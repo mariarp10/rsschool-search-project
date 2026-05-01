@@ -2,6 +2,8 @@ import React from 'react';
 import type { TCharacter } from '@utils/types';
 import api from '@utils/api';
 import UIButton from '@ui/button/button';
+import { CharacterCard } from '@ui/character-card';
+import { CardsList } from '@ui/cards-list';
 
 type TResultsProps = {
   searchTerm: string;
@@ -66,10 +68,7 @@ export class ResultsBlock extends React.Component<TResultsProps, TResultsState> 
   };
 
   componentDidMount() {
-    if (this.props.searchTerm === '') {
-      const characters = this.loadAllCharacters(this.state.currentPage);
-      return characters;
-    }
+    this.loadAllCharacters(this.state.currentPage);
   }
 
   render() {
@@ -77,8 +76,18 @@ export class ResultsBlock extends React.Component<TResultsProps, TResultsState> 
       <>
         {this.props.searchTerm === '' && (
           <>
-            <UIButton text="Previous" handleClick={this.handlePreviousPage}></UIButton>
-            <UIButton text="Next" handleClick={this.handleNextPage}></UIButton>
+            <CardsList>
+              {this.state.characters.map((character) => (
+                <CharacterCard key={character.id} character={character} />
+              ))}
+            </CardsList>
+            <div>
+              <UIButton text="Previous" handleClick={this.handlePreviousPage}></UIButton>
+              <span>
+                Page {this.state.currentPage} of {this.state.totalPages}
+              </span>
+              <UIButton text="Next" handleClick={this.handleNextPage}></UIButton>
+            </div>
           </>
         )}
       </>
