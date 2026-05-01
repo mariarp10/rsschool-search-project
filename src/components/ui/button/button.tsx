@@ -7,7 +7,11 @@ type UIButtonProps = {
 
 class UIButton extends React.Component<UIButtonProps> {
   render() {
-    return <button onClick={this.props.handleClick} type='button'>{this.props.text}</button>;
+    return (
+      <button onClick={this.props.handleClick} type="button">
+        {this.props.text}
+      </button>
+    );
   }
 }
 

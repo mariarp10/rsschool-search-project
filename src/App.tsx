@@ -1,5 +1,6 @@
 import React from 'react';
-import SearchField from './components/search-field/search-field';
+import { SearchField } from '@components/search-field';
+import { ResultsBlock } from '@components/results-block';
 
 type AppState = {
   searchTerm: string;
@@ -35,6 +36,7 @@ class App extends React.Component<Record<string, never>, AppState> {
           <h1>Rick and Morty: search characters</h1>
           <SearchField initialValue={this.state.searchTerm} onSearch={this.handleSearch} />
         </div>
+        <ResultsBlock searchTerm={this.state.searchTerm}></ResultsBlock>
       </>
     );
   }

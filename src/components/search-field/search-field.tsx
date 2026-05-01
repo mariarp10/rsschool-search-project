@@ -13,7 +13,7 @@ type SearchFieldState = {
   value: string;
 };
 
-class SearchField extends React.Component<SearchFieldProps, SearchFieldState> {
+export class SearchField extends React.Component<SearchFieldProps, SearchFieldState> {
   state: SearchFieldState = {
     value: this.props.initialValue,
   };
@@ -49,5 +49,3 @@ class SearchField extends React.Component<SearchFieldProps, SearchFieldState> {
     );
   }
 }
-
-export default SearchField;
