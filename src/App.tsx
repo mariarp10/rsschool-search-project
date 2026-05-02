@@ -12,7 +12,7 @@ type AppState = {
   totalPages: number;
   characters: TCharacter[];
   isLoading: boolean;
-  errorCode: number | null;
+  statusCode: number | null;
 };
 class App extends React.Component<Record<string, never>, AppState> {
   state: AppState = {
@@ -21,11 +21,15 @@ class App extends React.Component<Record<string, never>, AppState> {
     totalPages: 0,
     characters: [],
     isLoading: false,
-    errorCode: null,
+    statusCode: null,
   };
 
+  getStatusCode(err) {
+    return err instanceof Response ? err.status : 429;
+  }
+
   loadAllCharacters = async (page: number) => {
-    this.setState({ isLoading: true, errorCode: null });
+    this.setState({ isLoading: true, statusCode: null });
 
     try {
       const data = await api.getAllCharacters(page);
@@ -35,10 +39,11 @@ class App extends React.Component<Record<string, never>, AppState> {
         totalPages: data.info.pages,
         isLoading: false,
       });
-    } catch (err) {
+    } catch (err: unknown) {
+      const statusCode = this.getStatusCode(err);
       this.setState({
         isLoading: false,
-        errorCode: Number(err),
+        statusCode,
       });
     }
   };
@@ -89,7 +94,7 @@ class App extends React.Component<Record<string, never>, AppState> {
   };
 
   searchCharacterByName = async (page: number, name: string) => {
-    this.setState({ isLoading: true, errorCode: null });
+    this.setState({ isLoading: true, statusCode: null });
 
     try {
       const data = await api.getCharacterByName(page, name);
@@ -99,10 +104,12 @@ class App extends React.Component<Record<string, never>, AppState> {
         totalPages: data.info.pages,
         isLoading: false,
       });
-    } catch (err) {
+    } catch (err: unknown) {
+      const statusCode = this.getStatusCode(err);
+
       this.setState({
         isLoading: false,
-        errorCode: Number(err),
+        statusCode,
       });
     }
   };

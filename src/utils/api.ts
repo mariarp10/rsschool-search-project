@@ -4,7 +4,7 @@ const checkResponse = async (response: Response) => {
   if (response.ok) {
     return response.json();
   }
-  return Promise.reject(response.status);
+  return Promise.reject(response);
 };
 
 const baseURL = 'https://rickandmortyapi.com/api';
