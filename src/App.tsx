@@ -3,6 +3,8 @@ import { SearchField } from '@components/search-field';
 import { ResultsBlock } from '@components/results-block';
 import api from '@utils/api';
 import type { TCharacter } from '@utils/types';
+import { ErrorBoundary } from '@components/error-boundary';
+import { BrokenComponent } from '@components/broken-component';
 
 type AppState = {
   lastSearch: string;
@@ -119,17 +121,20 @@ class App extends React.Component<Record<string, never>, AppState> {
   render() {
     return (
       <>
-        <div>
-          <h1>Rick and Morty: search characters</h1>
-          <SearchField initialValue={this.state.lastSearch} onSearch={this.handleSearch} />
-        </div>
-        <ResultsBlock
-          characters={this.state.characters}
-          currentPage={this.state.currentPage}
-          totalPages={this.state.totalPages}
-          handlePreviousPage={this.handlePreviousPage}
-          handleNextPage={this.handleNextPage}
-        />
+        <ErrorBoundary>
+          <div>
+            <h1>Rick and Morty: search characters</h1>
+            <SearchField initialValue={this.state.lastSearch} onSearch={this.handleSearch} />
+          </div>
+          <ResultsBlock
+            characters={this.state.characters}
+            currentPage={this.state.currentPage}
+            totalPages={this.state.totalPages}
+            handlePreviousPage={this.handlePreviousPage}
+            handleNextPage={this.handleNextPage}
+          />
+          <BrokenComponent />
+        </ErrorBoundary>
       </>
     );
   }
