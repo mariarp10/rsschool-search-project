@@ -137,6 +137,7 @@ class App extends React.Component<Record<string, never>, AppState> {
             characters={this.state.characters}
             currentPage={this.state.currentPage}
             totalPages={this.state.totalPages}
+            isLoading={this.state.isLoading}
             handlePreviousPage={this.handlePreviousPage}
             handleNextPage={this.handleNextPage}
           />
