@@ -23,6 +23,15 @@ class Api {
     const response = await fetch(urlWithPagination);
     return checkResponse(response);
   }
+
+  async getCharacterByName(page: number, name: string): Promise<TCharacterResponse> {
+    const urlWithNameFilter = new URL(`${this._url}/character`);
+    urlWithNameFilter.searchParams.set('name', name);
+    urlWithNameFilter.searchParams.set('page', String(page));
+
+    const response = await fetch(urlWithNameFilter.toString());
+    return checkResponse(response);
+  }
 }
 
 const api = new Api(baseURL);

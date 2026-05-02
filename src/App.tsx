@@ -1,42 +1,135 @@
 import React from 'react';
 import { SearchField } from '@components/search-field';
 import { ResultsBlock } from '@components/results-block';
+import api from '@utils/api';
+import type { TCharacter } from '@utils/types';
 
 type AppState = {
-  searchTerm: string;
+  lastSearch: string;
+  currentPage: number;
+  totalPages: number;
+  characters: TCharacter[];
+  isLoading: boolean;
+  errorCode: number | null;
 };
 class App extends React.Component<Record<string, never>, AppState> {
   state: AppState = {
-    searchTerm: '',
+    lastSearch: '',
+    currentPage: 1,
+    totalPages: 0,
+    characters: [],
+    isLoading: false,
+    errorCode: null,
   };
 
-  componentDidMount() {
-    const lastSearchTerm = localStorage.getItem('searchTerm');
+  loadAllCharacters = async (page: number) => {
+    this.setState({ isLoading: true, errorCode: null });
 
-    if (lastSearchTerm !== null) {
-      this.setState({ searchTerm: lastSearchTerm });
+    try {
+      const data = await api.getAllCharacters(page);
+
+      this.setState({
+        characters: data.results,
+        totalPages: data.info.pages,
+        isLoading: false,
+      });
+    } catch (err) {
+      this.setState({
+        isLoading: false,
+        errorCode: Number(err),
+      });
     }
-  }
+  };
 
-  handleSearch = (userInput: string) => {
-    const trimmedSearch = userInput.trim();
+  handleNextPage = () => {
+    const nextPage = this.state.currentPage + 1;
 
-    if (trimmedSearch === this.state.searchTerm) {
+    if (nextPage > this.state.totalPages) {
       return;
     }
 
-    localStorage.setItem('searchTerm', trimmedSearch);
-    this.setState({ searchTerm: trimmedSearch });
+    this.setState({ currentPage: nextPage });
+
+    if (this.state.lastSearch) {
+      this.searchCharacterByName(nextPage, this.state.lastSearch);
+    } else {
+      this.loadAllCharacters(nextPage);
+    }
   };
+
+  handlePreviousPage = () => {
+    const previousPage = this.state.currentPage - 1;
+
+    if (previousPage < 1) {
+      return;
+    }
+
+    this.setState({ currentPage: previousPage });
+
+    if (this.state.lastSearch) {
+      this.searchCharacterByName(previousPage, this.state.lastSearch);
+    } else {
+      this.loadAllCharacters(previousPage);
+    }
+  };
+
+  handleSearch = async (userInput: string) => {
+    const trimmedSearch = userInput.trim().toLowerCase();
+    const savedSearch = localStorage.getItem('lastSearch');
+
+    if (trimmedSearch === savedSearch) {
+      return;
+    }
+
+    localStorage.setItem('lastSearch', trimmedSearch);
+    this.setState({ lastSearch: trimmedSearch, currentPage: 1 });
+    this.searchCharacterByName(1, trimmedSearch);
+  };
+
+  searchCharacterByName = async (page: number, name: string) => {
+    this.setState({ isLoading: true, errorCode: null });
+
+    try {
+      const data = await api.getCharacterByName(page, name);
+
+      this.setState({
+        characters: data.results,
+        totalPages: data.info.pages,
+        isLoading: false,
+      });
+    } catch (err) {
+      this.setState({
+        isLoading: false,
+        errorCode: Number(err),
+      });
+    }
+  };
+
+  componentDidMount() {
+    const lastSearch = localStorage.getItem('lastSearch');
+
+    if (lastSearch !== null) {
+      this.setState({ lastSearch });
+      this.searchCharacterByName(1, lastSearch);
+    } else {
+      this.loadAllCharacters(1);
+    }
+  }
 
   render() {
     return (
       <>
         <div>
           <h1>Rick and Morty: search characters</h1>
-          <SearchField initialValue={this.state.searchTerm} onSearch={this.handleSearch} />
+          <SearchField initialValue={this.state.lastSearch} onSearch={this.handleSearch} />
         </div>
-        <ResultsBlock searchTerm={this.state.searchTerm}></ResultsBlock>
+        <ResultsBlock
+          characters={this.state.characters}
+          currentPage={this.state.currentPage}
+          totalPages={this.state.totalPages}
+          handlePreviousPage={this.handlePreviousPage}
+          handleNextPage={this.handleNextPage}
+        />
       </>
     );
   }
