@@ -5,6 +5,7 @@ import api from '@utils/api';
 import type { TCharacter } from '@utils/types';
 import { ErrorBoundary } from '@components/error-boundary';
 import { BrokenComponent } from '@components/broken-component';
+import { UIErrorNotification } from '@ui/error-notification';
 
 type AppState = {
   lastSearch: string;
@@ -133,6 +134,9 @@ class App extends React.Component<Record<string, never>, AppState> {
             <h1>Rick and Morty: search characters</h1>
             <SearchField initialValue={this.state.lastSearch} onSearch={this.handleSearch} />
           </div>
+          {this.state.statusCode && (
+            <UIErrorNotification statusCode={this.state.statusCode}></UIErrorNotification>
+          )}
           <ResultsBlock
             characters={this.state.characters}
             currentPage={this.state.currentPage}

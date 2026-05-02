@@ -1,10 +1,5 @@
 export const ErrorMessages: Record<number, string> = {
-  400: 'Bad request',
-  401: 'Unauthorized',
-  403: 'Forbidden',
-  404: 'Not found',
-  429: 'Too many requests, please try again later',
-  500: 'Internal server error',
-  502: 'Bad gateway',
-  503: 'Service unavailable',
+  404: `Unfortunately we couldn't find what you're looking for. Try searching for a diffirent character`,
+  429: `Looks like you're clicking through pages too quickly. There's a rate limit for the requests`,
+  500: 'Something is wrong we the server',
 };
