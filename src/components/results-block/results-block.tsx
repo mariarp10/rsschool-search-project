@@ -12,6 +12,7 @@ type ResultsProps = {
   totalPages: number;
   isLoading: boolean;
   errorCode: number | null;
+  isEmpty: boolean;
   handlePreviousPage: () => void;
   handleNextPage: () => void;
 };
@@ -20,6 +21,7 @@ export class ResultsBlock extends React.Component<ResultsProps> {
     return (
       <>
         {this.props.errorCode && <UIErrorNotification errorCode={this.props.errorCode} />}
+        {this.props.isEmpty && <p>{`Couldn't find this character`}</p>}
         {this.props.isLoading ? (
           <UILoader></UILoader>
         ) : (
