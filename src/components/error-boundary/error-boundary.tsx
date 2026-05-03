@@ -13,7 +13,7 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren, Stat
     console.error(error, info.componentStack);
   }
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.hasError) {
       return (
         <>

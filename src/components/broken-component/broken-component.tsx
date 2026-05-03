@@ -9,7 +9,7 @@ export class BrokenComponent extends React.Component<Record<string, never>, Stat
     this.setState({ shouldThrow: true });
   };
 
-  render() {
+  render(): React.ReactNode {
     if (this.state.shouldThrow) {
       throw new Error('Test error');
     }

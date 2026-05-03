@@ -6,9 +6,8 @@ type UIButtonProps = {
   disabled?: boolean;
   handleClick: () => void;
 };
-
-class UIButton extends React.Component<UIButtonProps> {
-  render() {
+export class UIButton extends React.Component<UIButtonProps> {
+  render(): React.ReactNode {
     return (
       <button
         className={styles.button}
@@ -21,5 +20,3 @@ class UIButton extends React.Component<UIButtonProps> {
     );
   }
 }
-
-export default UIButton;

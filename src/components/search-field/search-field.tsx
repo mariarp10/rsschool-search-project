@@ -1,6 +1,6 @@
 import React from 'react';
-import UIButton from '@ui/button/button';
-import UIInput from '@ui/input/input';
+import { UIButton } from '@ui/button';
+import { UIInput } from '@ui/input';
 
 import styles from './search-field.module.css';
 
@@ -32,7 +32,7 @@ export class SearchField extends React.Component<SearchFieldProps, SearchFieldSt
     this.props.onSearch(this.state.value);
   };
 
-  render() {
+  render(): React.ReactNode {
     return (
       <>
         <div className={styles.container}>

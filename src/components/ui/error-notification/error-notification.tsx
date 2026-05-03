@@ -3,15 +3,15 @@ import styles from './error-notification.module.css';
 import { ErrorMessages } from '../../../error-messages';
 
 type UIErrorNotificationProps = {
-  statusCode: number;
+  errorCode: number;
 };
 
 export class UIErrorNotification extends React.Component<UIErrorNotificationProps> {
   getErrorMessage() {
-    return ErrorMessages[this.props.statusCode];
+    return ErrorMessages[this.props.errorCode];
   }
 
-  render() {
+  render(): React.ReactNode {
     return (
       <div className={styles.container}>
         <p className={styles.error_message}>{this.getErrorMessage()}</p>

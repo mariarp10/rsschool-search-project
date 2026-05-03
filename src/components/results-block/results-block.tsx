@@ -4,21 +4,25 @@ import { CharacterCard } from '@ui/character-card';
 import { CardsList } from '@ui/cards-list';
 import { UIPagination } from '@ui/pagination';
 import { UILoader } from '@ui/loader';
+import { UIErrorNotification } from '@ui/error-notification';
 
 type ResultsProps = {
   characters: TCharacter[];
   currentPage: number;
   totalPages: number;
   isLoading: boolean;
+  errorCode: number | null;
   handlePreviousPage: () => void;
   handleNextPage: () => void;
 };
 export class ResultsBlock extends React.Component<ResultsProps> {
-  render() {
+  render(): React.ReactNode {
     return (
       <>
-        {this.props.isLoading && <UILoader></UILoader>}
-        {!this.props.isLoading && (
+        {this.props.errorCode && <UIErrorNotification errorCode={this.props.errorCode} />}
+        {this.props.isLoading ? (
+          <UILoader></UILoader>
+        ) : (
           <CardsList>
             {this.props.characters.map((character) => (
               <CharacterCard key={character.id} character={character} />

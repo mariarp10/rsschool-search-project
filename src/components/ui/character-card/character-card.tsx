@@ -7,7 +7,7 @@ type TCharacterCardProps = {
 };
 
 export class CharacterCard extends React.Component<TCharacterCardProps> {
-  render() {
+  render(): React.ReactNode {
     return (
       <>
         <button className={`${styles.card_container}`}>
@@ -16,6 +16,7 @@ export class CharacterCard extends React.Component<TCharacterCardProps> {
               className={`${styles.avatar}`}
               src={`${this.props.character.image}`}
               alt={`Picture of ${this.props.character.name}`}
+              loading="lazy"
             ></img>
           </div>
           <h3>{this.props.character.name}</h3>

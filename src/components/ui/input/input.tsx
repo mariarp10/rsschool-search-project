@@ -8,8 +8,8 @@ type UIInputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-class UIInput extends React.Component<UIInputProps> {
-  render() {
+export class UIInput extends React.Component<UIInputProps> {
+  render(): React.ReactNode {
     return (
       <input
         className={styles.input}
@@ -20,5 +20,3 @@ class UIInput extends React.Component<UIInputProps> {
     );
   }
 }
-
-export default UIInput;
