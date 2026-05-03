@@ -1,0 +1,60 @@
+:root {
+  --color-bg-primary: #0b0c10;
+  --color-bg-secondary: #13151c;
+  --color-bg-card: #1c1f2e;
+  --color-bg-elevated: #252840;
+
+  --color-text-primary: #f5f5f5;
+  --color-text-secondary: #cdd5e4;
+
+  --color-light-green: #00e5b0;
+  --color-dark-green: #00b389;
+  --color-light-blue: #97e8ff;
+  --color-light-purple: #c44dff;
+
+  --color-error: #ff4757;
+  --color-error-bg: #2a0e12;
+  --color-warning: #ffd166;
+
+  --color-border: #2e3150;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  background-color: black;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol,
+li {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

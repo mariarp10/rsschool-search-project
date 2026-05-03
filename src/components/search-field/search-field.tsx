@@ -35,6 +35,7 @@ export class SearchField extends React.Component<SearchFieldProps, SearchFieldSt
   render(): React.ReactNode {
     return (
       <>
+        <h1 className={styles.title}>Rick and Morty - look up characters from the show</h1>
         <div className={styles.container}>
           <UIInput
             placeholder="Look up Rick and Morty characters"
@@ -43,8 +44,9 @@ export class SearchField extends React.Component<SearchFieldProps, SearchFieldSt
           />
           <UIButton handleClick={this.handleClick} text="search" />
         </div>
-
-        <p>Try typing in names of the characters from the show: Summer, Beth, Rick</p>
+        <p className={styles.hint}>
+          Try typing in names of the characters from the show: Summer, Beth, Rick
+        </p>
       </>
     );
   }

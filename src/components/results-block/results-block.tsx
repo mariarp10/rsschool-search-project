@@ -3,7 +3,7 @@ import type { TCharacter } from '@utils/types';
 import { CharacterCard } from '@ui/character-card';
 import { CardsList } from '@ui/cards-list';
 import { UILoader } from '@ui/loader';
-import { UIErrorNotification } from '@ui/error-notification';
+import styles from './results-block.module.css';
 
 type ResultsProps = {
   characters: TCharacter[];
@@ -15,16 +15,18 @@ export class ResultsBlock extends React.Component<ResultsProps> {
   render(): React.ReactNode {
     return (
       <>
-        {this.props.errorCode && <UIErrorNotification errorCode={this.props.errorCode} />}
         {this.props.isEmpty && <p>{`Couldn't find this character`}</p>}
         {this.props.isLoading ? (
           <UILoader></UILoader>
         ) : (
-          <CardsList>
-            {this.props.characters.map((character) => (
-              <CharacterCard key={character.id} character={character} />
-            ))}
-          </CardsList>
+          <div className={styles.container}>
+            <h2 className={styles.title}>Seen in the show</h2>
+            <CardsList>
+              {this.props.characters.map((character) => (
+                <CharacterCard key={character.id} character={character} />
+              ))}
+            </CardsList>
+          </div>
         )}
       </>
     );

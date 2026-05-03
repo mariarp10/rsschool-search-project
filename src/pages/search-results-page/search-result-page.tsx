@@ -4,6 +4,7 @@ import { SearchField } from '@components/search-field';
 import { ResultsBlock } from '@components/results-block';
 import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
+import { UIErrorNotification } from '@ui/error-notification';
 
 const ITEMS_PER_PAGE = 20;
 const CHARACTERS_JSON_PATH = '/all-characters.json';
@@ -161,6 +162,8 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
       const charactersForPage = this.getCharactersForPage(filteredCharacters, page);
       this.setState({ currentPage: page, isLoading: false, charactersForPage });
 
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
       this.pageChangeTimeoutId = null;
     }, PAGE_CHANGE_DELAY_MS);
   };
@@ -194,20 +197,26 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     return (
       <>
         <SearchField initialValue={lastSearch} onSearch={this.handleSearch} />
-        <ResultsBlock
-          characters={charactersForPage}
-          isLoading={isLoading}
-          errorCode={errorCode}
-          isEmpty={isEmpty}
-        />
-        {totalPages > 1 && (
-          <UIPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            isLoading={isLoading}
-            handleNextPage={this.handleNextPage}
-            handlePreviousPage={this.handlePreviousPage}
-          ></UIPagination>
+        {this.state.errorCode ? (
+          <UIErrorNotification errorCode={this.state.errorCode} />
+        ) : (
+          <>
+            <ResultsBlock
+              characters={charactersForPage}
+              isLoading={isLoading}
+              errorCode={errorCode}
+              isEmpty={isEmpty}
+            />
+            {totalPages > 1 && (
+              <UIPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                isLoading={isLoading}
+                handleNextPage={this.handleNextPage}
+                handlePreviousPage={this.handlePreviousPage}
+              />
+            )}
+          </>
         )}
       </>
     );

@@ -16,6 +16,7 @@ export class UIInput extends React.Component<UIInputProps> {
         placeholder={this.props.placeholder}
         onChange={this.props.onChange}
         value={this.props.value}
+        id="search"
       ></input>
     );
   }

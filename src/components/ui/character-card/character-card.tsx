@@ -18,8 +18,10 @@ export class CharacterCard extends React.Component<TCharacterCardProps> {
               alt={`Picture of ${this.props.character.name}`}
               loading="lazy"
             ></img>
+            <div className={styles.overlay}>
+              <span className={styles.name}>{this.props.character.name}</span>
+            </div>
           </div>
-          <h3>{this.props.character.name}</h3>
         </button>
       </>
     );

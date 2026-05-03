@@ -1,4 +1,24 @@
+.button {
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background-color: var(--color-text-primary);
+  padding: 5px 0;
+  font: inherit;
+  font-size: 14px;
+  text-transform: capitalize;
+  width: 80px;
+}
+
+.button:hover {
+  background-color: var(--color-light-green);
+}
+
+.button:active {
+  background-color: var(--color-dark-green);
+}
+
 .button:disabled {
-  opacity: 0.7;
+  color: var(--color-text-secondary);
+  opacity: 0.9;
   pointer-events: none;
 }

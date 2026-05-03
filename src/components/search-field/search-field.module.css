@@ -1,4 +1,15 @@
+.title {
+  font-size: 32px;
+  color: var(--color-dark-green);
+  padding: 10px 0;
+}
 .container {
   display: flex;
   gap: 10px;
+  padding-bottom: 5px;
+}
+
+.hint {
+  font-size: 14px;
+  color: var(--color-text-secondary);
 }
