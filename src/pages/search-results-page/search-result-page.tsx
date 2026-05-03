@@ -2,6 +2,7 @@ import React from 'react';
 import type { TCharacter } from '@utils/types';
 import { SearchField } from '@components/search-field';
 import { ResultsBlock } from '@components/results-block';
+import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 
 const ITEMS_PER_PAGE = 20;
@@ -115,6 +116,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
       totalPages,
       currentPage: page,
       errorCode: null,
+      isEmpty: filteredCharacters.length === 0,
     });
   };
 
@@ -192,17 +194,21 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     return (
       <>
         <SearchField initialValue={lastSearch} onSearch={this.handleSearch} />
-
         <ResultsBlock
           characters={charactersForPage}
-          currentPage={currentPage}
-          totalPages={totalPages}
           isLoading={isLoading}
           errorCode={errorCode}
           isEmpty={isEmpty}
-          handlePreviousPage={this.handlePreviousPage}
-          handleNextPage={this.handleNextPage}
         />
+        {totalPages > 1 && (
+          <UIPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            isLoading={isLoading}
+            handleNextPage={this.handleNextPage}
+            handlePreviousPage={this.handlePreviousPage}
+          ></UIPagination>
+        )}
       </>
     );
   }
