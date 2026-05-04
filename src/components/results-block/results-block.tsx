@@ -15,18 +15,23 @@ export class ResultsBlock extends React.Component<ResultsProps> {
   render(): React.ReactNode {
     return (
       <>
-        {this.props.isEmpty && <p>{`Couldn't find this character`}</p>}
         {this.props.isLoading ? (
           <UILoader></UILoader>
         ) : (
-          <div className={styles.container}>
-            <h2 className={styles.title}>Seen in the show</h2>
-            <CardsList>
-              {this.props.characters.map((character) => (
-                <CharacterCard key={character.id} character={character} />
-              ))}
-            </CardsList>
-          </div>
+          <main className={styles.container}>
+            {this.props.isEmpty ? (
+              <p>{`Couldn't find this character`}</p>
+            ) : (
+              <>
+                <h2 className={styles.title}>Seen in the show</h2>
+                <CardsList>
+                  {this.props.characters.map((character) => (
+                    <CharacterCard key={character.id} character={character} />
+                  ))}
+                </CardsList>
+              </>
+            )}
+          </main>
         )}
       </>
     );

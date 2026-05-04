@@ -56,9 +56,10 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
 
     try {
       const response = await fetch(CHARACTERS_JSON_PATH);
+      const contentType = response.headers.get('content-type');
 
-      if (!response.ok) {
-        throw Object.assign(new Error('Failed to load'), { status: response.status });
+      if (!contentType?.includes('application/json')) {
+        throw new Error('HTTP error');
       }
 
       const allCharacters = await response.json();
@@ -201,7 +202,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
         {this.state.errorCode ? (
           <UIErrorNotification errorCode={this.state.errorCode} />
         ) : (
-          <section>
+          <>
             <ResultsBlock
               characters={charactersForPage}
               isLoading={isLoading}
@@ -217,7 +218,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
                 handlePreviousPage={this.handlePreviousPage}
               />
             )}
-          </section>
+          </>
         )}
         <Footer />
       </>
