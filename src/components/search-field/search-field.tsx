@@ -32,6 +32,12 @@ export class SearchField extends React.Component<SearchFieldProps, SearchFieldSt
     this.props.onSearch(this.state.value);
   };
 
+  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      this.props.onSearch(this.state.value);
+    }
+  };
+
   render(): React.ReactNode {
     return (
       <header className={styles.header}>
@@ -41,6 +47,7 @@ export class SearchField extends React.Component<SearchFieldProps, SearchFieldSt
             placeholder="Look up Rick and Morty characters"
             value={this.state.value}
             onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
           />
           <UIButton handleClick={this.handleClick} text="search" />
         </div>
