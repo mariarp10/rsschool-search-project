@@ -1,6 +1,14 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-bg-primary);
+  padding: 40px 60px;
+}
+
 .title {
-  font-size: 32px;
-  color: var(--color-dark-green);
+  font-size: 38px;
+  color: var(--color-light-blue);
   padding: 10px 0;
 }
 .container {
