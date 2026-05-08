@@ -7,6 +7,6 @@ type TCardListProps = {
 
 export class CardsList extends React.Component<TCardListProps> {
   render(): React.ReactNode {
-    return <div className={`${styles.list}`}>{this.props.children}</div>;
+    return <ul className={`${styles.list}`}>{this.props.children}</ul>;
   }
 }

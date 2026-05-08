@@ -10,7 +10,8 @@
       "@ui/*": ["./src/components/ui/*"],
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
-      "@pages/*": ["./src/pages/*"]
+      "@pages/*": ["./src/pages/*"],
+      "@tests/*": ["./__tests__/*"]
     },
 
     /* Bundler mode */

@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { SearchField } from './search-field';
 
 describe('SearchField Component', () => {
-  //passed
   test(`renders input, search button, and hint`, () => {
     render(<SearchField initialValue="" onSearch={vi.fn()} />);
 
@@ -17,7 +16,6 @@ describe('SearchField Component', () => {
     expect(searchButton).toBeInTheDocument();
     expect(hintElement).toBeInTheDocument();
   });
-  //passed
   test(`displays initial value from props`, () => {
     render(<SearchField initialValue="Rick" onSearch={vi.fn()} />);
 
@@ -25,7 +23,6 @@ describe('SearchField Component', () => {
 
     expect(inputElement).toHaveValue('Rick');
   });
-  // passed
   test(`displays empty string when initial value is empty`, () => {
     render(<SearchField initialValue="" onSearch={vi.fn()} />);
 
@@ -33,7 +30,6 @@ describe('SearchField Component', () => {
 
     expect(inputElement).toHaveValue('');
   });
-  // passed
   test(`updates input value when user types`, async () => {
     const user = userEvent.setup();
 
@@ -45,7 +41,6 @@ describe('SearchField Component', () => {
 
     expect(inputElement).toHaveValue('Morty');
   });
-  // passed
   test(`calls onSearch callback with input value when user clicks search button`, async () => {
     const user = userEvent.setup();
     const handleSearch = vi.fn();
