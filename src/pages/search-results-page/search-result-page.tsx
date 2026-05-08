@@ -5,7 +5,7 @@ import { ResultsBlock } from '@components/results-block';
 import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 import { UIErrorNotification } from '@ui/error-notification';
-import { Footer } from '@components/footer';
+import { Footer } from '@ui/footer';
 
 const ITEMS_PER_PAGE = 20;
 const CHARACTERS_JSON_PATH = '/all-characters.json';
