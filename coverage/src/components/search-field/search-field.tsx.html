@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -139,32 +139,32 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,32 +199,32 @@ type SearchFieldState = {
 };
 &nbsp;
 export class SearchField extends React.Component&lt;SearchFieldProps, SearchFieldState&gt; {
-  state: SearchFieldState = <span class="cstat-no" title="statement not covered" >{</span>
+  state: SearchFieldState = {
     value: this.props.initialValue,
   };
 &nbsp;
-<span class="fstat-no" title="function not covered" >  componentDidUpdate(p</span>revProps: SearchFieldProps) {
-<span class="cstat-no" title="statement not covered" >    if (prevProps.initialValue !== this.props.initialValue) {</span>
-<span class="cstat-no" title="statement not covered" >      this.setState({ value: this.props.initialValue });</span>
+  componentDidUpdate(prevProps: SearchFieldProps) {
+    if (prevProps.initialValue !== this.props.initialValue) {
+      this.setState({ value: this.props.initialValue });
     }
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  handleChange = (e</span>vent: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    this.setState({ value: event.target.value });</span>
+  handleChange = (event: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {
+    this.setState({ value: event.target.value });
   };
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  handleClick = () =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >    this.props.onSearch(this.state.value);</span>
+  handleClick = () =&gt; {
+    this.props.onSearch(this.state.value);
   };
 &nbsp;
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  handleKeyDown = (e</span>: React.KeyboardEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (e.key === 'Enter') {</span>
-<span class="cstat-no" title="statement not covered" >      this.props.onSearch(this.state.value);</span>
+  handleKeyDown = (e: React.KeyboardEvent&lt;HTMLInputElement&gt;) =&gt; {
+    if (e.key === 'Enter') {
+      this.props.onSearch(this.state.value);
     }
   };
 &nbsp;
-<span class="fstat-no" title="function not covered" >  render(): React.ReactNode {</span>
-<span class="cstat-no" title="statement not covered" >    return (</span>
+  render(): React.ReactNode {
+    return (
       &lt;header className={styles.header}&gt;
         &lt;h1 className={styles.title}&gt;Rick and Morty - look up characters from the show&lt;/h1&gt;
         &lt;div className={styles.container}&gt;
@@ -250,7 +250,7 @@ export class SearchField extends React.Component&lt;SearchFieldProps, SearchFiel
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-05-07T22:14:02.359Z
+                at 2026-05-08T03:32:12.159Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

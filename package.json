@@ -13,7 +13,8 @@
     "format:check": "prettier . --check",
     "prepare": "husky",
     "generate:characters": "node scripts/get-all-characters-json.js",
-    "test": "vitest --coverage"
+    "test": "vitest --coverage",
+    "test:run": "vitest run"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
