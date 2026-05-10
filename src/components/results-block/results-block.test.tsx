@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { ResultsBlock } from './results-block';
-import MockCharacters from '@tests/mock-characters';
+import { MockCharacters } from '@tests/fixtures';
 
 const defaultProps = {
   characters: [],

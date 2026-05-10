@@ -13,7 +13,7 @@ export class UIErrorNotification extends React.Component<UIErrorNotificationProp
 
   render(): React.ReactNode {
     return (
-      <div className={styles.container}>
+      <div role="alert" className={styles.container}>
         <p className={styles.error_message}>{this.getErrorMessage()}</p>
       </div>
     );

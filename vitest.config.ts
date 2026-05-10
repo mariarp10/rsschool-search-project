@@ -24,7 +24,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
 
-      include: ['src/**/*.tsx'],
+      include: ['src/**/*.{tsx, ts}'],
 
       exclude: [
         'src/**/*.test.ts',
@@ -33,6 +33,7 @@ export default defineConfig({
         'src/components/**/index.ts',
         'src/components/ui/**',
         'src/tests/**',
+        'src/App.tsx',
       ],
 
       thresholds: {
