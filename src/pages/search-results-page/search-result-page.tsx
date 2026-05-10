@@ -5,7 +5,7 @@ import { ResultsBlock } from '@components/results-block';
 import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 import { UIErrorNotification } from '@ui/error-notification';
-import { Footer } from '@components/footer';
+import { Footer } from '@ui/footer';
 
 const ITEMS_PER_PAGE = 20;
 const CHARACTERS_JSON_PATH = '/all-characters.json';
@@ -147,16 +147,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   };
 
   changePage = (page: number) => {
-    const { filteredCharacters, isLoading } = this.state;
-    const totalPages = this.getTotalPages(filteredCharacters);
-
-    if (isLoading || page < 1 || page > totalPages) {
-      return;
-    }
-
-    if (this.pageChangeTimeoutId) {
-      clearTimeout(this.pageChangeTimeoutId);
-    }
+    const { filteredCharacters } = this.state;
 
     this.setState({ isLoading: true });
 
@@ -186,15 +177,8 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   };
 
   render(): React.ReactNode {
-    const {
-      lastSearch,
-      charactersForPage,
-      currentPage,
-      totalPages,
-      isLoading,
-      errorCode,
-      isEmpty,
-    } = this.state;
+    const { lastSearch, charactersForPage, currentPage, totalPages, isLoading, isEmpty } =
+      this.state;
 
     return (
       <>
@@ -203,12 +187,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
           <UIErrorNotification errorCode={this.state.errorCode} />
         ) : (
           <>
-            <ResultsBlock
-              characters={charactersForPage}
-              isLoading={isLoading}
-              errorCode={errorCode}
-              isEmpty={isEmpty}
-            />
+            <ResultsBlock characters={charactersForPage} isLoading={isLoading} isEmpty={isEmpty} />
             {totalPages > 1 && (
               <UIPagination
                 currentPage={currentPage}

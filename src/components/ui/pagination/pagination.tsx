@@ -13,7 +13,7 @@ type UIPaginationProps = {
 export class UIPagination extends React.Component<UIPaginationProps> {
   render(): React.ReactNode {
     return (
-      <div className={styles.container}>
+      <div role="navigation" className={styles.container}>
         <UIButton
           text="Previous"
           handleClick={this.props.handlePreviousPage}

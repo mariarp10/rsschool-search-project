@@ -8,7 +8,6 @@ import styles from './results-block.module.css';
 type ResultsProps = {
   characters: TCharacter[];
   isLoading: boolean;
-  errorCode: number | null;
   isEmpty: boolean;
 };
 export class ResultsBlock extends React.Component<ResultsProps> {

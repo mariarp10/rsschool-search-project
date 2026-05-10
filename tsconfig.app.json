@@ -4,13 +4,14 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM"],
     "module": "esnext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "skipLibCheck": true,
     "paths": {
       "@ui/*": ["./src/components/ui/*"],
       "@utils/*": ["./src/utils/*"],
       "@components/*": ["./src/components/*"],
-      "@pages/*": ["./src/pages/*"]
+      "@pages/*": ["./src/pages/*"],
+      "@tests/*": ["./__tests__/*"]
     },
 
     /* Bundler mode */

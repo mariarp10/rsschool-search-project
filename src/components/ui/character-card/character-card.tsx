@@ -9,7 +9,7 @@ type TCharacterCardProps = {
 export class CharacterCard extends React.Component<TCharacterCardProps> {
   render(): React.ReactNode {
     return (
-      <>
+      <li className={styles.list_item}>
         <button className={`${styles.card_container}`}>
           <div className={`${styles.image_container}`}>
             <img
@@ -23,7 +23,7 @@ export class CharacterCard extends React.Component<TCharacterCardProps> {
             </div>
           </div>
         </button>
-      </>
+      </li>
     );
   }
 }
