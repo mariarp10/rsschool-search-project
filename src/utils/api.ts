@@ -11,26 +11,65 @@ const baseURL = 'https://rickandmortyapi.com/api';
 
 class Api {
   _url: string;
+  _cache: Map<string, TCharacterResponse> = new Map();
 
   constructor(url: string) {
     this._url = url;
   }
 
-  async getAllCharacters(page: number): Promise<TCharacterResponse> {
-    const urlWithPagination = new URL(`${this._url}/character`);
-    urlWithPagination.searchParams.set('page', String(page));
-
-    const response = await fetch(urlWithPagination);
-    return checkResponse(response);
+  private _cacheKey(page: number, name?: string): string {
+    return name ? `?name=${name}&page=${page}` : `?page=${page}`;
   }
 
-  async getCharacterByName(page: number, name: string): Promise<TCharacterResponse> {
-    const urlWithNameFilter = new URL(`${this._url}/character`);
-    urlWithNameFilter.searchParams.set('name', name);
-    urlWithNameFilter.searchParams.set('page', String(page));
+  // async getAllCharacters(page: number): Promise<TCharacterResponse> {
+  //   const key = this._cacheKey(page);
 
-    const response = await fetch(urlWithNameFilter.toString());
-    return checkResponse(response);
+  //   const url = new URL(`${this._url}/character`);
+  //   url.searchParams.set('page', String(page));
+
+  //   if (this._cache.has(key)) {
+  //     return this._cache.get(key);
+  //   }
+
+  //   const response = await fetch(url);
+  //   const data = await checkResponse(response);
+
+  //   this._cache.set(key, data);
+  //   return data;
+  // }
+
+  // async getCharacterByName(page: number, name: string): Promise<TCharacterResponse> {
+  //   const key = this._cacheKey(page, name);
+
+  //   const url = new URL(`${this._url}/character`);
+  //   url.searchParams.set('name', name);
+  //   url.searchParams.set('page', String(page));
+
+  //   const response = await fetch(url);
+  //   const data = await checkResponse(response);
+
+  //   this._cache.set(key, data);
+  //   return data;
+  // }
+
+  async getCharacters(page: number, name?: string): Promise<TCharacterResponse> {
+    const key = this._cacheKey(page, name);
+
+    const url = new URL(`${this._url}/character`);
+    if (name) {
+      url.searchParams.set('name', name);
+    }
+    url.searchParams.set('page', String(page));
+
+    if (this._cache.has(key)) {
+      return this._cache.get(key);
+    }
+
+    const response = await fetch(url);
+    const data = await checkResponse(response);
+
+    this._cache.set(key, data);
+    return data;
   }
 }
 

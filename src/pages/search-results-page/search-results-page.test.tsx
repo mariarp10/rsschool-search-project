@@ -8,12 +8,15 @@ import userEvent from '@testing-library/user-event';
 
 describe(`Search Results Page Component`, () => {
   describe('initialization', () => {
-    test('checks localStorage for lastSearch when renders', () => {
+    test('checks localStorage for lastSearch when renders', async () => {
+      mockFetch();
       vi.spyOn(helpers, 'getLastSearch').mockReturnValue('rick');
 
       render(<SearchResultsPage />);
 
       expect(helpers.getLastSearch).toHaveBeenCalledTimes(1);
+
+      await screen.findByText(MockCharacters[0].name);
     });
     describe('fetching data', () => {
       beforeEach(() => {
@@ -129,6 +132,8 @@ describe(`Search Results Page Component`, () => {
       render(<SearchResultsPage />);
 
       expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+
+      await screen.findByText(MockCharacters[0].name);
     });
     test('resets to first page when new search is performed', async () => {
       const user = userEvent.setup();
@@ -138,7 +143,7 @@ describe(`Search Results Page Component`, () => {
       await screen.findByText('Page 1 of 2');
 
       const nextButton = screen.getByRole('button', { name: 'Next' });
-      user.click(nextButton);
+      await user.click(nextButton);
 
       await screen.findByText('Page 2 of 2');
 

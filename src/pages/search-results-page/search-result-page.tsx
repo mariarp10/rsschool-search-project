@@ -6,21 +6,17 @@ import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 import { UIErrorNotification } from '@ui/error-notification';
 import { Footer } from '@ui/footer';
+import api from '@utils/api';
 
-const ITEMS_PER_PAGE = 20;
-const CHARACTERS_JSON_PATH = '/all-characters.json';
 const PAGE_CHANGE_DELAY_MS = 400;
 
 type SearchState = {
   lastSearch: string;
   currentPage: number;
   totalPages: number;
-  allCharacters: TCharacter[];
-  filteredCharacters: TCharacter[];
   charactersForPage: TCharacter[];
   isLoading: boolean;
   errorCode: number | null;
-  isEmpty: boolean;
 };
 
 export class SearchResultsPage extends React.Component<Record<string, never>, SearchState> {
@@ -30,19 +26,16 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     lastSearch: '',
     currentPage: 1,
     totalPages: 0,
-    allCharacters: [],
-    filteredCharacters: [],
     charactersForPage: [],
     isLoading: false,
     errorCode: null,
-    isEmpty: false,
   };
 
   componentDidMount(): void {
     const lastSearch = getLastSearch();
 
     this.setState({ lastSearch });
-    this.loadCharactersFromJson(lastSearch);
+    this.loadCharacters();
   }
 
   componentWillUnmount(): void {
@@ -51,84 +44,23 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     }
   }
 
-  loadCharactersFromJson = async (lastSearch: string) => {
-    this.setState({ isLoading: true, errorCode: null });
-
+  loadCharacters = async () => {
     try {
-      const response = await fetch(CHARACTERS_JSON_PATH);
-      const contentType = response.headers.get('content-type');
-
-      if (!contentType?.includes('application/json')) {
-        throw new Error('HTTP error');
-      }
-
-      const allCharacters = await response.json();
-
-      const filteredCharacters = this.getFilteredCharacters(allCharacters, lastSearch);
-      const currentPage = 1;
-      const charactersForPage = this.getCharactersForPage(filteredCharacters, currentPage);
-      const totalPages = this.getTotalPages(filteredCharacters);
+      const { info, results } = this.state.lastSearch
+        ? await api.getCharacters(this.state.currentPage, this.state.lastSearch)
+        : await api.getCharacters(this.state.currentPage);
 
       this.setState({
-        allCharacters,
-        filteredCharacters,
-        charactersForPage,
-        currentPage,
-        totalPages,
-        isLoading: false,
-        isEmpty: filteredCharacters.length === 0,
+        totalPages: info.pages,
+        charactersForPage: results,
       });
-    } catch (err: unknown) {
+    } catch (err) {
       this.handleError(err);
     }
   };
 
-  getFilteredCharacters = (characters: TCharacter[], lastSearch: string) => {
-    const normalizedSearch = lastSearch.trim().toLowerCase();
-
-    if (!normalizedSearch) {
-      return characters;
-    }
-
-    return characters.filter((character) =>
-      character.name.toLowerCase().includes(normalizedSearch),
-    );
-  };
-
-  getTotalPages = (characters: TCharacter[]) => {
-    return Math.ceil(characters.length / ITEMS_PER_PAGE);
-  };
-
-  getCharactersForPage = (characters: TCharacter[], page: number) => {
-    const startIndex = (page - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-
-    return characters.slice(startIndex, endIndex);
-  };
-
-  loadCharacters = async (page: number, lastSearch: string) => {
-    const { allCharacters } = this.state;
-
-    const filteredCharacters = this.getFilteredCharacters(allCharacters, lastSearch);
-    const charactersForPage = this.getCharactersForPage(filteredCharacters, page);
-    const totalPages = this.getTotalPages(filteredCharacters);
-
-    this.setState({
-      charactersForPage,
-      filteredCharacters,
-      totalPages,
-      currentPage: page,
-      errorCode: null,
-      isEmpty: filteredCharacters.length === 0,
-    });
-  };
-
   handleError = (err: unknown) => {
     this.setState({
-      allCharacters: [],
-      filteredCharacters: [],
-      charactersForPage: [],
-      totalPages: 0,
       isLoading: false,
       errorCode: getStatusCode(err),
     });
@@ -147,23 +79,23 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   };
 
   changePage = (page: number) => {
-    const { filteredCharacters } = this.state;
-
     this.setState({ isLoading: true });
 
     this.pageChangeTimeoutId = setTimeout(() => {
-      const charactersForPage = this.getCharactersForPage(filteredCharacters, page);
-      this.setState({ currentPage: page, isLoading: false, charactersForPage });
-
+      this.loadCharacters();
       window.scrollTo({ top: 0, behavior: 'smooth' });
-
       this.pageChangeTimeoutId = null;
+      this.setState({ isLoading: false, currentPage: page });
     }, PAGE_CHANGE_DELAY_MS);
   };
 
   handleSearch = (userInput: string) => {
     const trimmedSearch = userInput.trim().toLowerCase();
     const { lastSearch, isLoading } = this.state;
+
+    if (this.state.errorCode) {
+      this.setState({ errorCode: null });
+    }
 
     if (isLoading || trimmedSearch === lastSearch) {
       return;
@@ -172,22 +104,47 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     saveLastSearch(trimmedSearch);
 
     this.setState({ lastSearch: trimmedSearch }, () => {
-      this.loadCharacters(1, trimmedSearch);
+      this.loadCharacters();
     });
   };
 
+  handleBackToResults = () => {
+    this.setState({ errorCode: null });
+    this.loadCharacters();
+  };
+
+  handleBackToAllCharacters = () => {
+    saveLastSearch('');
+
+    this.setState(
+      {
+        lastSearch: getLastSearch(),
+        currentPage: 1,
+        totalPages: 0,
+        charactersForPage: [],
+        errorCode: null,
+      },
+      () => {
+        this.loadCharacters();
+      },
+    );
+  };
+
   render(): React.ReactNode {
-    const { lastSearch, charactersForPage, currentPage, totalPages, isLoading, isEmpty } =
-      this.state;
+    const { lastSearch, charactersForPage, currentPage, totalPages, isLoading } = this.state;
 
     return (
       <>
         <SearchField initialValue={lastSearch} onSearch={this.handleSearch} />
         {this.state.errorCode ? (
-          <UIErrorNotification errorCode={this.state.errorCode} />
+          <UIErrorNotification
+            handleAllCharacters={this.handleBackToAllCharacters}
+            handleBackToResults={this.handleBackToResults}
+            errorCode={this.state.errorCode}
+          />
         ) : (
           <>
-            <ResultsBlock characters={charactersForPage} isLoading={isLoading} isEmpty={isEmpty} />
+            <ResultsBlock characters={charactersForPage} isLoading={isLoading} />
             {totalPages > 1 && (
               <UIPagination
                 currentPage={currentPage}

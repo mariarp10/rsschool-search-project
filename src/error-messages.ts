@@ -1,6 +1,5 @@
 export const ErrorMessages: Record<number, string> = {
-  404: `Unfortunately we couldn't find what you're looking for.`,
-  429: `You're sending requests too often, please wait a bit longer between requests.`,
+  404: `Looks like this this character wasn't in the show. Try looking up someone else`,
   500: 'Something is wrong we the server.',
-  1: `Looks like we couldn't load data properly. We know about the issue and are working to fix it.`,
+  1: `Please wait a bit longer when switching between pages`,
 };
