@@ -21,37 +21,6 @@ class Api {
     return name ? `?name=${name}&page=${page}` : `?page=${page}`;
   }
 
-  // async getAllCharacters(page: number): Promise<TCharacterResponse> {
-  //   const key = this._cacheKey(page);
-
-  //   const url = new URL(`${this._url}/character`);
-  //   url.searchParams.set('page', String(page));
-
-  //   if (this._cache.has(key)) {
-  //     return this._cache.get(key);
-  //   }
-
-  //   const response = await fetch(url);
-  //   const data = await checkResponse(response);
-
-  //   this._cache.set(key, data);
-  //   return data;
-  // }
-
-  // async getCharacterByName(page: number, name: string): Promise<TCharacterResponse> {
-  //   const key = this._cacheKey(page, name);
-
-  //   const url = new URL(`${this._url}/character`);
-  //   url.searchParams.set('name', name);
-  //   url.searchParams.set('page', String(page));
-
-  //   const response = await fetch(url);
-  //   const data = await checkResponse(response);
-
-  //   this._cache.set(key, data);
-  //   return data;
-  // }
-
   async getCharacters(page: number, name?: string): Promise<TCharacterResponse> {
     const key = this._cacheKey(page, name);
 

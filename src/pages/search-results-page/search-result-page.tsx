@@ -103,7 +103,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
 
     saveLastSearch(trimmedSearch);
 
-    this.setState({ lastSearch: trimmedSearch }, () => {
+    this.setState({ lastSearch: trimmedSearch, currentPage: 1 }, () => {
       this.loadCharacters();
     });
   };
