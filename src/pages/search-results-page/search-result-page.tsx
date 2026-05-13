@@ -45,6 +45,8 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   }
 
   loadCharacters = async () => {
+    this.setState({ errorCode: null });
+
     try {
       const { info, results } = this.state.lastSearch
         ? await api.getCharacters(this.state.currentPage, this.state.lastSearch)
@@ -53,8 +55,10 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
       this.setState({
         totalPages: info.pages,
         charactersForPage: results,
+        isLoading: false,
       });
     } catch (err) {
+      this.setState((prev) => ({ currentPage: prev.currentPage - 1 }));
       this.handleError(err);
     }
   };
@@ -82,10 +86,11 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     this.setState({ isLoading: true });
 
     this.pageChangeTimeoutId = setTimeout(() => {
-      this.loadCharacters();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      this.pageChangeTimeoutId = null;
-      this.setState({ isLoading: false, currentPage: page });
+      this.setState({ currentPage: page }, () => {
+        this.loadCharacters();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.pageChangeTimeoutId = null;
+      });
     }, PAGE_CHANGE_DELAY_MS);
   };
 
@@ -108,54 +113,25 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     });
   };
 
-  handleBackToResults = () => {
-    this.setState({ errorCode: null });
-    this.loadCharacters();
-  };
-
-  handleBackToAllCharacters = () => {
-    saveLastSearch('');
-
-    this.setState(
-      {
-        lastSearch: getLastSearch(),
-        currentPage: 1,
-        totalPages: 0,
-        charactersForPage: [],
-        errorCode: null,
-      },
-      () => {
-        this.loadCharacters();
-      },
-    );
-  };
-
   render(): React.ReactNode {
     const { lastSearch, charactersForPage, currentPage, totalPages, isLoading } = this.state;
 
     return (
       <>
         <SearchField initialValue={lastSearch} onSearch={this.handleSearch} />
-        {this.state.errorCode ? (
-          <UIErrorNotification
-            handleAllCharacters={this.handleBackToAllCharacters}
-            handleBackToResults={this.handleBackToResults}
-            errorCode={this.state.errorCode}
-          />
-        ) : (
-          <>
-            <ResultsBlock characters={charactersForPage} isLoading={isLoading} />
-            {totalPages > 1 && (
-              <UIPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                isLoading={isLoading}
-                handleNextPage={this.handleNextPage}
-                handlePreviousPage={this.handlePreviousPage}
-              />
-            )}
-          </>
-        )}
+        {this.state.errorCode && <UIErrorNotification errorCode={this.state.errorCode} />}
+        <>
+          {totalPages > 1 && (
+            <UIPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              isLoading={isLoading}
+              handleNextPage={this.handleNextPage}
+              handlePreviousPage={this.handlePreviousPage}
+            />
+          )}
+          <ResultsBlock characters={charactersForPage} isLoading={isLoading} />
+        </>
         <Footer />
       </>
     );

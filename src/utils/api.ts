@@ -11,33 +11,40 @@ const baseURL = 'https://rickandmortyapi.com/api';
 
 class Api {
   _url: string;
-  _cache: Map<string, TCharacterResponse> = new Map();
+  _cacheName = 'rick-and-morty-cache';
 
   constructor(url: string) {
     this._url = url;
   }
 
-  private _cacheKey(page: number, name?: string): string {
-    return name ? `?name=${name}&page=${page}` : `?page=${page}`;
+  private async _getFromCache(url: string): Promise<Response | undefined> {
+    const cache = await caches.open(this._cacheName);
+    const cachedResponse = await cache.match(url);
+    return cachedResponse;
+  }
+
+  private async _addToCache(url: string, response: Response): Promise<void> {
+    const cache = await caches.open(this._cacheName);
+    await cache.put(url, response.clone());
   }
 
   async getCharacters(page: number, name?: string): Promise<TCharacterResponse> {
-    const key = this._cacheKey(page, name);
-
     const url = new URL(`${this._url}/character`);
     if (name) {
       url.searchParams.set('name', name);
     }
     url.searchParams.set('page', String(page));
 
-    if (this._cache.has(key)) {
-      return this._cache.get(key);
+    const cached = await this._getFromCache(url.toString());
+    if (cached) {
+      return cached.json();
     }
 
     const response = await fetch(url);
-    const data = await checkResponse(response);
+    const data = await checkResponse(response.clone());
 
-    this._cache.set(key, data);
+    await this._addToCache(url.toString(), response);
+
     return data;
   }
 }

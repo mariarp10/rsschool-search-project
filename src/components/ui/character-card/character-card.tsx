@@ -17,6 +17,10 @@ export class CharacterCard extends React.Component<TCharacterCardProps> {
               src={`${this.props.character.image}`}
               alt={`Picture of ${this.props.character.name}`}
               loading="lazy"
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = '/images/placeholder-image.png';
+              }}
             ></img>
             <div className={styles.overlay}>
               <span className={styles.name}>{this.props.character.name}</span>
