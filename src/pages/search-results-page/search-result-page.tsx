@@ -56,6 +56,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
         totalPages: info.pages,
         charactersForPage: results,
         isLoading: false,
+        errorCode: null,
       });
     } catch (err) {
       this.setState((prev) => ({ currentPage: prev.currentPage - 1 }));
@@ -68,6 +69,10 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
       isLoading: false,
       errorCode: getStatusCode(err),
     });
+
+    if (!(err instanceof TypeError)) {
+      this.setState({ charactersForPage: [], currentPage: 1, totalPages: 0 });
+    }
   };
 
   handleNextPage = () => {
@@ -98,10 +103,6 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
     const trimmedSearch = userInput.trim().toLowerCase();
     const { lastSearch, isLoading } = this.state;
 
-    if (this.state.errorCode) {
-      this.setState({ errorCode: null });
-    }
-
     if (isLoading || trimmedSearch === lastSearch) {
       return;
     }
@@ -114,24 +115,29 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   };
 
   render(): React.ReactNode {
-    const { lastSearch, charactersForPage, currentPage, totalPages, isLoading } = this.state;
+    const { lastSearch, charactersForPage, currentPage, totalPages, isLoading, errorCode } =
+      this.state;
 
     return (
       <>
         <SearchField initialValue={lastSearch} onSearch={this.handleSearch} />
-        {this.state.errorCode && <UIErrorNotification errorCode={this.state.errorCode} />}
-        <>
-          {totalPages > 1 && (
-            <UIPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              isLoading={isLoading}
-              handleNextPage={this.handleNextPage}
-              handlePreviousPage={this.handlePreviousPage}
-            />
-          )}
-          <ResultsBlock characters={charactersForPage} isLoading={isLoading} />
-        </>
+        {errorCode && errorCode !== 1 ? (
+          <UIErrorNotification errorCode={errorCode} />
+        ) : (
+          <>
+            <UIErrorNotification errorCode={errorCode} />
+            {totalPages > 1 && (
+              <UIPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                isLoading={isLoading}
+                handleNextPage={this.handleNextPage}
+                handlePreviousPage={this.handlePreviousPage}
+              />
+            )}
+            <ResultsBlock characters={charactersForPage} isLoading={isLoading} />
+          </>
+        )}
         <Footer />
       </>
     );
