@@ -34,8 +34,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   componentDidMount(): void {
     const lastSearch = getLastSearch();
 
-    this.setState({ lastSearch });
-    this.loadCharacters();
+    this.setState({ lastSearch }, () => this.loadCharacters());
   }
 
   componentWillUnmount(): void {
