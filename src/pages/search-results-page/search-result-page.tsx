@@ -44,7 +44,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
   }
 
   loadCharacters = async () => {
-    this.setState({ errorCode: null });
+    this.setState({ errorCode: null, isLoading: true });
 
     try {
       const { info, results } = this.state.lastSearch
@@ -124,7 +124,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
           <UIErrorNotification errorCode={errorCode} />
         ) : (
           <>
-            <UIErrorNotification errorCode={errorCode} />
+            {errorCode === 1 && <UIErrorNotification errorCode={errorCode} />}
             {totalPages > 1 && (
               <UIPagination
                 currentPage={currentPage}

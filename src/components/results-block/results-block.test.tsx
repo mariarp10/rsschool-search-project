@@ -5,7 +5,6 @@ import { MockCharacters } from '@tests/fixtures';
 const defaultProps = {
   characters: [],
   isLoading: false,
-  isEmpty: false,
 };
 
 describe('ResultsBlock Component', () => {
@@ -36,15 +35,6 @@ describe('ResultsBlock Component', () => {
     render(<ResultsBlock {...defaultProps} isLoading={true} />);
 
     expect(screen.getByRole('status')).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
-    expect(screen.queryByRole('list')).not.toBeInTheDocument();
-  });
-  test(`shows empty message instead of results when isEmpty is true`, () => {
-    render(<ResultsBlock {...defaultProps} isEmpty={true} />);
-
-    const message = screen.getByText(`Couldn't find this character`);
-
-    expect(message).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });

@@ -31,7 +31,6 @@ export default defineConfig({
         'src/main.tsx',
         'src/error-messages.ts',
         'src/components/**/index.ts',
-        'src/components/ui/**',
         'src/tests/**',
         'src/App.tsx',
       ],

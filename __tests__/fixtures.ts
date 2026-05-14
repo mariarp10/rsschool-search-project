@@ -74,4 +74,24 @@ export const MockCharacters: TCharacter[] = [
 export const ManyCharacters = Array.from({ length: 23 }, (_, i) => ({
   id: i + 1,
   name: `Character ${i + 1}`,
+  status: 'Alive',
+  species: 'Human',
+  type: '',
+  gender: 'Female',
+  origin: {
+    name: 'Earth (Replacement Dimension)',
+    url: 'https://link-to-api.com/location/20',
+  },
+  location: {
+    name: 'Earth (Replacement Dimension)',
+    url: 'https://link-to-api.com/location/20',
+  },
+  image: 'https://link-to-api.com/character/avatar/3.jpeg',
+  episode: [
+    'https://link-to-api.com/episode/6',
+    'https://link-to-api.com/episode/7',
+    'https://link-to-api.com/episode/8',
+  ],
+  url: 'https://link-to-api.com/character/3',
+  created: '2017-11-04T19:09:56.428Z',
 }));

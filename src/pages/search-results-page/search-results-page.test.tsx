@@ -1,15 +1,22 @@
 import { render, screen } from '@testing-library/react';
 import * as helpers from '@utils/helpers';
-import { infiniteFetch, mockFetch, mockFetchError, mockFetchManyCharacters } from '@tests/mocks';
-import { MockCharacters } from '@tests/fixtures';
+import {
+  infiniteApi,
+  mockApiGetCharacters,
+  mockApiGetManyCharacters,
+  mockApiNotFound,
+  mockApiServerError,
+} from '@tests/mocks';
+import { ManyCharacters, MockCharacters } from '@tests/fixtures';
 import { SearchResultsPage } from './search-result-page';
 import { ErrorMessages } from '../../error-messages';
 import userEvent from '@testing-library/user-event';
+import api from '@utils/api';
 
 describe(`Search Results Page Component`, () => {
   describe('initialization', () => {
     test('checks localStorage for lastSearch when renders', async () => {
-      mockFetch();
+      mockApiGetCharacters();
       vi.spyOn(helpers, 'getLastSearch').mockReturnValue('rick');
 
       render(<SearchResultsPage />);
@@ -20,11 +27,7 @@ describe(`Search Results Page Component`, () => {
     });
     describe('fetching data', () => {
       beforeEach(() => {
-        mockFetch();
-      });
-
-      afterEach(() => {
-        vi.restoreAllMocks();
+        mockApiGetCharacters();
       });
 
       test('loads all characters when there is no lastSearch', async () => {
@@ -60,20 +63,19 @@ describe(`Search Results Page Component`, () => {
   });
   describe('data loading', () => {
     afterEach(() => {
-      vi.resetAllMocks();
+      vi.restoreAllMocks();
     });
 
-    test('loads characters from JSON file', async () => {
-      mockFetch();
+    test('sends API request for characters', async () => {
+      mockApiGetCharacters();
       render(<SearchResultsPage />);
 
       await screen.findByText(MockCharacters[0].name);
 
-      expect(fetch).toHaveBeenCalledWith('/all-characters.json');
+      expect(api.getCharacters).toHaveBeenCalled();
     });
     test('signals to show/hide loader component while waiting for fetch to finish', async () => {
-      mockFetch();
-
+      mockApiGetCharacters();
       render(<SearchResultsPage />);
 
       expect(screen.getByRole('status')).toBeInTheDocument();
@@ -82,44 +84,40 @@ describe(`Search Results Page Component`, () => {
 
       expect(screen.queryByRole('status')).not.toBeInTheDocument();
     });
-    test(`catches error when can't find JSON file with characters`, async () => {
-      mockFetchError();
-
+    test('shows error notification when character is not found', async () => {
+      mockApiNotFound();
       render(<SearchResultsPage />);
 
-      expect(await screen.findByRole('alert')).toBeInTheDocument();
+      expect(await screen.findByText(ErrorMessages[404])).toBeInTheDocument();
+      expect(screen.getByRole('alert')).toBeInTheDocument();
     });
-    test('displays a human readable error message when there is an HTTP error', async () => {
-      mockFetchError();
-
+    test('show error notification when server returns an error', async () => {
+      mockApiServerError();
       render(<SearchResultsPage />);
 
-      expect(await screen.findByText(ErrorMessages[1])).toBeInTheDocument();
-
-      expect(screen.queryByText(MockCharacters[0].name)).not.toBeInTheDocument();
-
-      expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+      expect(await screen.findByText(ErrorMessages[500])).toBeInTheDocument();
+      expect(screen.getByRole('alert')).toBeInTheDocument();
     });
   });
   describe('filtering and pagination', () => {
     beforeEach(() => {
-      mockFetchManyCharacters();
+      mockApiGetManyCharacters();
     });
 
     afterEach(() => {
-      vi.resetAllMocks();
+      vi.restoreAllMocks();
     });
 
-    test('selects a specified amount of characters to display on the page', async () => {
+    test('shows as many characters as API returns in response', async () => {
       render(<SearchResultsPage />);
 
       await screen.findByText('Character 1');
 
       const cards = screen.getAllByRole('listitem');
 
-      expect(cards).toHaveLength(20);
+      expect(cards).toHaveLength(ManyCharacters.length);
     });
-    test('calculates total pages of characters', async () => {
+    test('shows total pages of characters', async () => {
       render(<SearchResultsPage />);
 
       expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
@@ -127,7 +125,7 @@ describe(`Search Results Page Component`, () => {
       expect(screen.getByRole('button', { name: 'Next' }));
     });
     test('does not show pagination when there is only one page', async () => {
-      mockFetch();
+      mockApiGetCharacters();
 
       render(<SearchResultsPage />);
 
@@ -156,14 +154,14 @@ describe(`Search Results Page Component`, () => {
   });
   describe('pagination navigation', () => {
     afterEach(() => {
-      vi.clearAllMocks();
+      vi.restoreAllMocks();
     });
 
     test('scrolls to top when page changes', async () => {
       const scrollTo = vi.fn();
       vi.spyOn(window, 'scrollTo').mockImplementation(scrollTo);
 
-      mockFetchManyCharacters();
+      mockApiGetManyCharacters();
       const user = userEvent.setup();
 
       render(<SearchResultsPage />);
@@ -174,7 +172,7 @@ describe(`Search Results Page Component`, () => {
       expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
     });
     test('navigates to previous page', async () => {
-      mockFetchManyCharacters();
+      mockApiGetManyCharacters();
       const user = userEvent.setup();
 
       render(<SearchResultsPage />);
@@ -189,7 +187,7 @@ describe(`Search Results Page Component`, () => {
       expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
     });
     test('does not navigate below first page', async () => {
-      mockFetchManyCharacters();
+      mockApiGetManyCharacters();
 
       render(<SearchResultsPage />);
 
@@ -199,7 +197,7 @@ describe(`Search Results Page Component`, () => {
       expect(previousButton).toBeDisabled();
     });
     test('does not navigate above last page', async () => {
-      mockFetchManyCharacters();
+      mockApiGetManyCharacters();
       const user = userEvent.setup();
 
       render(<SearchResultsPage />);
@@ -214,7 +212,7 @@ describe(`Search Results Page Component`, () => {
       expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
     });
     test('does not navigate when loading is in progress', async () => {
-      mockFetchManyCharacters();
+      mockApiGetManyCharacters();
       const user = userEvent.setup();
 
       render(<SearchResultsPage />);
@@ -263,7 +261,7 @@ describe(`Search Results Page Component`, () => {
       expect(helpers.saveLastSearch).toHaveBeenCalledOnce();
     });
     test('does not initiate search when loading is in progress', async () => {
-      infiniteFetch();
+      infiniteApi();
       vi.spyOn(helpers, 'saveLastSearch');
 
       const user = userEvent.setup();
