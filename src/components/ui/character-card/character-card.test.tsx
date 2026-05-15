@@ -8,7 +8,7 @@ describe('CharacterCard Component', () => {
   test('shows placeholder image when image request fails with an error', () => {
     render(<CharacterCard character={character} />);
 
-    const img = screen.getByRole('img', { name: `Picture of ${character.name}` });
+    const img = screen.getByRole('img', { name: 'Picture of character' });
 
     fireEvent.error(img);
 

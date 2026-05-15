@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { ResultsBlock } from './results-block';
+import { Results } from './results';
 import { MockCharacters } from '@tests/fixtures';
 
 const defaultProps = {
@@ -7,9 +7,9 @@ const defaultProps = {
   isLoading: false,
 };
 
-describe('ResultsBlock Component', () => {
+describe('Results Component', () => {
   test(`renders cards with results on the screen`, () => {
-    render(<ResultsBlock {...defaultProps} characters={MockCharacters} />);
+    render(<Results {...defaultProps} characters={MockCharacters} />);
 
     const title = screen.getByRole('heading', { level: 2 });
     const charactersList = screen.getByRole('list');
@@ -18,23 +18,23 @@ describe('ResultsBlock Component', () => {
     expect(charactersList).toBeInTheDocument();
   });
   test(`renders correct number of items`, () => {
-    render(<ResultsBlock {...defaultProps} characters={MockCharacters} />);
+    render(<Results {...defaultProps} characters={MockCharacters} />);
 
     const cards = screen.getAllByRole('listitem');
 
     expect(cards.length).toEqual(MockCharacters.length);
   });
   test(`shows and removes loader while waiting for results`, () => {
-    const { rerender } = render(<ResultsBlock {...defaultProps} isLoading={true} />);
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    const { rerender } = render(<Results {...defaultProps} isLoading={true} />);
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    rerender(<ResultsBlock {...defaultProps} characters={MockCharacters} isLoading={false} />);
-    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    rerender(<Results {...defaultProps} characters={MockCharacters} isLoading={false} />);
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
   test(`shows only loader when isLoading is true`, () => {
-    render(<ResultsBlock {...defaultProps} isLoading={true} />);
+    render(<Results {...defaultProps} isLoading={true} />);
 
-    expect(screen.getByRole('status')).toBeInTheDocument();
+    expect(screen.getByRole('progressbar')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
@@ -42,11 +42,11 @@ describe('ResultsBlock Component', () => {
     const initialCharacters = [MockCharacters[0]];
     const changedCharacters = MockCharacters.slice(1);
 
-    const { rerender } = render(<ResultsBlock {...defaultProps} characters={initialCharacters} />);
+    const { rerender } = render(<Results {...defaultProps} characters={initialCharacters} />);
 
     expect(screen.getByText(initialCharacters[0].name)).toBeInTheDocument();
 
-    rerender(<ResultsBlock {...defaultProps} characters={changedCharacters} />);
+    rerender(<Results {...defaultProps} characters={changedCharacters} />);
 
     expect(screen.queryByText(MockCharacters[0].name)).not.toBeInTheDocument();
 

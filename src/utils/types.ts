@@ -23,7 +23,7 @@ export type TCharacterResponse = {
   info: {
     count: number;
     pages: number;
-    next: string;
+    next: null | string;
     prev: null | string;
   };
   results: TCharacter[];

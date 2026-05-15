@@ -2,7 +2,7 @@ import React from 'react';
 import { UIButton } from '@ui/button';
 import styles from './pagination.module.css';
 
-type UIPaginationProps = {
+type TUIPaginationProps = {
   currentPage: number;
   totalPages: number;
   isLoading: boolean;
@@ -10,7 +10,7 @@ type UIPaginationProps = {
   handleNextPage: () => void;
 };
 
-export class UIPagination extends React.Component<UIPaginationProps> {
+export class UIPagination extends React.Component<TUIPaginationProps> {
   render(): React.ReactNode {
     return (
       <div role="navigation" className={styles.container}>
@@ -18,7 +18,7 @@ export class UIPagination extends React.Component<UIPaginationProps> {
           text="Previous"
           handleClick={this.props.handlePreviousPage}
           disabled={this.props.isLoading || this.props.currentPage === 1}
-        ></UIButton>
+        />
         <span>
           Page {this.props.currentPage} of {this.props.totalPages}
         </span>
@@ -26,7 +26,7 @@ export class UIPagination extends React.Component<UIPaginationProps> {
           text="Next"
           handleClick={this.props.handleNextPage}
           disabled={this.props.isLoading || this.props.currentPage === this.props.totalPages}
-        ></UIButton>
+        />
       </div>
     );
   }

@@ -31,7 +31,9 @@ describe(`ErrorBoundry Component`, () => {
 
     const reloadButton = screen.getByRole('button', { name: 'Reload page' });
 
-    expect(screen.getByText('The app has crashed')).toBeInTheDocument();
+    expect(
+      screen.getByText('The thrown error has been successfully caught by the ErrorBoundary'),
+    ).toBeInTheDocument();
     expect(reloadButton).toBeInTheDocument();
 
     await user.click(reloadButton);

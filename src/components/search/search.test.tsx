@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { SearchField } from './search-field';
+import { Search } from './search';
 
-describe('SearchField Component', () => {
+describe('Search Component', () => {
   test(`renders input, search button, and hint`, () => {
-    render(<SearchField initialValue="" onSearch={vi.fn()} />);
+    render(<Search initialValue="" onSearch={vi.fn()} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
     const searchButton = screen.getByRole('button', { name: /search/i });
@@ -17,14 +17,14 @@ describe('SearchField Component', () => {
     expect(hintElement).toBeInTheDocument();
   });
   test(`displays initial value from props`, () => {
-    render(<SearchField initialValue="Rick" onSearch={vi.fn()} />);
+    render(<Search initialValue="Rick" onSearch={vi.fn()} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
     expect(inputElement).toHaveValue('Rick');
   });
   test(`displays empty string when initial value is empty`, () => {
-    render(<SearchField initialValue="" onSearch={vi.fn()} />);
+    render(<Search initialValue="" onSearch={vi.fn()} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
@@ -33,7 +33,7 @@ describe('SearchField Component', () => {
   test(`updates input value when user types`, async () => {
     const user = userEvent.setup();
 
-    render(<SearchField initialValue="" onSearch={vi.fn()} />);
+    render(<Search initialValue="" onSearch={vi.fn()} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
@@ -45,7 +45,7 @@ describe('SearchField Component', () => {
     const user = userEvent.setup();
     const handleSearch = vi.fn();
 
-    render(<SearchField initialValue="" onSearch={handleSearch} />);
+    render(<Search initialValue="" onSearch={handleSearch} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
     const searchButton = screen.getByRole('button', { name: /search/i });
@@ -60,7 +60,7 @@ describe('SearchField Component', () => {
     const user = userEvent.setup();
     const handleSearch = vi.fn();
 
-    render(<SearchField initialValue="" onSearch={handleSearch} />);
+    render(<Search initialValue="" onSearch={handleSearch} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
@@ -71,13 +71,13 @@ describe('SearchField Component', () => {
     expect(handleSearch).toHaveBeenCalledWith('Summer');
   });
   test(`updates input value when initialValue prop changes`, () => {
-    const { rerender } = render(<SearchField initialValue="Rick" onSearch={vi.fn()} />);
+    const { rerender } = render(<Search initialValue="Rick" onSearch={vi.fn()} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
     expect(inputElement).toHaveValue('Rick');
 
-    rerender(<SearchField initialValue="Morty" onSearch={vi.fn()} />);
+    rerender(<Search initialValue="Morty" onSearch={vi.fn()} />);
 
     expect(inputElement).toHaveValue('Morty');
   });

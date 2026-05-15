@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from './button.module.css';
 
-type UIButtonProps = {
+type TUIButtonProps = {
   text: string;
   disabled?: boolean;
   handleClick: () => void;
   extraClass?: string;
 };
-export class UIButton extends React.Component<UIButtonProps> {
+export class UIButton extends React.Component<TUIButtonProps> {
   render(): React.ReactNode {
     return (
       <button

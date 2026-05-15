@@ -1,7 +1,7 @@
 import React from 'react';
 import type { TCharacter } from '@utils/types';
-import { SearchField } from '@components/search-field';
-import { ResultsBlock } from '@components/results-block';
+import { Search } from '@components/search';
+import { Results } from '@components/results';
 import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 import { UIErrorNotification } from '@ui/error-notification';
@@ -10,7 +10,7 @@ import api from '@utils/api';
 
 const PAGE_CHANGE_DELAY_MS = 400;
 
-type SearchState = {
+type THomePageState = {
   lastSearch: string;
   currentPage: number;
   totalPages: number;
@@ -19,10 +19,10 @@ type SearchState = {
   errorCode: number | null;
 };
 
-export class SearchResultsPage extends React.Component<Record<string, never>, SearchState> {
+export class HomePage extends React.Component<Record<string, never>, THomePageState> {
   pageChangeTimeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  state: SearchState = {
+  state: THomePageState = {
     lastSearch: '',
     currentPage: 1,
     totalPages: 0,
@@ -119,7 +119,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
 
     return (
       <>
-        <SearchField initialValue={lastSearch} onSearch={this.handleSearch} />
+        <Search initialValue={lastSearch} onSearch={this.handleSearch} />
         {errorCode && errorCode !== 1 ? (
           <UIErrorNotification errorCode={errorCode} />
         ) : (
@@ -134,7 +134,7 @@ export class SearchResultsPage extends React.Component<Record<string, never>, Se
                 handlePreviousPage={this.handlePreviousPage}
               />
             )}
-            <ResultsBlock characters={charactersForPage} isLoading={isLoading} />
+            <Results characters={charactersForPage} isLoading={isLoading} />
           </>
         )}
         <Footer />

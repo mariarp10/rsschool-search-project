@@ -8,8 +8,8 @@ import {
   mockApiServerError,
 } from '@tests/mocks';
 import { ManyCharacters, MockCharacters } from '@tests/fixtures';
-import { SearchResultsPage } from './search-result-page';
-import { ErrorMessages } from '../../error-messages';
+import { HomePage } from './home';
+import { ErrorMessages } from '../../utils/constants';
 import userEvent from '@testing-library/user-event';
 import api from '@utils/api';
 
@@ -19,7 +19,7 @@ describe(`Search Results Page Component`, () => {
       mockApiGetCharacters();
       vi.spyOn(helpers, 'getLastSearch').mockReturnValue('rick');
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       expect(helpers.getLastSearch).toHaveBeenCalledTimes(1);
 
@@ -33,7 +33,7 @@ describe(`Search Results Page Component`, () => {
       test('loads all characters when there is no lastSearch', async () => {
         vi.spyOn(helpers, 'getLastSearch').mockReturnValue('');
 
-        render(<SearchResultsPage />);
+        render(<HomePage />);
 
         for (const character of MockCharacters) {
           expect(await screen.findByText(character.name)).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe(`Search Results Page Component`, () => {
       test('loads last search characters when there is lastSearch', async () => {
         vi.spyOn(helpers, 'getLastSearch').mockReturnValue('rick');
 
-        render(<SearchResultsPage />);
+        render(<HomePage />);
 
         const filteredCharacters = MockCharacters.filter((character) =>
           character.name.toLowerCase().includes('rick'),
@@ -68,7 +68,7 @@ describe(`Search Results Page Component`, () => {
 
     test('sends API request for characters', async () => {
       mockApiGetCharacters();
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await screen.findByText(MockCharacters[0].name);
 
@@ -76,24 +76,24 @@ describe(`Search Results Page Component`, () => {
     });
     test('signals to show/hide loader component while waiting for fetch to finish', async () => {
       mockApiGetCharacters();
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
-      expect(screen.getByRole('status')).toBeInTheDocument();
+      expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
       await screen.findByText(MockCharacters[0].name);
 
-      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
     test('shows error notification when character is not found', async () => {
       mockApiNotFound();
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       expect(await screen.findByText(ErrorMessages[404])).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
     test('show error notification when server returns an error', async () => {
       mockApiServerError();
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       expect(await screen.findByText(ErrorMessages[500])).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -109,7 +109,7 @@ describe(`Search Results Page Component`, () => {
     });
 
     test('shows as many characters as API returns in response', async () => {
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await screen.findByText('Character 1');
 
@@ -118,7 +118,7 @@ describe(`Search Results Page Component`, () => {
       expect(cards).toHaveLength(ManyCharacters.length);
     });
     test('shows total pages of characters', async () => {
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Previous' }));
@@ -127,7 +127,7 @@ describe(`Search Results Page Component`, () => {
     test('does not show pagination when there is only one page', async () => {
       mockApiGetCharacters();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
 
@@ -136,7 +136,7 @@ describe(`Search Results Page Component`, () => {
     test('resets to first page when new search is performed', async () => {
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await screen.findByText('Page 1 of 2');
 
@@ -164,7 +164,7 @@ describe(`Search Results Page Component`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await user.click(await screen.findByRole('button', { name: 'Next' }));
       await screen.findByText('Page 2 of 2');
@@ -175,7 +175,7 @@ describe(`Search Results Page Component`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       const nextButton = await screen.findByRole('button', { name: 'Next' });
       const previousButton = screen.getByRole('button', { name: 'Previous' });
@@ -189,7 +189,7 @@ describe(`Search Results Page Component`, () => {
     test('does not navigate below first page', async () => {
       mockApiGetManyCharacters();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await screen.findByText('Page 1 of 2');
 
@@ -200,7 +200,7 @@ describe(`Search Results Page Component`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await screen.findByRole('navigation');
 
@@ -215,7 +215,7 @@ describe(`Search Results Page Component`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       await user.click(await screen.findByRole('button', { name: 'Next' }));
 
@@ -230,7 +230,7 @@ describe(`Search Results Page Component`, () => {
       vi.spyOn(helpers, 'saveLastSearch');
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       const input = screen.getByRole('textbox');
       const button = screen.getByRole('button', { name: 'search' });
@@ -245,7 +245,7 @@ describe(`Search Results Page Component`, () => {
       vi.spyOn(helpers, 'saveLastSearch');
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       const input = screen.getByRole('textbox');
       const button = screen.getByRole('button', { name: 'search' });
@@ -266,7 +266,7 @@ describe(`Search Results Page Component`, () => {
 
       const user = userEvent.setup();
 
-      render(<SearchResultsPage />);
+      render(<HomePage />);
 
       const input = screen.getByRole('textbox');
       const button = screen.getByRole('button', { name: 'search' });

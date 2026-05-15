@@ -1,9 +1,9 @@
 import React from 'react';
 
-type State = { hasError: boolean };
+type TErrorBoundaryState = { hasError: boolean };
 
-export class ErrorBoundary extends React.Component<React.PropsWithChildren, State> {
-  state: State = { hasError: false };
+export class ErrorBoundary extends React.Component<React.PropsWithChildren, TErrorBoundaryState> {
+  state: TErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError() {
     return { hasError: true };
@@ -17,7 +17,7 @@ export class ErrorBoundary extends React.Component<React.PropsWithChildren, Stat
     if (this.state.hasError) {
       return (
         <>
-          <p>The app has crashed</p>
+          <p>The thrown error has been successfully caught by the ErrorBoundary</p>
           <button onClick={() => window.location.reload()}>Reload page</button>
         </>
       );

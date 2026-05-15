@@ -12,7 +12,6 @@
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "prepare": "husky",
-    "generate:characters": "node scripts/get-all-characters-json.js",
     "test": "vitest --coverage",
     "test:run": "vitest run"
   },

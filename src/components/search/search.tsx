@@ -1,24 +1,23 @@
 import React from 'react';
 import { UIButton } from '@ui/button';
 import { UIInput } from '@ui/input';
+import styles from './search.module.css';
 
-import styles from './search-field.module.css';
-
-type SearchFieldProps = {
+type TSearchProps = {
   initialValue: string;
   onSearch: (value: string) => void;
 };
 
-type SearchFieldState = {
+type TSearchState = {
   value: string;
 };
 
-export class SearchField extends React.Component<SearchFieldProps, SearchFieldState> {
-  state: SearchFieldState = {
+export class Search extends React.Component<TSearchProps, TSearchState> {
+  state: TSearchState = {
     value: this.props.initialValue,
   };
 
-  componentDidUpdate(prevProps: SearchFieldProps) {
+  componentDidUpdate(prevProps: TSearchProps) {
     if (prevProps.initialValue !== this.props.initialValue) {
       this.setState({ value: this.props.initialValue });
     }

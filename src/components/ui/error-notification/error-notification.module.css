@@ -11,14 +11,3 @@
   display: block;
   color: var(--color-error);
 }
-
-.buttons_container {
-  display: flex;
-  width: 100%;
-  gap: 40px;
-}
-
-.big_button {
-  height: 45px;
-  width: 65%;
-}

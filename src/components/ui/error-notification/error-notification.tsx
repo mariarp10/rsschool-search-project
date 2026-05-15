@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './error-notification.module.css';
-import { ErrorMessages } from '../../../error-messages';
+import { ErrorMessages } from '@utils/constants';
 
-type UIErrorNotificationProps = {
+type TUIErrorNotificationProps = {
   errorCode: number;
 };
 
-export class UIErrorNotification extends React.Component<UIErrorNotificationProps> {
+export class UIErrorNotification extends React.Component<TUIErrorNotificationProps> {
   getErrorMessage() {
     return ErrorMessages[this.props.errorCode];
   }
