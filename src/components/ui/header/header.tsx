@@ -1,12 +1,13 @@
 import React from 'react';
 import styles from './header.module.css';
+import classNames from 'classnames/bind';
 
-export class Header extends React.Component {
-  render(): React.ReactNode {
-    return (
-      <header className={styles.header}>
-        <h1 className={styles.title}>Rick and Morty Search</h1>
-      </header>
-    );
-  }
-}
+const cn = classNames.bind(styles);
+
+export const Header: React.FC = () => {
+  return (
+    <header className={cn('header')}>
+      <h1 className={cn('title')}>Rick and Morty Search</h1>
+    </header>
+  );
+};

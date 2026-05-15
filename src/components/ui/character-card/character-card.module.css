@@ -1,8 +1,8 @@
-.list_item {
+.list-item {
   list-style: none;
 }
 
-.card_container {
+.card-container {
   width: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 20px;
@@ -15,14 +15,14 @@
     box-shadow 0.2s ease;
   padding: 0;
   margin: 0;
+
+  &:hover {
+    box-shadow: 3px 8px 20px 0 var(--color-light-purple);
+    transform: translateY(-4px);
+  }
 }
 
-.card_container:hover {
-  box-shadow: 3px 8px 20px 0 var(--color-light-purple);
-  transform: translateY(-4px);
-}
-
-.image_container {
+.image-container {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -36,7 +36,7 @@
   left: 0;
   right: 0;
   padding: 50px 0 15px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  background: linear-gradient(transparent, rgb(0 0 0 / 80%));
 }
 
 .avatar {

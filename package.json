@@ -13,7 +13,9 @@
     "format:check": "prettier . --check",
     "prepare": "husky",
     "test": "vitest --coverage",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "lint:css": "stylelint \"src/**/*.css\"",
+    "lint:css:fix": "stylelint \"src/**/*.css\" --fix"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
@@ -25,6 +27,7 @@
     ]
   },
   "dependencies": {
+    "classnames": "^2.5.1",
     "react": "^19.2.5",
     "react-dom": "^19.2.5"
   },
@@ -50,6 +53,8 @@
     "jsdom": "^29.1.1",
     "lint-staged": "^16.4.0",
     "prettier": "3.8.3",
+    "stylelint": "^17.11.1",
+    "stylelint-config-standard": "^40.0.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.10",

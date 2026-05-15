@@ -1,6 +1,8 @@
 import React from 'react';
-
 import styles from './input.module.css';
+import classNames from 'classnames/bind';
+
+const cn = classNames.bind(styles);
 
 type TUIInputProps = {
   placeholder: string;
@@ -9,18 +11,16 @@ type TUIInputProps = {
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export class UIInput extends React.Component<TUIInputProps> {
-  render(): React.ReactNode {
-    return (
-      <input
-        type="text"
-        className={styles.input}
-        placeholder={this.props.placeholder}
-        onChange={this.props.onChange}
-        onKeyDown={this.props.onKeyDown}
-        value={this.props.value}
-        id="search"
-      />
-    );
-  }
-}
+export const UIInput: React.FC<TUIInputProps> = ({ placeholder, value, onChange, onKeyDown }) => {
+  return (
+    <input
+      type="text"
+      className={cn('input')}
+      placeholder={placeholder}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      value={value}
+      id="search"
+    />
+  );
+};

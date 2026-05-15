@@ -5,7 +5,7 @@
   flex: 1;
 }
 
-.loader_circle {
+.loader-circle {
   display: block;
   width: 100px;
   height: 100px;
@@ -13,12 +13,8 @@
   border-color: #d1d2d6 #9fa0a5 #626368 #1a1b22;
   border-radius: 50%;
   animation: spin 0.75s infinite linear;
-
   position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   margin: auto;
 }
 

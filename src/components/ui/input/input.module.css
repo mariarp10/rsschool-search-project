@@ -6,13 +6,13 @@
   height: 30px;
   background-color: var(--color-text-primary);
   font-family: inherit;
-}
 
-.input:focus {
-  border-color: var(--color-text-secondary);
-  border-width: 2px;
-}
+  &:focus {
+    border-color: var(--color-light-green);
+    border-width: 2px;
+  }
 
-.input::placeholder {
-  color: var(--color-text-placeholder);
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
 }

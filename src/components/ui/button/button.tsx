@@ -1,5 +1,8 @@
 import React from 'react';
 import styles from './button.module.css';
+import classNames from 'classnames/bind';
+
+const cn = classNames.bind(styles);
 
 type TUIButtonProps = {
   text: string;
@@ -7,17 +10,16 @@ type TUIButtonProps = {
   handleClick: () => void;
   extraClass?: string;
 };
-export class UIButton extends React.Component<TUIButtonProps> {
-  render(): React.ReactNode {
-    return (
-      <button
-        className={`${styles.button} ${this.props.extraClass}`}
-        onClick={this.props.handleClick}
-        type="button"
-        disabled={this.props.disabled}
-      >
-        {this.props.text}
-      </button>
-    );
-  }
-}
+
+export const UIButton: React.FC<TUIButtonProps> = ({ text, disabled, handleClick, extraClass }) => {
+  return (
+    <button
+      className={cn('button', extraClass)}
+      onClick={handleClick}
+      type="button"
+      disabled={disabled}
+    >
+      {text}
+    </button>
+  );
+};

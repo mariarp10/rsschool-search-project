@@ -1,6 +1,9 @@
 import React from 'react';
 import { UIButton } from '@ui/button';
 import styles from './pagination.module.css';
+import classNames from 'classnames/bind';
+
+const cn = classNames.bind(styles);
 
 type TUIPaginationProps = {
   currentPage: number;
@@ -10,24 +13,28 @@ type TUIPaginationProps = {
   handleNextPage: () => void;
 };
 
-export class UIPagination extends React.Component<TUIPaginationProps> {
-  render(): React.ReactNode {
-    return (
-      <div role="navigation" className={styles.container}>
-        <UIButton
-          text="Previous"
-          handleClick={this.props.handlePreviousPage}
-          disabled={this.props.isLoading || this.props.currentPage === 1}
-        />
-        <span>
-          Page {this.props.currentPage} of {this.props.totalPages}
-        </span>
-        <UIButton
-          text="Next"
-          handleClick={this.props.handleNextPage}
-          disabled={this.props.isLoading || this.props.currentPage === this.props.totalPages}
-        />
-      </div>
-    );
-  }
-}
+export const UIPagination: React.FC<TUIPaginationProps> = ({
+  currentPage,
+  totalPages,
+  isLoading,
+  handlePreviousPage,
+  handleNextPage,
+}) => {
+  return (
+    <div role="navigation" className={cn('container')}>
+      <UIButton
+        text="Previous"
+        handleClick={handlePreviousPage}
+        disabled={isLoading || currentPage === 1}
+      />
+      <span>
+        Page {currentPage} of {totalPages}
+      </span>
+      <UIButton
+        text="Next"
+        handleClick={handleNextPage}
+        disabled={isLoading || currentPage === totalPages}
+      />
+    </div>
+  );
+};

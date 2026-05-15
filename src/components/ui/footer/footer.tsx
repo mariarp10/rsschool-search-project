@@ -1,12 +1,13 @@
 import React from 'react';
 import styles from './footer.module.css';
+import classNames from 'classnames/bind';
 
-export class Footer extends React.Component {
-  render(): React.ReactNode {
-    return (
-      <footer className={styles.footer}>
-        <p>RSSchool 2026</p>
-      </footer>
-    );
-  }
-}
+const cn = classNames.bind(styles);
+
+export const Footer: React.FC = () => {
+  return (
+    <footer className={cn('footer')}>
+      <p>RSSchool 2026</p>
+    </footer>
+  );
+};

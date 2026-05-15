@@ -1,12 +1,13 @@
 import React from 'react';
 import styles from './loader.module.css';
+import classNames from 'classnames/bind';
 
-export class UILoader extends React.Component {
-  render(): React.ReactNode {
-    return (
-      <div role="progressbar" aria-label="Loading" className={styles.loader}>
-        <div className={styles.loader_circle}></div>
-      </div>
-    );
-  }
-}
+const cn = classNames.bind(styles);
+
+export const UILoader: React.FC = () => {
+  return (
+    <div role="progressbar" aria-label="Loading" className={cn('loader')}>
+      <div className={cn('loader-circle')}></div>
+    </div>
+  );
+};

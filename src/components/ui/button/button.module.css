@@ -7,18 +7,18 @@
   font-size: 14px;
   text-transform: capitalize;
   width: 80px;
-}
 
-.button:hover {
-  background-color: var(--color-light-green);
-}
+  &:hover {
+    background-color: var(--color-light-green);
+  }
 
-.button:active {
-  background-color: var(--color-dark-green);
-}
+  &:active {
+    background-color: var(--color-dark-green);
+  }
 
-.button:disabled {
-  color: var(--color-text-secondary);
-  opacity: 0.9;
-  pointer-events: none;
+  &:disabled {
+    color: var(--color-text-secondary);
+    opacity: 0.9;
+    pointer-events: none;
+  }
 }
