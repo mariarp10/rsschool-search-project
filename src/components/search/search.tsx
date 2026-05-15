@@ -39,9 +39,8 @@ export class Search extends React.Component<TSearchProps, TSearchState> {
 
   render(): React.ReactNode {
     return (
-      <header className={styles.header}>
-        <h1 className={styles.title}>Rick and Morty - look up characters from the show</h1>
-        <div className={styles.container}>
+      <section className={styles.container}>
+        <div className={styles.search}>
           <UIInput
             placeholder="Look up Rick and Morty characters"
             value={this.state.value}
@@ -53,7 +52,7 @@ export class Search extends React.Component<TSearchProps, TSearchState> {
         <p className={styles.hint}>
           Try typing in names of the characters from the show: Summer, Beth, Rick
         </p>
-      </header>
+      </section>
     );
   }
 }

@@ -6,6 +6,8 @@ import { UIPagination } from '@ui/pagination';
 import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 import { UIErrorNotification } from '@ui/error-notification';
 import { Footer } from '@ui/footer';
+import { Header } from '@ui/header/header';
+import { ErrorThrower } from '@components/error-thrower';
 import api from '@utils/api';
 
 const PAGE_CHANGE_DELAY_MS = 400;
@@ -119,24 +121,28 @@ export class HomePage extends React.Component<Record<string, never>, THomePageSt
 
     return (
       <>
-        <Search initialValue={lastSearch} onSearch={this.handleSearch} />
-        {errorCode && errorCode !== 1 ? (
-          <UIErrorNotification errorCode={errorCode} />
-        ) : (
-          <>
-            {errorCode === 1 && <UIErrorNotification errorCode={errorCode} />}
-            {totalPages > 1 && (
-              <UIPagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                isLoading={isLoading}
-                handleNextPage={this.handleNextPage}
-                handlePreviousPage={this.handlePreviousPage}
-              />
-            )}
-            <Results characters={charactersForPage} isLoading={isLoading} />
-          </>
-        )}
+        <Header />
+        <main style={{ paddingInline: '100px' }}>
+          <Search initialValue={lastSearch} onSearch={this.handleSearch} />
+          {errorCode && errorCode !== 1 ? (
+            <UIErrorNotification errorCode={errorCode} />
+          ) : (
+            <>
+              {errorCode === 1 && <UIErrorNotification errorCode={errorCode} />}
+              {totalPages > 1 && (
+                <UIPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  isLoading={isLoading}
+                  handleNextPage={this.handleNextPage}
+                  handlePreviousPage={this.handlePreviousPage}
+                />
+              )}
+              <Results characters={charactersForPage} isLoading={isLoading} />
+            </>
+          )}
+          <ErrorThrower />
+        </main>
         <Footer />
       </>
     );

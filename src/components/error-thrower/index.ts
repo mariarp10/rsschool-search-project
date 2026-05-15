@@ -1,1 +1,1 @@
-export { ErrorThrowerComponent } from './error-thrower';
+export { ErrorThrower } from './error-thrower';

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { type MockInstance } from 'vitest';
-import { ErrorThrowerComponent } from './error-thrower';
+import { ErrorThrower } from './error-thrower';
 
 describe(`Error Thrower Component`, () => {
   let consoleError: MockInstance<() => void>;
@@ -15,14 +15,14 @@ describe(`Error Thrower Component`, () => {
   });
 
   test(`shows crash button to initiate error throw`, () => {
-    render(<ErrorThrowerComponent />);
+    render(<ErrorThrower />);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
 
   test(`throws error when button is clicked`, async () => {
     const user = userEvent.setup();
 
-    render(<ErrorThrowerComponent />);
+    render(<ErrorThrower />);
 
     const button = screen.getByRole('button', { name: 'Test ErrorBoundary' });
 

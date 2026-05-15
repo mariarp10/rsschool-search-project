@@ -1,11 +1,9 @@
 import React from 'react';
+import styles from './error-thrower.module.css';
 
 type TErrorThrowerState = { shouldThrow: boolean };
 
-export class ErrorThrowerComponent extends React.Component<
-  Record<string, never>,
-  TErrorThrowerState
-> {
+export class ErrorThrower extends React.Component<Record<string, never>, TErrorThrowerState> {
   state: TErrorThrowerState = { shouldThrow: false };
 
   handleClick = () => {
@@ -17,6 +15,10 @@ export class ErrorThrowerComponent extends React.Component<
       throw new Error('Test error');
     }
 
-    return <button onClick={this.handleClick}>Test ErrorBoundary</button>;
+    return (
+      <div className={styles.container}>
+        <button onClick={this.handleClick}>Test Error</button>
+      </div>
+    );
   }
 }

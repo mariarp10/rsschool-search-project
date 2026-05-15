@@ -1,17 +1,8 @@
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 1;
+.container {
   background-color: var(--color-bg-primary);
-  padding: 40px 60px;
 }
 
-.title {
-  font-size: 38px;
-  color: var(--color-light-blue);
-  padding: 10px 0;
-}
-.container {
+.search {
   display: flex;
   gap: 10px;
   padding-bottom: 5px;
