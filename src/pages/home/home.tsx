@@ -1,13 +1,20 @@
-import React, { useReducer, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect, useRef, useCallback } from 'react';
+
 import { Search } from '@components/search';
 import { Results } from '@components/results';
+import { ErrorThrower } from '@components/error-thrower';
+
 import { UIPagination } from '@ui/pagination';
-import { getLastSearch, getStatusCode, saveLastSearch } from '@utils/helpers';
 import { UIErrorNotification } from '@ui/error-notification';
 import { Footer } from '@ui/footer';
 import { Header } from '@ui/header/header';
-import { ErrorThrower } from '@components/error-thrower';
+
+import { getStatusCode } from '@utils/helpers';
+
 import api from '@utils/api';
+
+import { useLocalStorage } from '@hooks/use-local-storage';
+
 import { initialHomePageState, homePageReducer } from './home.reducer';
 
 const PAGE_CHANGE_DELAY_MS = 400;
@@ -15,6 +22,7 @@ const PAGE_CHANGE_DELAY_MS = 400;
 export const HomePage: React.FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
   const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { getValue: getLastSearch, setValue: saveLastSearch } = useLocalStorage('lastSearch');
 
   const {
     searchValue,
@@ -26,7 +34,7 @@ export const HomePage: React.FC = () => {
     errorCode,
   } = state;
 
-  const loadCharacters = async (page: number, search: string) => {
+  const loadCharacters = useCallback(async (page: number, search: string) => {
     dispatch({ type: 'startLoading' });
 
     try {
@@ -50,7 +58,7 @@ export const HomePage: React.FC = () => {
         },
       });
     }
-  };
+  }, []);
 
   useEffect(() => {
     const lastSearch = getLastSearch();
@@ -64,7 +72,7 @@ export const HomePage: React.FC = () => {
         clearTimeout(pageChangeTimeoutId.current);
       }
     };
-  }, []);
+  }, [getLastSearch, loadCharacters]);
 
   const handleNextPage = () => {
     changePage(currentPage + 1);
