@@ -1,24 +1,24 @@
 import React from 'react';
+import { useState } from 'react';
 import styles from './error-thrower.module.css';
+import classNames from 'classnames/bind';
 
-type TErrorThrowerState = { shouldThrow: boolean };
+const cn = classNames.bind(styles);
 
-export class ErrorThrower extends React.Component<Record<string, never>, TErrorThrowerState> {
-  state: TErrorThrowerState = { shouldThrow: false };
+export const ErrorThrower: React.FC = () => {
+  const [shouldThrow, setShouldThrow] = useState(false);
 
-  handleClick = () => {
-    this.setState({ shouldThrow: true });
+  const handleClick = () => {
+    setShouldThrow(true);
   };
 
-  render(): React.ReactNode {
-    if (this.state.shouldThrow) {
-      throw new Error('Test error');
-    }
-
-    return (
-      <div className={styles.container}>
-        <button onClick={this.handleClick}>Test Error</button>
-      </div>
-    );
+  if (shouldThrow) {
+    throw new Error('Test error');
   }
-}
+
+  return (
+    <div className={cn('container')}>
+      <button onClick={handleClick}>Test Error</button>
+    </div>
+  );
+};

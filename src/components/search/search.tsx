@@ -2,57 +2,45 @@ import React from 'react';
 import { UIButton } from '@ui/button';
 import { UIInput } from '@ui/input';
 import styles from './search.module.css';
+import classNames from 'classnames/bind';
+
+const cn = classNames.bind(styles);
 
 type TSearchProps = {
-  initialValue: string;
+  value: string;
+  onChange: (value: string) => void;
   onSearch: (value: string) => void;
 };
 
-type TSearchState = {
-  value: string;
-};
-
-export class Search extends React.Component<TSearchProps, TSearchState> {
-  state: TSearchState = {
-    value: this.props.initialValue,
+export const Search: React.FC<TSearchProps> = ({ value, onChange, onSearch }) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(event.target.value);
   };
 
-  componentDidUpdate(prevProps: TSearchProps) {
-    if (prevProps.initialValue !== this.props.initialValue) {
-      this.setState({ value: this.props.initialValue });
-    }
-  }
-
-  handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ value: event.target.value });
+  const handleClick = () => {
+    onSearch(value);
   };
 
-  handleClick = () => {
-    this.props.onSearch(this.state.value);
-  };
-
-  handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      this.props.onSearch(this.state.value);
+      onSearch(value);
     }
   };
 
-  render(): React.ReactNode {
-    return (
-      <section className={styles.container}>
-        <div className={styles.search}>
-          <UIInput
-            placeholder="Look up Rick and Morty characters"
-            value={this.state.value}
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
-          />
-          <UIButton handleClick={this.handleClick} text="search" />
-        </div>
-        <p className={styles.hint}>
-          Try typing in names of the characters from the show: Summer, Beth, Rick
-        </p>
-      </section>
-    );
-  }
-}
+  return (
+    <section className={cn('container')}>
+      <div className={cn('search')}>
+        <UIInput
+          placeholder="Look up Rick and Morty characters"
+          value={value}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
+        <UIButton handleClick={handleClick} text="search" />
+      </div>
+      <p className={cn('hint')}>
+        Try typing in names of the characters from the show: Summer, Beth, Rick
+      </p>
+    </section>
+  );
+};
