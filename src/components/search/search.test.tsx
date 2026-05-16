@@ -1,10 +1,32 @@
+import { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, test, vi } from 'vitest';
 import { Search } from './search';
 
+const defaultProps = {
+  value: '',
+  onChange: vi.fn(),
+  onSearch: vi.fn(),
+};
+
+const renderControlledSearch = (onSearch = vi.fn()) => {
+  const ControlledSearch = () => {
+    const [value, setValue] = useState('');
+
+    return <Search value={value} onChange={setValue} onSearch={onSearch} />;
+  };
+
+  render(<ControlledSearch />);
+
+  return {
+    onSearch,
+  };
+};
+
 describe('Search Component', () => {
-  test(`renders input, search button, and hint`, () => {
-    render(<Search initialValue="" onSearch={vi.fn()} />);
+  test('renders input, search button, and hint', () => {
+    render(<Search {...defaultProps} />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
     const searchButton = screen.getByRole('button', { name: /search/i });
@@ -16,24 +38,41 @@ describe('Search Component', () => {
     expect(searchButton).toBeInTheDocument();
     expect(hintElement).toBeInTheDocument();
   });
-  test(`displays initial value from props`, () => {
-    render(<Search initialValue="Rick" onSearch={vi.fn()} />);
+
+  test('displays value from props', () => {
+    render(<Search {...defaultProps} value="Rick" />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
     expect(inputElement).toHaveValue('Rick');
   });
-  test(`displays empty string when initial value is empty`, () => {
-    render(<Search initialValue="" onSearch={vi.fn()} />);
+
+  test('displays empty string when value is empty', () => {
+    render(<Search {...defaultProps} value="" />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
     expect(inputElement).toHaveValue('');
   });
-  test(`updates input value when user types`, async () => {
+
+  test('calls onChange when user types', async () => {
+    const user = userEvent.setup();
+    const handleChange = vi.fn();
+
+    render(<Search {...defaultProps} value="" onChange={handleChange} />);
+
+    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+
+    await user.type(inputElement, 'Morty');
+
+    expect(handleChange).toHaveBeenCalled();
+    expect(handleChange).toHaveBeenLastCalledWith('y');
+  });
+
+  test('updates input value when parent updates value', async () => {
     const user = userEvent.setup();
 
-    render(<Search initialValue="" onSearch={vi.fn()} />);
+    renderControlledSearch();
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
@@ -41,11 +80,12 @@ describe('Search Component', () => {
 
     expect(inputElement).toHaveValue('Morty');
   });
-  test(`calls onSearch callback with input value when user clicks search button`, async () => {
+
+  test('calls onSearch callback with input value when user clicks search button', async () => {
     const user = userEvent.setup();
     const handleSearch = vi.fn();
 
-    render(<Search initialValue="" onSearch={handleSearch} />);
+    renderControlledSearch(handleSearch);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
     const searchButton = screen.getByRole('button', { name: /search/i });
@@ -56,11 +96,12 @@ describe('Search Component', () => {
     expect(handleSearch).toHaveBeenCalledTimes(1);
     expect(handleSearch).toHaveBeenCalledWith('Summer');
   });
-  test(`calls onSearch callback with input value when user presses Enter`, async () => {
+
+  test('calls onSearch callback with input value when user presses Enter', async () => {
     const user = userEvent.setup();
     const handleSearch = vi.fn();
 
-    render(<Search initialValue="" onSearch={handleSearch} />);
+    renderControlledSearch(handleSearch);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
@@ -70,14 +111,15 @@ describe('Search Component', () => {
     expect(handleSearch).toHaveBeenCalledTimes(1);
     expect(handleSearch).toHaveBeenCalledWith('Summer');
   });
-  test(`updates input value when initialValue prop changes`, () => {
-    const { rerender } = render(<Search initialValue="Rick" onSearch={vi.fn()} />);
+
+  test('updates input value when value prop changes', () => {
+    const { rerender } = render(<Search {...defaultProps} value="Rick" />);
 
     const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
 
     expect(inputElement).toHaveValue('Rick');
 
-    rerender(<Search initialValue="Morty" onSearch={vi.fn()} />);
+    rerender(<Search {...defaultProps} value="Morty" />);
 
     expect(inputElement).toHaveValue('Morty');
   });

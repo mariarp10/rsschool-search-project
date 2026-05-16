@@ -14,7 +14,7 @@ describe(`Error Thrower Component`, () => {
     consoleError.mockRestore();
   });
 
-  test(`shows crash button to initiate error throw`, () => {
+  test(`shows test button to initiate error throw`, () => {
     render(<ErrorThrower />);
     expect(screen.getByRole('button')).toBeInTheDocument();
   });
@@ -24,7 +24,7 @@ describe(`Error Thrower Component`, () => {
 
     render(<ErrorThrower />);
 
-    const button = screen.getByRole('button', { name: 'Test ErrorBoundary' });
+    const button = screen.getByRole('button', { name: 'Test Error' });
 
     await expect(user.click(button)).rejects.toThrow('Test error');
   });

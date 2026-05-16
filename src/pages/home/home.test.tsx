@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import * as helpers from '@utils/helpers';
 import {
   infiniteApi,
   mockApiGetCharacters,
@@ -9,29 +8,51 @@ import {
 } from '@tests/mocks';
 import { ManyCharacters, MockCharacters } from '@tests/fixtures';
 import { HomePage } from './home';
-import { ErrorMessages } from '../../utils/constants';
+import { ErrorMessages } from '@utils/constants';
 import userEvent from '@testing-library/user-event';
 import api from '@utils/api';
 
-describe(`Search Results Page Component`, () => {
+const localStorageMocks = vi.hoisted(() => ({
+  getValue: vi.fn(),
+  setValue: vi.fn(),
+}));
+
+vi.mock('@hooks/use-local-storage', () => ({
+  useLocalStorage: () => ({
+    getValue: localStorageMocks.getValue,
+    setValue: localStorageMocks.setValue,
+  }),
+}));
+
+describe(`Home page`, () => {
+  beforeEach(() => {
+    localStorageMocks.getValue.mockReturnValue('');
+    localStorageMocks.setValue.mockClear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   describe('initialization', () => {
     test('checks localStorage for lastSearch when renders', async () => {
       mockApiGetCharacters();
-      vi.spyOn(helpers, 'getLastSearch').mockReturnValue('rick');
+      localStorageMocks.getValue.mockReturnValue('rick');
 
       render(<HomePage />);
 
-      expect(helpers.getLastSearch).toHaveBeenCalledTimes(1);
+      expect(localStorageMocks.getValue).toHaveBeenCalledTimes(1);
 
       await screen.findByText(MockCharacters[0].name);
     });
+
     describe('fetching data', () => {
       beforeEach(() => {
         mockApiGetCharacters();
       });
 
       test('loads all characters when there is no lastSearch', async () => {
-        vi.spyOn(helpers, 'getLastSearch').mockReturnValue('');
+        localStorageMocks.getValue.mockReturnValue('');
 
         render(<HomePage />);
 
@@ -39,8 +60,9 @@ describe(`Search Results Page Component`, () => {
           expect(await screen.findByText(character.name)).toBeInTheDocument();
         }
       });
+
       test('loads last search characters when there is lastSearch', async () => {
-        vi.spyOn(helpers, 'getLastSearch').mockReturnValue('rick');
+        localStorageMocks.getValue.mockReturnValue('rick');
 
         render(<HomePage />);
 
@@ -61,6 +83,7 @@ describe(`Search Results Page Component`, () => {
       });
     });
   });
+
   describe('data loading', () => {
     afterEach(() => {
       vi.restoreAllMocks();
@@ -74,6 +97,7 @@ describe(`Search Results Page Component`, () => {
 
       expect(api.getCharacters).toHaveBeenCalled();
     });
+
     test('signals to show/hide loader component while waiting for fetch to finish', async () => {
       mockApiGetCharacters();
       render(<HomePage />);
@@ -84,6 +108,7 @@ describe(`Search Results Page Component`, () => {
 
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
+
     test('shows error notification when character is not found', async () => {
       mockApiNotFound();
       render(<HomePage />);
@@ -91,6 +116,7 @@ describe(`Search Results Page Component`, () => {
       expect(await screen.findByText(ErrorMessages[404])).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
+
     test('show error notification when server returns an error', async () => {
       mockApiServerError();
       render(<HomePage />);
@@ -99,6 +125,7 @@ describe(`Search Results Page Component`, () => {
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
   });
+
   describe('filtering and pagination', () => {
     beforeEach(() => {
       mockApiGetManyCharacters();
@@ -117,6 +144,7 @@ describe(`Search Results Page Component`, () => {
 
       expect(cards).toHaveLength(ManyCharacters.length);
     });
+
     test('shows total pages of characters', async () => {
       render(<HomePage />);
 
@@ -124,6 +152,7 @@ describe(`Search Results Page Component`, () => {
       expect(screen.getByRole('button', { name: 'Previous' }));
       expect(screen.getByRole('button', { name: 'Next' }));
     });
+
     test('does not show pagination when there is only one page', async () => {
       mockApiGetCharacters();
 
@@ -133,6 +162,7 @@ describe(`Search Results Page Component`, () => {
 
       await screen.findByText(MockCharacters[0].name);
     });
+
     test('resets to first page when new search is performed', async () => {
       const user = userEvent.setup();
 
@@ -152,6 +182,7 @@ describe(`Search Results Page Component`, () => {
       expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
     });
   });
+
   describe('pagination navigation', () => {
     afterEach(() => {
       vi.restoreAllMocks();
@@ -171,6 +202,7 @@ describe(`Search Results Page Component`, () => {
 
       expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
     });
+
     test('navigates to previous page', async () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
@@ -186,6 +218,7 @@ describe(`Search Results Page Component`, () => {
 
       expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
     });
+
     test('does not navigate below first page', async () => {
       mockApiGetManyCharacters();
 
@@ -196,6 +229,7 @@ describe(`Search Results Page Component`, () => {
       const previousButton = screen.getByRole('button', { name: 'Previous' });
       expect(previousButton).toBeDisabled();
     });
+
     test('does not navigate above last page', async () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
@@ -211,6 +245,7 @@ describe(`Search Results Page Component`, () => {
 
       expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
     });
+
     test('does not navigate when loading is in progress', async () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
@@ -225,9 +260,9 @@ describe(`Search Results Page Component`, () => {
       expect(screen.queryByText('Page 2 of 2')).not.toBeInTheDocument();
     });
   });
+
   describe('search', () => {
     test('updates localStorage when user enters a non-empty search term', async () => {
-      vi.spyOn(helpers, 'saveLastSearch');
       const user = userEvent.setup();
 
       render(<HomePage />);
@@ -239,10 +274,10 @@ describe(`Search Results Page Component`, () => {
       await user.type(input, 'rick');
       await user.click(button);
 
-      expect(helpers.saveLastSearch).toHaveBeenCalledWith('rick');
+      expect(localStorageMocks.setValue).toHaveBeenCalledWith('rick');
     });
+
     test('does not initiate search when new term is the same as lastSearch', async () => {
-      vi.spyOn(helpers, 'saveLastSearch');
       const user = userEvent.setup();
 
       render(<HomePage />);
@@ -258,11 +293,11 @@ describe(`Search Results Page Component`, () => {
       await user.type(input, 'rick');
       await user.click(button);
 
-      expect(helpers.saveLastSearch).toHaveBeenCalledOnce();
+      expect(localStorageMocks.setValue).toHaveBeenCalledOnce();
     });
+
     test('does not initiate search when loading is in progress', async () => {
       infiniteApi();
-      vi.spyOn(helpers, 'saveLastSearch');
 
       const user = userEvent.setup();
 
@@ -275,12 +310,7 @@ describe(`Search Results Page Component`, () => {
       await user.type(input, 'Rick');
       await user.click(button);
 
-      await user.clear(input);
-      await user.type(input, 'Morty');
-      await user.click(button);
-
-      expect(helpers.saveLastSearch).toHaveBeenCalledOnce();
-      expect(helpers.saveLastSearch).toHaveBeenCalledWith('rick');
+      expect(localStorageMocks.setValue).not.toHaveBeenCalled();
     });
   });
 });
