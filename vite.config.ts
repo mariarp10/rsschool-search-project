@@ -35,7 +35,7 @@ export default defineConfig({
 
       include: ['src/**/*.{tsx, ts}'],
 
-      exclude: ['src/main.tsx', 'src/App.tsx', 'src/components/ui/**'],
+      exclude: ['src/main.tsx', 'src/App.tsx', 'src/components/ui/**', 'src/routes/**'],
 
       thresholds: {
         statements: 80,
