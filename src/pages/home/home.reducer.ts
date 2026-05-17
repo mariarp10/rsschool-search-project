@@ -3,7 +3,6 @@ import type { TCharacter } from '@utils/types';
 export type THomePageState = {
   searchValue: string;
   lastSearch: string;
-  currentPage: number;
   totalPages: number;
   charactersForPage: TCharacter[];
   isLoading: boolean;
@@ -28,13 +27,11 @@ export type THomePageAction =
         shouldResetResults: boolean;
       };
     }
-  | { type: 'setPage'; payload: number }
   | { type: 'search'; payload: string };
 
 export const initialHomePageState: THomePageState = {
   searchValue: '',
   lastSearch: '',
-  currentPage: 1,
   totalPages: 0,
   charactersForPage: [],
   isLoading: false,

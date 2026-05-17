@@ -15,29 +15,27 @@ import { useLocalStorage } from '@hooks/use-local-storage';
 
 import { initialHomePageState, homePageReducer } from './home.reducer';
 
+import { Route } from '@routes/character';
+
+import { useNavigate } from '@tanstack/react-router';
+
 const PAGE_CHANGE_DELAY_MS = 400;
 
 export const HomePage: React.FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
   const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { getValue: getLastSearch, setValue: saveLastSearch } = useLocalStorage('lastSearch');
+  const { page, name } = Route.useSearch();
+  const navigate = useNavigate({ from: '/character' });
 
-  const {
-    searchValue,
-    lastSearch,
-    charactersForPage,
-    currentPage,
-    totalPages,
-    isLoading,
-    errorCode,
-  } = state;
+  const { searchValue, lastSearch, charactersForPage, totalPages, isLoading, errorCode } = state;
 
-  const loadCharacters = useCallback(async (page: number, search: string) => {
+  const loadCharacters = useCallback(async (page: number, searchTerm: string) => {
     dispatch({ type: 'startLoading' });
 
     try {
-      const { info, results } = search
-        ? await api.getCharacters(page, search)
+      const { info, results } = searchTerm
+        ? await api.getCharacters(page, searchTerm)
         : await api.getCharacters(page);
 
       dispatch({
@@ -61,31 +59,47 @@ export const HomePage: React.FC = () => {
   useEffect(() => {
     const lastSearch = getLastSearch();
 
-    dispatch({ type: 'initLastSearch', payload: lastSearch });
+    if (!name && lastSearch) {
+      void navigate({
+        search: {
+          page: 1,
+          name: lastSearch,
+        },
+        replace: true,
+      });
 
-    void loadCharacters(1, lastSearch);
+      return;
+    }
+
+    dispatch({ type: 'initLastSearch', payload: name ?? '' });
+    void loadCharacters(page, name!);
 
     return () => {
       if (pageChangeTimeoutId.current) {
         clearTimeout(pageChangeTimeoutId.current);
       }
     };
-  }, [getLastSearch, loadCharacters]);
+  }, [page, name, getLastSearch, navigate, loadCharacters]);
 
   const handleNextPage = () => {
-    changePage(currentPage + 1);
+    changePage(page + 1);
   };
 
   const handlePreviousPage = () => {
-    changePage(currentPage - 1);
+    changePage(page - 1);
   };
 
-  const changePage = (page: number) => {
+  const changePage = (nextPage: number) => {
     dispatch({ type: 'startLoading' });
 
     pageChangeTimeoutId.current = setTimeout(() => {
-      dispatch({ type: 'setPage', payload: page });
-      void loadCharacters(page, lastSearch);
+      void navigate({
+        search: (prev) => ({
+          ...prev,
+          page: nextPage,
+        }),
+      });
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
       pageChangeTimeoutId.current = null;
     }, PAGE_CHANGE_DELAY_MS);
@@ -106,7 +120,12 @@ export const HomePage: React.FC = () => {
 
     dispatch({ type: 'search', payload: trimmedSearch });
 
-    void loadCharacters(1, trimmedSearch);
+    void navigate({
+      search: {
+        page: 1,
+        name: trimmedSearch,
+      },
+    });
   };
 
   return (
@@ -122,7 +141,7 @@ export const HomePage: React.FC = () => {
 
             {totalPages > 1 && (
               <UIPagination
-                currentPage={currentPage}
+                currentPage={page}
                 totalPages={totalPages}
                 isLoading={isLoading}
                 handleNextPage={handleNextPage}
