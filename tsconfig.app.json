@@ -6,6 +6,7 @@
     "module": "esnext",
     "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
     "skipLibCheck": true,
+    "strictNullChecks": true,
     "paths": {
       "@ui/*": ["./src/components/ui/*"],
       "@utils/*": ["./src/utils/*"],

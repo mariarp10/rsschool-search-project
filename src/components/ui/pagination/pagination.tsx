@@ -21,7 +21,7 @@ export const UIPagination: React.FC<TUIPaginationProps> = ({
   handleNextPage,
 }) => {
   return (
-    <div role="navigation" className={cn('container')}>
+    <section role="navigation" className={cn('container')}>
       <UIButton
         text="Previous"
         handleClick={handlePreviousPage}
@@ -35,6 +35,6 @@ export const UIPagination: React.FC<TUIPaginationProps> = ({
         handleClick={handleNextPage}
         disabled={isLoading || currentPage === totalPages}
       />
-    </div>
+    </section>
   );
 };

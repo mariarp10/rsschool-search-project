@@ -6,8 +6,6 @@ import { ErrorThrower } from '@components/error-thrower';
 
 import { UIPagination } from '@ui/pagination';
 import { UIErrorNotification } from '@ui/error-notification';
-import { Footer } from '@ui/footer';
-import { Header } from '@ui/header/header';
 
 import { getStatusCode } from '@utils/helpers';
 
@@ -113,9 +111,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <>
-      <Header />
-
-      <main style={{ paddingInline: '100px' }}>
+      <section style={{ paddingInline: '100px' }}>
         <Search value={searchValue} onChange={handleSearchChange} onSearch={handleSearch} />
 
         {errorCode && errorCode !== 1 ? (
@@ -138,8 +134,7 @@ export const HomePage: React.FC = () => {
           </>
         )}
         <ErrorThrower />
-      </main>
-      <Footer />
+      </section>
     </>
   );
 };

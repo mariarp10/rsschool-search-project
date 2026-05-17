@@ -8,7 +8,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', '**/routeTree.gen.ts']),
 
   {
     files: ['**/*.{ts,tsx}'],
@@ -36,6 +36,13 @@ export default defineConfig([
 
     rules: {
       'react/react-in-jsx-scope': 'off',
+    },
+  },
+
+  {
+    files: ['src/routes/**/*.{ts,tsx}'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]);
