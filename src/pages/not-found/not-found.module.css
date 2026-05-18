@@ -1,0 +1,25 @@
+.container {
+  padding-inline: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-height: 100vh;
+}
+
+.titile {
+  padding-block: 20px;
+}
+
+.image {
+  object-fit: contain;
+  align-self: center;
+}
+
+.link {
+  align-self: center;
+  font-size: 22px;
+
+  &:hover {
+    color: var(--color-light-purple);
+  }
+}
