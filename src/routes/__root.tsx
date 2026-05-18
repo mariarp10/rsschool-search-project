@@ -12,13 +12,15 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <ErrorBoundary>
-      <Header />
-      <main>
-        <Outlet />
-      </main>
-      <Footer />
-      <TanStackRouterDevtools position="bottom-right" />
-    </ErrorBoundary>
+    <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+      <ErrorBoundary>
+        <Header />
+        <main style={{ flex: '1' }}>
+          <Outlet />
+        </main>
+        <Footer />
+        <TanStackRouterDevtools position="bottom-right" />
+      </ErrorBoundary>
+    </div>
   );
 }

@@ -1,0 +1,23 @@
+.container {
+  padding-inline: 100px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.link {
+  color: var(--color-light-blue);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

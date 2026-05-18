@@ -5,8 +5,27 @@
   padding-block: 20px;
   padding-inline: 100px;
   background-color: var(--color-bg-primary);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .title {
   color: var(--color-light-blue);
+}
+
+.link {
+  cursor: pointer;
+  transition: transform 120ms ease;
+
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    color: var(--color-light-blue);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
 }
