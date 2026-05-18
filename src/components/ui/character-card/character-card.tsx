@@ -2,6 +2,7 @@ import React from 'react';
 import type { TCharacter } from '@utils/types';
 import styles from './character-card.module.css';
 import classNames from 'classnames/bind';
+import { Link } from '@tanstack/react-router';
 
 const cn = classNames.bind(styles);
 
@@ -12,7 +13,15 @@ type TCharacterCardProps = {
 export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
   return (
     <li className={cn('list-item')}>
-      <button className={cn('card-container')}>
+      <Link
+        to="/characters"
+        search={(prev) => ({
+          page: prev.page ?? 1,
+          name: prev.name,
+          detailsId: character.id,
+        })}
+        className={cn('card-container')}
+      >
         <div className={cn('image-container')}>
           <img
             className={cn('avatar')}
@@ -28,7 +37,7 @@ export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
             <h3 className={cn('name')}>{character.name}</h3>
           </div>
         </div>
-      </button>
+      </Link>
     </li>
   );
 };

@@ -15,7 +15,7 @@ import { useLocalStorage } from '@hooks/use-local-storage';
 
 import { initialHomePageState, homePageReducer } from './home.reducer';
 
-import { Route } from '@routes/character';
+import { Route } from '@routes/characters.index';
 
 import { useNavigate } from '@tanstack/react-router';
 
@@ -25,8 +25,8 @@ export const HomePage: React.FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
   const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { getValue: getLastSearch, setValue: saveLastSearch } = useLocalStorage('lastSearch');
-  const { page, name } = Route.useSearch();
-  const navigate = useNavigate({ from: '/character' });
+  const { page = 1, name } = Route.useSearch();
+  const navigate = useNavigate({ from: '/characters' });
 
   const { searchValue, lastSearch, charactersForPage, totalPages, isLoading, errorCode } = state;
 
@@ -123,7 +123,7 @@ export const HomePage: React.FC = () => {
     void navigate({
       search: {
         page: 1,
-        name: trimmedSearch,
+        name: trimmedSearch || undefined,
       },
     });
   };

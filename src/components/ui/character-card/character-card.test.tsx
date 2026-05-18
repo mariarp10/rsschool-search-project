@@ -2,6 +2,20 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterCard } from './character-card';
 import { MockCharacters } from '@tests/fixtures';
 
+vi.mock('@tanstack/react-router', async () => {
+  const actual = await vi.importActual('@tanstack/react-router');
+
+  return {
+    ...actual,
+
+    Link: ({ children, className }: { children: React.ReactNode; className?: string }) => (
+      <a href="/characters?page=1" className={className}>
+        {children}
+      </a>
+    ),
+  };
+});
+
 const character = MockCharacters[0];
 
 describe('CharacterCard Component', () => {

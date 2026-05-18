@@ -8,7 +8,7 @@ type RenderWithRouterOptions = Omit<RenderOptions, 'wrapper'> & {
 };
 
 export function renderWithRouter({
-  initialLocation = '/character?page=1',
+  initialLocation = '/characters?page=1',
   ...renderOptions
 }: RenderWithRouterOptions = {}) {
   const router = createRouter({

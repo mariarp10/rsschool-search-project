@@ -1,0 +1,8 @@
+.split-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.details-panel {
+  width: 300px;
+}

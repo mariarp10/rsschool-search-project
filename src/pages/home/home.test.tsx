@@ -39,9 +39,7 @@ describe(`Home page`, () => {
       mockApiGetCharacters();
       localStorageMocks.getValue.mockReturnValue('rick');
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await waitFor(() => {
         expect(localStorageMocks.getValue).toHaveBeenCalledTimes(1);
@@ -58,9 +56,7 @@ describe(`Home page`, () => {
       test('loads all characters when there is no lastSearch', async () => {
         localStorageMocks.getValue.mockReturnValue('');
 
-        renderWithRouter({
-          initialLocation: '/character?page=1',
-        });
+        renderWithRouter();
 
         await waitFor(() => {
           for (const character of MockCharacters) {
@@ -72,9 +68,7 @@ describe(`Home page`, () => {
       test('loads last search characters when there is lastSearch', async () => {
         localStorageMocks.getValue.mockReturnValue('rick');
 
-        renderWithRouter({
-          initialLocation: '/character?page=1',
-        });
+        renderWithRouter();
 
         const filteredCharacters = MockCharacters.filter((character) =>
           character.name.toLowerCase().includes('rick'),
@@ -101,9 +95,7 @@ describe(`Home page`, () => {
 
     test('sends API request for characters', async () => {
       mockApiGetCharacters();
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await screen.findByText(MockCharacters[0].name);
 
@@ -133,9 +125,7 @@ describe(`Home page`, () => {
         }),
       );
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       expect(await screen.findByRole('progressbar')).toBeInTheDocument();
 
@@ -150,9 +140,7 @@ describe(`Home page`, () => {
 
     test('shows error notification when character is not found', async () => {
       mockApiNotFound();
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       expect(await screen.findByText(ErrorMessages[404])).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -160,9 +148,7 @@ describe(`Home page`, () => {
 
     test('show error notification when server returns an error', async () => {
       mockApiServerError();
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       expect(await screen.findByText(ErrorMessages[500])).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -179,9 +165,7 @@ describe(`Home page`, () => {
     });
 
     test('shows as many characters as API returns in response', async () => {
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await screen.findByText('Character 1');
 
@@ -191,9 +175,7 @@ describe(`Home page`, () => {
     });
 
     test('shows total pages of characters', async () => {
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       expect(await screen.findByText('Page 1 of 2')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Previous' }));
@@ -202,9 +184,7 @@ describe(`Home page`, () => {
 
     test('does not show pagination when there is only one page', async () => {
       mockApiGetCharacters();
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
 
@@ -214,9 +194,7 @@ describe(`Home page`, () => {
     test('resets to first page when new search is performed', async () => {
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await screen.findByText('Page 1 of 2');
 
@@ -245,9 +223,7 @@ describe(`Home page`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await user.click(await screen.findByRole('button', { name: 'Next' }));
       await screen.findByText('Page 2 of 2');
@@ -259,9 +235,7 @@ describe(`Home page`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       const nextButton = await screen.findByRole('button', { name: 'Next' });
       const previousButton = screen.getByRole('button', { name: 'Previous' });
@@ -276,9 +250,7 @@ describe(`Home page`, () => {
     test('does not navigate below first page', async () => {
       mockApiGetManyCharacters();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await screen.findByText('Page 1 of 2');
 
@@ -290,9 +262,7 @@ describe(`Home page`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await screen.findByRole('navigation');
 
@@ -308,9 +278,7 @@ describe(`Home page`, () => {
       mockApiGetManyCharacters();
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       await user.click(await screen.findByRole('button', { name: 'Next' }));
 
@@ -325,9 +293,7 @@ describe(`Home page`, () => {
     test('updates localStorage when user enters a non-empty search term', async () => {
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       const input = await screen.findByRole('textbox');
       const button = screen.getByRole('button', { name: 'search' });
@@ -342,9 +308,7 @@ describe(`Home page`, () => {
     test('does not initiate search when new term is the same as lastSearch', async () => {
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       const input = await screen.findByRole('textbox');
       const button = screen.getByRole('button', { name: 'search' });
@@ -365,9 +329,7 @@ describe(`Home page`, () => {
 
       const user = userEvent.setup();
 
-      renderWithRouter({
-        initialLocation: '/character?page=1',
-      });
+      renderWithRouter();
 
       const input = await screen.findByRole('textbox');
       const button = screen.getByRole('button', { name: 'search' });
