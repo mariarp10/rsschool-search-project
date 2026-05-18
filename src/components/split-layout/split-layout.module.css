@@ -4,5 +4,6 @@
 }
 
 .details-panel {
-  width: 300px;
+  width: 500px;
+  padding-right: 100px;
 }

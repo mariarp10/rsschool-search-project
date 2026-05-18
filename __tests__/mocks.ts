@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { MockCharacters, ManyCharacters } from './fixtures';
-import api from '../src/utils/api';
+import * as api from '@utils/api';
 
 export const mockApiGetCharacters = () => {
   vi.spyOn(api, 'getCharacters').mockImplementation(async (_page, name) => {

@@ -9,7 +9,7 @@ import { UIErrorNotification } from '@ui/error-notification';
 
 import { getStatusCode } from '@utils/helpers';
 
-import api from '@utils/api';
+import { getCharacters } from '@utils/api';
 
 import { useLocalStorage } from '@hooks/use-local-storage';
 
@@ -19,7 +19,7 @@ import { Route } from '@routes/characters.index';
 
 import { useNavigate } from '@tanstack/react-router';
 
-const PAGE_CHANGE_DELAY_MS = 400;
+const PAGE_CHANGE_DELAY_MS = 1000;
 
 export const HomePage: React.FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
@@ -35,8 +35,8 @@ export const HomePage: React.FC = () => {
 
     try {
       const { info, results } = searchTerm
-        ? await api.getCharacters(page, searchTerm)
-        : await api.getCharacters(page);
+        ? await getCharacters(page, searchTerm)
+        : await getCharacters(page);
 
       dispatch({
         type: 'loadSuccess',

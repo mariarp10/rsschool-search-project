@@ -9,7 +9,7 @@ import {
 import { ManyCharacters, MockCharacters } from '@tests/fixtures';
 import { ErrorMessages } from '@utils/constants';
 import userEvent from '@testing-library/user-event';
-import api from '@utils/api';
+import * as api from '@utils/api';
 import { renderWithRouter } from '@tests/render-with-router';
 
 const localStorageMocks = vi.hoisted(() => ({
