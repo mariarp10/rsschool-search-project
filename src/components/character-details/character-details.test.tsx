@@ -142,9 +142,7 @@ describe('CharacterDetails Component', () => {
     await flushDetailsLoading();
 
     expect(
-      screen.getByText(
-        `Looks like this this character wasn't in the show. Try looking up someone else`,
-      ),
+      screen.getByText(`Looks like this character wasn't in the show. Try looking up someone else`),
     ).toBeInTheDocument();
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
