@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { UIButton } from '@ui/button';
 import { UIInput } from '@ui/input';
 import styles from './search.module.css';
@@ -7,23 +7,24 @@ import classNames from 'classnames/bind';
 const cn = classNames.bind(styles);
 
 type TSearchProps = {
-  value: string;
-  onChange: (value: string) => void;
+  savedSearch: string;
   onSearch: (value: string) => void;
 };
 
-export const Search: React.FC<TSearchProps> = ({ value, onChange, onSearch }) => {
+export const Search: React.FC<TSearchProps> = ({ savedSearch, onSearch }) => {
+  const [userInput, setUserInput] = useState(savedSearch);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
+    setUserInput(event.target.value);
   };
 
   const handleClick = () => {
-    onSearch(value);
+    onSearch(userInput);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      onSearch(value);
+      onSearch(userInput);
     }
   };
 
@@ -32,7 +33,7 @@ export const Search: React.FC<TSearchProps> = ({ value, onChange, onSearch }) =>
       <div className={cn('search')}>
         <UIInput
           placeholder="Look up Rick and Morty characters"
-          value={value}
+          value={userInput}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
         />

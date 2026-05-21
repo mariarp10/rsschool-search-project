@@ -1,24 +1,20 @@
-import { useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useLocalStorage = (key: string, defaultValue: string = '') => {
-  const getValue = useCallback(() => {
+  const [lastSearch, setLastSearch] = useState(() => {
     try {
-      return localStorage.getItem(key) ?? defaultValue;
+      const value = localStorage.getItem(key);
+
+      return value ? JSON.parse(value) : defaultValue;
     } catch {
+      console.error('A problem occured when retrieving data from localStorage');
       return defaultValue;
     }
-  }, [key, defaultValue]);
+  });
 
-  const setValue = useCallback(
-    (value: string, defaultValue: string = '') => {
-      try {
-        localStorage.setItem(key, value);
-      } catch {
-        return defaultValue;
-      }
-    },
-    [key],
-  );
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(lastSearch));
+  }, [key, lastSearch]);
 
-  return { getValue, setValue };
+  return [lastSearch, setLastSearch];
 };

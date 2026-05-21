@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { Search } from '@components/search';
 import { Results } from '@components/results';
@@ -20,7 +20,7 @@ const PAGE_CHANGE_DELAY_MS = 1000;
 export const HomePage: React.FC = () => {
   const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { getValue: getLastSearch, setValue: saveLastSearch } = useLocalStorage('lastSearch');
+  const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
 
   const { page = 1, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
@@ -32,20 +32,14 @@ export const HomePage: React.FC = () => {
   const setLoading = useResultsStore((state) => state.setLoading);
   const fetchCharacters = useResultsStore((state) => state.fetchCharacters);
 
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const cancelCurrentTimer = () => {
+    if (pageChangeTimeoutId.current) {
+      clearTimeout(pageChangeTimeoutId.current);
+      pageChangeTimeoutId.current = null;
+    }
+  };
 
   useEffect(() => {
-    const checkLocalStorage = () => {
-      const lastSearch = getLastSearch();
-      if (lastSearch) {
-        setSearchTerm(lastSearch);
-      }
-
-      return lastSearch;
-    };
-
-    const lastSearch = checkLocalStorage();
-
     if (!name && lastSearch) {
       void navigate({
         search: {
@@ -59,13 +53,13 @@ export const HomePage: React.FC = () => {
     }
 
     void fetchCharacters(page, name ?? '');
+  }, [page, name, lastSearch, navigate, fetchCharacters]);
 
+  useEffect(() => {
     return () => {
-      if (pageChangeTimeoutId.current) {
-        clearTimeout(pageChangeTimeoutId.current);
-      }
+      cancelCurrentTimer();
     };
-  }, [page, name, getLastSearch, navigate, fetchCharacters]);
+  }, []);
 
   const handleNextPage = () => {
     changePage(page + 1);
@@ -76,6 +70,7 @@ export const HomePage: React.FC = () => {
   };
 
   const changePage = (nextPage: number) => {
+    cancelCurrentTimer();
     setLoading();
 
     pageChangeTimeoutId.current = setTimeout(() => {
@@ -91,34 +86,34 @@ export const HomePage: React.FC = () => {
     }, PAGE_CHANGE_DELAY_MS);
   };
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-  };
-
   const handleSearch = (userInput: string) => {
     const trimmedSearch = userInput.trim().toLowerCase();
-    const lastSearch = getLastSearch();
 
-    if (isLoading || trimmedSearch === lastSearch) {
+    if (trimmedSearch === lastSearch) {
       return;
     }
 
-    saveLastSearch(trimmedSearch);
+    cancelCurrentTimer();
+    setLoading();
 
-    fetchCharacters(1, trimmedSearch);
+    pageChangeTimeoutId.current = setTimeout(() => {
+      setLastSearch(trimmedSearch);
 
-    void navigate({
-      search: {
-        page: 1,
-        name: trimmedSearch || undefined,
-      },
-    });
+      void navigate({
+        search: {
+          page: 1,
+          name: trimmedSearch || undefined,
+        },
+      });
+
+      pageChangeTimeoutId.current = null;
+    }, PAGE_CHANGE_DELAY_MS);
   };
 
   return (
     <>
       <section style={{ paddingInline: '100px' }}>
-        <Search value={searchTerm} onChange={handleSearchChange} onSearch={handleSearch} />
+        <Search savedSearch={lastSearch} onSearch={handleSearch} />
 
         {errorCode && errorCode !== 1 ? (
           <UIErrorNotification errorCode={errorCode} />
