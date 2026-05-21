@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { Search } from '@components/search';
 import { Results } from '@components/results';
@@ -7,57 +7,44 @@ import { ErrorThrower } from '@components/error-thrower';
 import { UIPagination } from '@ui/pagination';
 import { UIErrorNotification } from '@ui/error-notification';
 
-import { getStatusCode } from '@utils/helpers';
-
-import { getCharacters } from '@utils/api';
-
 import { useLocalStorage } from '@hooks/use-local-storage';
-
-import { initialHomePageState, homePageReducer } from './home.reducer';
 
 import { Route } from '@routes/characters.index';
 
 import { useNavigate } from '@tanstack/react-router';
 
+import { useResultsStore } from '../../store/results.store';
+
 const PAGE_CHANGE_DELAY_MS = 1000;
 
 export const HomePage: React.FC = () => {
-  const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
   const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const { getValue: getLastSearch, setValue: saveLastSearch } = useLocalStorage('lastSearch');
+
   const { page = 1, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
 
-  const { searchValue, lastSearch, charactersForPage, totalPages, isLoading, errorCode } = state;
+  const characters = useResultsStore((state) => state.characters);
+  const totalPages = useResultsStore((state) => state.totalPages);
+  const isLoading = useResultsStore((state) => state.isLoading);
+  const errorCode = useResultsStore((state) => state.errorCode);
+  const setLoading = useResultsStore((state) => state.setLoading);
+  const fetchCharacters = useResultsStore((state) => state.fetchCharacters);
 
-  const loadCharacters = useCallback(async (page: number, searchTerm: string) => {
-    dispatch({ type: 'startLoading' });
-
-    try {
-      const { info, results } = searchTerm
-        ? await getCharacters(page, searchTerm)
-        : await getCharacters(page);
-
-      dispatch({
-        type: 'loadSuccess',
-        payload: {
-          totalPages: info.pages,
-          charactersForPage: results,
-        },
-      });
-    } catch (err) {
-      dispatch({
-        type: 'loadError',
-        payload: {
-          errorCode: getStatusCode(err),
-          shouldResetResults: !(err instanceof TypeError),
-        },
-      });
-    }
-  }, []);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
-    const lastSearch = getLastSearch();
+    const checkLocalStorage = () => {
+      const lastSearch = getLastSearch();
+      if (lastSearch) {
+        setSearchTerm(lastSearch);
+      }
+
+      return lastSearch;
+    };
+
+    const lastSearch = checkLocalStorage();
 
     if (!name && lastSearch) {
       void navigate({
@@ -71,15 +58,14 @@ export const HomePage: React.FC = () => {
       return;
     }
 
-    dispatch({ type: 'initLastSearch', payload: name ?? '' });
-    void loadCharacters(page, name!);
+    void fetchCharacters(page, name ?? '');
 
     return () => {
       if (pageChangeTimeoutId.current) {
         clearTimeout(pageChangeTimeoutId.current);
       }
     };
-  }, [page, name, getLastSearch, navigate, loadCharacters]);
+  }, [page, name, getLastSearch, navigate, fetchCharacters]);
 
   const handleNextPage = () => {
     changePage(page + 1);
@@ -90,7 +76,7 @@ export const HomePage: React.FC = () => {
   };
 
   const changePage = (nextPage: number) => {
-    dispatch({ type: 'startLoading' });
+    setLoading();
 
     pageChangeTimeoutId.current = setTimeout(() => {
       void navigate({
@@ -106,11 +92,12 @@ export const HomePage: React.FC = () => {
   };
 
   const handleSearchChange = (value: string) => {
-    dispatch({ type: 'setSearchValue', payload: value });
+    setSearchTerm(value);
   };
 
   const handleSearch = (userInput: string) => {
     const trimmedSearch = userInput.trim().toLowerCase();
+    const lastSearch = getLastSearch();
 
     if (isLoading || trimmedSearch === lastSearch) {
       return;
@@ -118,7 +105,7 @@ export const HomePage: React.FC = () => {
 
     saveLastSearch(trimmedSearch);
 
-    dispatch({ type: 'search', payload: trimmedSearch });
+    fetchCharacters(1, trimmedSearch);
 
     void navigate({
       search: {
@@ -131,7 +118,7 @@ export const HomePage: React.FC = () => {
   return (
     <>
       <section style={{ paddingInline: '100px' }}>
-        <Search value={searchValue} onChange={handleSearchChange} onSearch={handleSearch} />
+        <Search value={searchTerm} onChange={handleSearchChange} onSearch={handleSearch} />
 
         {errorCode && errorCode !== 1 ? (
           <UIErrorNotification errorCode={errorCode} />
@@ -149,7 +136,7 @@ export const HomePage: React.FC = () => {
               />
             )}
 
-            <Results characters={charactersForPage} isLoading={isLoading} />
+            <Results characters={characters} isLoading={isLoading} />
           </>
         )}
         <ErrorThrower />
