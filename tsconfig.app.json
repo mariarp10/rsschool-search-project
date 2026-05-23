@@ -14,7 +14,8 @@
       "@pages/*": ["./src/pages/*"],
       "@tests/*": ["./__tests__/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@routes/*": ["./src/routes/*"]
+      "@routes/*": ["./src/routes/*"],
+      "@store/*": ["./src/store/*"]
     },
 
     /* Bundler mode */

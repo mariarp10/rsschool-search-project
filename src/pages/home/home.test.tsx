@@ -8,7 +8,7 @@ import {
   mockApiNotFound,
 } from '@tests/mocks';
 import { MockCharacters } from '@tests/fixtures';
-import { useResultsStore } from '../../store/results.store';
+import { useResultsStore } from '@store/results.store';
 import userEvent from '@testing-library/user-event';
 
 const initialStateStore = useResultsStore.getState();

@@ -13,7 +13,7 @@ import { Route } from '@routes/characters.index';
 
 import { useNavigate } from '@tanstack/react-router';
 
-import { useResultsStore } from '../../store/results.store';
+import { useResultsStore } from '@store/results.store';
 
 const PAGE_CHANGE_DELAY_MS = 1000;
 

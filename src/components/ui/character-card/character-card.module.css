@@ -1,5 +1,6 @@
 .list-item {
   list-style: none;
+  position: relative;
 }
 
 .card-container {
@@ -50,4 +51,13 @@
   font-family: inherit;
   color: var(--color-text-primary);
   font-weight: 500;
+}
+
+.checkbox {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  left: 10px;
+  width: 25px;
+  height: 25px;
 }
