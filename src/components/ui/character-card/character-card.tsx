@@ -14,6 +14,10 @@ type TCharacterCardProps = {
 export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
   const toggleSelection = useSelectionStore((state) => state.toggleSelection);
 
+  const isChecked = useSelectionStore((state) =>
+    state.selectedCharacters.some((selection) => selection.id === character.id),
+  );
+
   const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
     e.stopPropagation();
     toggleSelection(character);
@@ -21,7 +25,7 @@ export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
 
   return (
     <li className={cn('list-item')}>
-      <input className={cn('checkbox')} type="checkbox" onClick={handleClick} />
+      <input checked={isChecked} className={cn('checkbox')} type="checkbox" onClick={handleClick} />
       <Link
         to="/characters"
         search={(prev) => ({
