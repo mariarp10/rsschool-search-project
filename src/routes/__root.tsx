@@ -4,6 +4,7 @@ import { Header } from '@ui/header/header';
 import { Footer } from '@ui/footer/footer';
 import { ErrorBoundary } from '@components/error-boundary';
 import { NotFoundPage } from '@pages/not-found';
+import { FlyAway } from '@components/fly-away';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -18,6 +19,7 @@ function RootComponent() {
         <main style={{ flex: '1' }}>
           <Outlet />
         </main>
+        <FlyAway />
         <Footer />
         <TanStackRouterDevtools position="bottom-right" />
       </ErrorBoundary>

@@ -8,5 +8,5 @@
 
 .error-message {
   display: block;
-  color: var(--color-error);
+  color: var(--color-light-red);
 }
