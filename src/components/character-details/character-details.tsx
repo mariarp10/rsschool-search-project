@@ -150,7 +150,7 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
             e.currentTarget.src = '/images/placeholder-details-image.png';
           }}
         />
-        <h3 className={cn('facts-titile')}>{name}</h3>
+        <h3 className={cn('facts-title')}>{name}</h3>
         <div className={cn('facts-container')}>
           <p>{`Status: ${status}`}</p>
           <p>{`Species: ${species}`}</p>

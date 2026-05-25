@@ -21,7 +21,7 @@ export const UIPagination: React.FC<TUIPaginationProps> = ({
   handleNextPage,
 }) => {
   return (
-    <section role="navigation" className={cn('container')}>
+    <section className={cn('container')}>
       <UIButton
         text="Previous"
         handleClick={handlePreviousPage}

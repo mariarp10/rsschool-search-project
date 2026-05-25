@@ -16,7 +16,9 @@ export const UIErrorNotification: React.FC<TUIErrorNotificationProps> = ({ error
 
   return (
     <div role="alert" className={cn('container')}>
-      <p className={cn('error-message')}>{getErrorMessage()}</p>
+      <p className={cn('error-message')}>
+        {getErrorMessage() ?? 'We know about the issue and are working to resolve it'}
+      </p>
     </div>
   );
 };

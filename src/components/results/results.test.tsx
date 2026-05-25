@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Results } from './results';
 import { MockCharacters } from '@tests/fixtures';
@@ -40,6 +41,7 @@ describe('Results Component', () => {
     expect(title).toBeInTheDocument();
     expect(charactersList).toBeInTheDocument();
   });
+
   test(`renders correct number of items`, () => {
     render(<Results {...defaultProps} characters={MockCharacters} />);
 
@@ -47,6 +49,7 @@ describe('Results Component', () => {
 
     expect(cards.length).toEqual(MockCharacters.length);
   });
+
   test(`shows and removes loader while waiting for results`, () => {
     const { rerender } = render(<Results {...defaultProps} isLoading={true} />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
@@ -54,6 +57,7 @@ describe('Results Component', () => {
     rerender(<Results {...defaultProps} characters={MockCharacters} isLoading={false} />);
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
+
   test(`shows only loader when isLoading is true`, () => {
     render(<Results {...defaultProps} isLoading={true} />);
 
@@ -61,6 +65,7 @@ describe('Results Component', () => {
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
+
   test('shows new results after characters prop changes', () => {
     const initialCharacters = [MockCharacters[0]];
     const changedCharacters = MockCharacters.slice(1);

@@ -1,3 +1,4 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterCard } from './character-card';
 import { MockCharacters } from '@tests/fixtures';

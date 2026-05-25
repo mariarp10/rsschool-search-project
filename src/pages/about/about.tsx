@@ -41,7 +41,7 @@ export const AboutPage: React.FC = () => {
             , though it&apos;s a major work in progress.
           </p>
         </div>
-        <img src="/images/about-page-picture.jpg" />
+        <img src="/images/about-page-picture.jpg" alt="Picture of a meme" />
       </article>
     </section>
   );

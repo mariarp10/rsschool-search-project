@@ -3,6 +3,7 @@ import { UIButton } from '@ui/button';
 import { UIInput } from '@ui/input';
 import styles from './search.module.css';
 import classNames from 'classnames/bind';
+import type { FormEvent } from 'react';
 
 const cn = classNames.bind(styles);
 
@@ -18,27 +19,22 @@ export const Search: React.FC<TSearchProps> = ({ savedSearch, onSearch }) => {
     setUserInput(event.target.value);
   };
 
-  const handleClick = () => {
-    onSearch(userInput);
-  };
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSearch(userInput);
-    }
+    onSearch(userInput);
   };
 
   return (
     <section className={cn('container')}>
-      <div className={cn('search')}>
+      <form className={cn('search')} onSubmit={handleSubmit}>
         <UIInput
           placeholder="Look up Rick and Morty characters"
           value={userInput}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
         />
-        <UIButton handleClick={handleClick} text="search" />
-      </div>
+        <UIButton text="search" type="submit" />
+      </form>
       <p className={cn('hint')}>
         Try typing in names of the characters from the show: Summer, Beth, Rick
       </p>
