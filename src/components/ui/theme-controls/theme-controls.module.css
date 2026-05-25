@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  gap: 10px;
+}
+
+.button {
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  height: 40px;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+    color: var(--color-accent-primary);
+  }
+
+  &:active {
+    color: var(--color-accent-secondary);
+  }
+}

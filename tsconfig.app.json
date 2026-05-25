@@ -15,7 +15,8 @@
       "@tests/*": ["./__tests__/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@routes/*": ["./src/routes/*"],
-      "@store/*": ["./src/store/*"]
+      "@store/*": ["./src/store/*"],
+      "@assets/*": ["./src/assets/*"]
     },
 
     /* Bundler mode */

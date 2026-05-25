@@ -23,6 +23,7 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, 'src/hooks'),
       '@routes': path.resolve(__dirname, 'src/routes'),
       '@store': path.resolve(__dirname, 'src/store'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
     },
   },
 

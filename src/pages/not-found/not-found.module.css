@@ -20,6 +20,6 @@
   font-size: 22px;
 
   &:hover {
-    color: var(--color-light-purple);
+    color: var(--color-accent-secondary);
   }
 }

@@ -4,11 +4,11 @@
   border-radius: 5px;
   width: 100%;
   height: 30px;
-  background-color: var(--color-text-primary);
+  background-color: white;
   font-family: inherit;
 
   &:focus {
-    border-color: var(--color-light-green);
+    border-color: var(--color-accent-primary);
     border-width: 2px;
   }
 

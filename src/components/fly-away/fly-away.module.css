@@ -6,7 +6,7 @@
   position: sticky;
   z-index: 3;
   border-radius: 20px;
-  box-shadow: 1px 1px 10px 0 var(--color-light-purple);
+  box-shadow: 1px 1px 10px 0 var(--color-accent-primary);
 }
 
 .list {
@@ -35,11 +35,11 @@
   align-items: center;
 
   &:hover {
-    color: var(--color-light-red);
+    color: var(--color-error-primary);
   }
 
   &:active {
-    color: var(--color-dark-red);
+    color: var(--color-error-secondary);
   }
 }
 

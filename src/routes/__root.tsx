@@ -5,6 +5,7 @@ import { Footer } from '@ui/footer/footer';
 import { ErrorBoundary } from '@components/error-boundary';
 import { NotFoundPage } from '@pages/not-found';
 import { FlyAway } from '@components/fly-away';
+import { ThemeProvider } from '@components/theme-provider';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -15,13 +16,15 @@ function RootComponent() {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
       <ErrorBoundary>
-        <Header />
-        <main style={{ flex: '1' }}>
-          <Outlet />
-        </main>
-        <FlyAway />
-        <Footer />
-        <TanStackRouterDevtools position="bottom-right" />
+        <ThemeProvider>
+          <Header />
+          <main style={{ flex: '1' }}>
+            <Outlet />
+          </main>
+          <FlyAway />
+          <Footer />
+          <TanStackRouterDevtools position="bottom-right" />
+        </ThemeProvider>
       </ErrorBoundary>
     </div>
   );

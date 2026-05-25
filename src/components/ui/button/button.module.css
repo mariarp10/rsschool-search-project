@@ -1,24 +1,23 @@
 .button {
   border: 1px solid var(--color-border);
   border-radius: 5px;
-  background-color: var(--color-text-primary);
   padding: 5px 15px;
   font: inherit;
   font-size: 14px;
   text-transform: capitalize;
-  /* width: 80px; */
+  background-color: white;
 
   &:hover {
-    background-color: var(--color-light-green);
+    background-color: var(--color-button-hover);
   }
 
   &:active {
-    background-color: var(--color-dark-green);
+    background-color: var();
   }
 
   &:disabled {
-    color: var(--color-text-secondary);
     opacity: 0.9;
+    color: var(--color-text-secondary);
     pointer-events: none;
   }
 }
