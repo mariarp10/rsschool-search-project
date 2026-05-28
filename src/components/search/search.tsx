@@ -12,7 +12,11 @@ type TSearchProps = {
   onSearch: (value: string) => void;
 };
 
-export const Search: React.FC<TSearchProps> = ({ value, onChange, onSearch }) => {
+export const Search: React.FC<TSearchProps> = ({
+  value,
+  onChange,
+  onSearch,
+}) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   };

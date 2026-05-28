@@ -71,10 +71,10 @@ describe(`Home page`, () => {
         renderWithRouter();
 
         const filteredCharacters = MockCharacters.filter((character) =>
-          character.name.toLowerCase().includes('rick'),
+          character.name.toLowerCase().includes('rick')
         );
         const excludedCharacters = MockCharacters.filter(
-          (character) => !character.name.toLowerCase().includes('rick'),
+          (character) => !character.name.toLowerCase().includes('rick')
         );
 
         for (const character of filteredCharacters) {
@@ -122,7 +122,7 @@ describe(`Home page`, () => {
               results: MockCharacters,
             });
           };
-        }),
+        })
       );
 
       renderWithRouter();
@@ -131,7 +131,9 @@ describe(`Home page`, () => {
 
       resolveRequest();
 
-      expect(await screen.findByText(MockCharacters[0].name)).toBeInTheDocument();
+      expect(
+        await screen.findByText(MockCharacters[0].name)
+      ).toBeInTheDocument();
 
       await waitFor(() => {
         expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();

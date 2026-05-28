@@ -3,8 +3,9 @@ import { Results } from './results';
 import { MockCharacters } from '@tests/fixtures';
 
 vi.mock('@tanstack/react-router', async () => {
-  const actual =
-    await vi.importActual<typeof import('@tanstack/react-router')>('@tanstack/react-router');
+  const actual = await vi.importActual<typeof import('@tanstack/react-router')>(
+    '@tanstack/react-router'
+  );
 
   return {
     ...actual,
@@ -51,7 +52,13 @@ describe('Results Component', () => {
     const { rerender } = render(<Results {...defaultProps} isLoading={true} />);
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
-    rerender(<Results {...defaultProps} characters={MockCharacters} isLoading={false} />);
+    rerender(
+      <Results
+        {...defaultProps}
+        characters={MockCharacters}
+        isLoading={false}
+      />
+    );
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
   test(`shows only loader when isLoading is true`, () => {
@@ -65,7 +72,9 @@ describe('Results Component', () => {
     const initialCharacters = [MockCharacters[0]];
     const changedCharacters = MockCharacters.slice(1);
 
-    const { rerender } = render(<Results {...defaultProps} characters={initialCharacters} />);
+    const { rerender } = render(
+      <Results {...defaultProps} characters={initialCharacters} />
+    );
 
     expect(screen.getByText(initialCharacters[0].name)).toBeInTheDocument();
 

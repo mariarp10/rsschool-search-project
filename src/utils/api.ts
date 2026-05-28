@@ -22,7 +22,10 @@ const _addToCache = async (url: string, response: Response): Promise<void> => {
   await cache.put(url, response.clone());
 };
 
-export const getCharacters = async (page: number, name?: string): Promise<TCharacterResponse> => {
+export const getCharacters = async (
+  page: number,
+  name?: string
+): Promise<TCharacterResponse> => {
   const url = new URL(`${baseURL}/character`);
   if (name) {
     url.searchParams.set('name', name);

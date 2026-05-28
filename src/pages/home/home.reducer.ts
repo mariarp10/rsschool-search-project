@@ -38,7 +38,10 @@ export const initialHomePageState: THomePageState = {
   errorCode: null,
 };
 
-export function homePageReducer(state: THomePageState, action: THomePageAction): THomePageState {
+export function homePageReducer(
+  state: THomePageState,
+  action: THomePageAction
+): THomePageState {
   switch (action.type) {
     case 'setSearchValue':
       return {
@@ -74,8 +77,12 @@ export function homePageReducer(state: THomePageState, action: THomePageAction):
         ...state,
         isLoading: false,
         errorCode: action.payload.errorCode,
-        charactersForPage: action.payload.shouldResetResults ? [] : state.charactersForPage,
-        currentPage: action.payload.shouldResetResults ? 1 : Math.max(state.currentPage - 1, 1),
+        charactersForPage: action.payload.shouldResetResults
+          ? []
+          : state.charactersForPage,
+        currentPage: action.payload.shouldResetResults
+          ? 1
+          : Math.max(state.currentPage - 1, 1),
         totalPages: action.payload.shouldResetResults ? 0 : state.totalPages,
       };
 

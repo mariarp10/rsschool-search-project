@@ -23,38 +23,51 @@ const PAGE_CHANGE_DELAY_MS = 1000;
 
 export const HomePage: React.FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
-  const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { getValue: getLastSearch, setValue: saveLastSearch } = useLocalStorage('lastSearch');
+  const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  );
+  const { getValue: getLastSearch, setValue: saveLastSearch } =
+    useLocalStorage('lastSearch');
   const { page = 1, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
 
-  const { searchValue, lastSearch, charactersForPage, totalPages, isLoading, errorCode } = state;
+  const {
+    searchValue,
+    lastSearch,
+    charactersForPage,
+    totalPages,
+    isLoading,
+    errorCode,
+  } = state;
 
-  const loadCharacters = useCallback(async (page: number, searchTerm: string) => {
-    dispatch({ type: 'startLoading' });
+  const loadCharacters = useCallback(
+    async (page: number, searchTerm: string) => {
+      dispatch({ type: 'startLoading' });
 
-    try {
-      const { info, results } = searchTerm
-        ? await getCharacters(page, searchTerm)
-        : await getCharacters(page);
+      try {
+        const { info, results } = searchTerm
+          ? await getCharacters(page, searchTerm)
+          : await getCharacters(page);
 
-      dispatch({
-        type: 'loadSuccess',
-        payload: {
-          totalPages: info.pages,
-          charactersForPage: results,
-        },
-      });
-    } catch (err) {
-      dispatch({
-        type: 'loadError',
-        payload: {
-          errorCode: getStatusCode(err),
-          shouldResetResults: !(err instanceof TypeError),
-        },
-      });
-    }
-  }, []);
+        dispatch({
+          type: 'loadSuccess',
+          payload: {
+            totalPages: info.pages,
+            charactersForPage: results,
+          },
+        });
+      } catch (err) {
+        dispatch({
+          type: 'loadError',
+          payload: {
+            errorCode: getStatusCode(err),
+            shouldResetResults: !(err instanceof TypeError),
+          },
+        });
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const lastSearch = getLastSearch();
@@ -131,7 +144,11 @@ export const HomePage: React.FC = () => {
   return (
     <>
       <section style={{ paddingInline: '100px' }}>
-        <Search value={searchValue} onChange={handleSearchChange} onSearch={handleSearch} />
+        <Search
+          value={searchValue}
+          onChange={handleSearchChange}
+          onSearch={handleSearch}
+        />
 
         {errorCode && errorCode !== 1 ? (
           <UIErrorNotification errorCode={errorCode} />

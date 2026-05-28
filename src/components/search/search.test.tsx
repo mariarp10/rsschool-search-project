@@ -28,10 +28,12 @@ describe('Search Component', () => {
   test('renders input, search button, and hint', () => {
     render(<Search {...defaultProps} />);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
     const searchButton = screen.getByRole('button', { name: /search/i });
     const hintElement = screen.getByText(
-      'Try typing in names of the characters from the show: Summer, Beth, Rick',
+      'Try typing in names of the characters from the show: Summer, Beth, Rick'
     );
 
     expect(inputElement).toBeInTheDocument();
@@ -42,7 +44,9 @@ describe('Search Component', () => {
   test('displays value from props', () => {
     render(<Search {...defaultProps} value="Rick" />);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
 
     expect(inputElement).toHaveValue('Rick');
   });
@@ -50,7 +54,9 @@ describe('Search Component', () => {
   test('displays empty string when value is empty', () => {
     render(<Search {...defaultProps} value="" />);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
 
     expect(inputElement).toHaveValue('');
   });
@@ -61,7 +67,9 @@ describe('Search Component', () => {
 
     render(<Search {...defaultProps} value="" onChange={handleChange} />);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
 
     await user.type(inputElement, 'Morty');
 
@@ -74,7 +82,9 @@ describe('Search Component', () => {
 
     renderControlledSearch();
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
 
     await user.type(inputElement, 'Morty');
 
@@ -87,7 +97,9 @@ describe('Search Component', () => {
 
     renderControlledSearch(handleSearch);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
     const searchButton = screen.getByRole('button', { name: /search/i });
 
     await user.type(inputElement, 'Summer');
@@ -103,7 +115,9 @@ describe('Search Component', () => {
 
     renderControlledSearch(handleSearch);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
 
     await user.type(inputElement, 'Summer');
     await user.keyboard('{Enter}');
@@ -115,7 +129,9 @@ describe('Search Component', () => {
   test('updates input value when value prop changes', () => {
     const { rerender } = render(<Search {...defaultProps} value="Rick" />);
 
-    const inputElement = screen.getByPlaceholderText('Look up Rick and Morty characters');
+    const inputElement = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters'
+    );
 
     expect(inputElement).toHaveValue('Rick');
 

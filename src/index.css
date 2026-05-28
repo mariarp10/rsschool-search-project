@@ -19,7 +19,8 @@
 
 @font-face {
   font-family: Nunito;
-  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2') format('woff2-variations');
+  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2')
+    format('woff2-variations');
   font-weight: 200 900;
   font-style: normal;
   font-display: swap;

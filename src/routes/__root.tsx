@@ -12,7 +12,9 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+    <div
+      style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
+    >
       <ErrorBoundary>
         <Header />
         <main style={{ flex: '1' }}>

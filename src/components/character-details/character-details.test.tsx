@@ -83,14 +83,22 @@ describe('CharacterDetails Component', () => {
 
     await flushDetailsLoading();
 
-    expect(screen.getByRole('heading', { name: 'Details about character' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: character.name })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Details about character' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: character.name })
+    ).toBeInTheDocument();
 
     expect(screen.getByText(`Status: ${character.status}`)).toBeInTheDocument();
-    expect(screen.getByText(`Species: ${character.species}`)).toBeInTheDocument();
-    expect(screen.getByText(`Origin planet: ${character.origin.name}`)).toBeInTheDocument();
     expect(
-      screen.getByText(`Appeared in ${character.episode.length} episode(s)`),
+      screen.getByText(`Species: ${character.species}`)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(`Origin planet: ${character.origin.name}`)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(`Appeared in ${character.episode.length} episode(s)`)
     ).toBeInTheDocument();
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -127,12 +135,17 @@ describe('CharacterDetails Component', () => {
 
     fireEvent.error(image);
 
-    expect(image).toHaveAttribute('src', '/images/placeholder-details-image.png');
+    expect(image).toHaveAttribute(
+      'src',
+      '/images/placeholder-details-image.png'
+    );
   });
 
   test('shows error notification when details request fails', async () => {
     mockedGetDetails.mockRejectedValue(
-      new Response(JSON.stringify({ error: 'There is nothing here' }), { status: 404 }),
+      new Response(JSON.stringify({ error: 'There is nothing here' }), {
+        status: 404,
+      })
     );
 
     render(<CharacterDetails id={999} />);
@@ -143,8 +156,8 @@ describe('CharacterDetails Component', () => {
 
     expect(
       screen.getByText(
-        `Looks like this this character wasn't in the show. Try looking up someone else`,
-      ),
+        `Looks like this this character wasn't in the show. Try looking up someone else`
+      )
     ).toBeInTheDocument();
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
@@ -167,7 +180,7 @@ describe('CharacterDetails Component', () => {
     fireEvent.click(
       screen.getByRole('button', {
         name: 'Close',
-      }),
+      })
     );
 
     expect(mocks.navigate).toHaveBeenCalledWith({
@@ -196,7 +209,7 @@ describe('CharacterDetails Component', () => {
     fireEvent.click(
       screen.getByRole('button', {
         name: 'Close',
-      }),
+      })
     );
 
     expect(mocks.navigate).toHaveBeenCalledWith({

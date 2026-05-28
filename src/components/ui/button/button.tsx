@@ -11,7 +11,12 @@ type TUIButtonProps = {
   extraClass?: string;
 };
 
-export const UIButton: React.FC<TUIButtonProps> = ({ text, disabled, handleClick, extraClass }) => {
+export const UIButton: React.FC<TUIButtonProps> = ({
+  text,
+  disabled,
+  handleClick,
+  extraClass,
+}) => {
   return (
     <button
       className={cn('button', extraClass)}

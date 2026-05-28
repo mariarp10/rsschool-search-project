@@ -9,7 +9,9 @@ type TUIErrorNotificationProps = {
   errorCode: number;
 };
 
-export const UIErrorNotification: React.FC<TUIErrorNotificationProps> = ({ errorCode }) => {
+export const UIErrorNotification: React.FC<TUIErrorNotificationProps> = ({
+  errorCode,
+}) => {
   const getErrorMessage = () => {
     return ErrorMessages[errorCode];
   };

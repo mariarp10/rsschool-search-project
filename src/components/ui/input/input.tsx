@@ -11,7 +11,12 @@ type TUIInputProps = {
   onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export const UIInput: React.FC<TUIInputProps> = ({ placeholder, value, onChange, onKeyDown }) => {
+export const UIInput: React.FC<TUIInputProps> = ({
+  placeholder,
+  value,
+  onChange,
+  onKeyDown,
+}) => {
   return (
     <input
       type="text"
