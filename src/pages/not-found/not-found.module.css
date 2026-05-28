@@ -1,9 +1,10 @@
 .container {
-  padding-inline: 100px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+
   max-height: 100vh;
+  padding-inline: 100px;
 }
 
 .titile {
@@ -11,8 +12,8 @@
 }
 
 .image {
-  object-fit: contain;
   align-self: center;
+  object-fit: contain;
 }
 
 .link {

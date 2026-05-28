@@ -1,6 +1,6 @@
 .container {
-  background-color: var(--color-bg-primary);
   padding-bottom: 40px;
+  background-color: var(--color-bg-primary);
 }
 
 .search {
