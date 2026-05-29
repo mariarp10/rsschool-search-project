@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { Results } from './results';
 import { MockCharacters } from '@tests/fixtures';
+import { type ReactNode } from 'react';
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual<typeof import('@tanstack/react-router')>(
@@ -12,11 +13,9 @@ vi.mock('@tanstack/react-router', async () => {
 
     Link: ({
       children,
-
       className,
     }: {
-      children: React.ReactNode;
-
+      children: ReactNode;
       className?: string;
     }) => (
       <a href="/characters?page=1&detailsId=1" className={className}>

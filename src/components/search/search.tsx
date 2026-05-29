@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC, type ChangeEvent, type KeyboardEvent } from 'react';
 import { UIButton } from '@ui/button';
 import { UIInput } from '@ui/input';
 import styles from './search.module.css';
@@ -12,12 +12,8 @@ type TSearchProps = {
   onSearch: (value: string) => void;
 };
 
-export const Search: React.FC<TSearchProps> = ({
-  value,
-  onChange,
-  onSearch,
-}) => {
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+export const Search: FC<TSearchProps> = ({ value, onChange, onSearch }) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   };
 
@@ -25,7 +21,7 @@ export const Search: React.FC<TSearchProps> = ({
     onSearch(value);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       onSearch(value);
     }

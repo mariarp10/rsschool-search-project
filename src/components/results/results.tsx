@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import type { TCharacter } from '@utils/types';
 import { CharacterCard } from '@ui/character-card';
 import { CardsList } from '@ui/cards-list';
@@ -12,11 +12,11 @@ type TResultsProps = {
   characters: TCharacter[];
   isLoading: boolean;
 };
-export const Results: React.FC<TResultsProps> = ({ characters, isLoading }) => {
+export const Results: FC<TResultsProps> = ({ characters, isLoading }) => {
   return (
     <>
       {isLoading ? (
-        <UILoader></UILoader>
+        <UILoader />
       ) : (
         <section className={cn('container')}>
           <h2 className={cn('title')}>Seen in the show</h2>

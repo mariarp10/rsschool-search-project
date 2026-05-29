@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import type { TCharacter } from '@utils/types';
 import styles from './character-card.module.css';
 import classNames from 'classnames/bind';
@@ -10,7 +10,7 @@ type TCharacterCardProps = {
   character: TCharacter;
 };
 
-export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
+export const CharacterCard: FC<TCharacterCardProps> = ({ character }) => {
   return (
     <li className={cn('list-item')}>
       <Link

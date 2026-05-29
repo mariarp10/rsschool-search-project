@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { type TCharacter } from '@utils/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
@@ -7,6 +7,7 @@ import { getStatusCode } from '@utils/helpers';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
 import { UIErrorNotification } from '@ui/error-notification';
+import { CrossIcon } from '@assets/icons/cross-icon';
 
 const DETAILS_CHANGE_DELAY_MS = 1000;
 
@@ -28,7 +29,7 @@ const initialState: TCharacterDetailsState = {
   character: null,
 };
 
-export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
+export const CharacterDetails: FC<TCharacterDetailsProps> = ({ id }) => {
   const [state, setState] = useState<TCharacterDetailsState>(initialState);
 
   const navigate = useNavigate();
@@ -130,20 +131,7 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
           aria-label="Close"
           className={cn('close-button')}
         >
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              d="M18 6L6 18M6 6l12 12"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <CrossIcon />
         </button>
       </div>
       <section className={cn('card')}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import styles from './button.module.css';
 import classNames from 'classnames/bind';
 
@@ -11,7 +11,7 @@ type TUIButtonProps = {
   extraClass?: string;
 };
 
-export const UIButton: React.FC<TUIButtonProps> = ({
+export const UIButton: FC<TUIButtonProps> = ({
   text,
   disabled,
   handleClick,

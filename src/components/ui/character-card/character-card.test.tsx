@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { CharacterCard } from './character-card';
 import { MockCharacters } from '@tests/fixtures';
+import { type ReactNode } from 'react';
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -12,7 +13,7 @@ vi.mock('@tanstack/react-router', async () => {
       children,
       className,
     }: {
-      children: React.ReactNode;
+      children: ReactNode;
       className?: string;
     }) => (
       <a href="/characters?page=1" className={className}>

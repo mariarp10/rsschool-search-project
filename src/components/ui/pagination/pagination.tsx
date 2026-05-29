@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC } from 'react';
 import { UIButton } from '@ui/button';
 import styles from './pagination.module.css';
 import classNames from 'classnames/bind';
@@ -13,7 +13,7 @@ type TUIPaginationProps = {
   handleNextPage: () => void;
 };
 
-export const UIPagination: React.FC<TUIPaginationProps> = ({
+export const UIPagination: FC<TUIPaginationProps> = ({
   currentPage,
   totalPages,
   isLoading,

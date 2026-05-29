@@ -1,4 +1,4 @@
-import React from 'react';
+import { type FC, type ChangeEvent, type KeyboardEvent } from 'react';
 import styles from './input.module.css';
 import classNames from 'classnames/bind';
 
@@ -7,11 +7,11 @@ const cn = classNames.bind(styles);
 type TUIInputProps = {
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export const UIInput: React.FC<TUIInputProps> = ({
+export const UIInput: FC<TUIInputProps> = ({
   placeholder,
   value,
   onChange,

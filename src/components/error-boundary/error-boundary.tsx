@@ -1,9 +1,14 @@
-import React from 'react';
+import {
+  Component,
+  type ErrorInfo,
+  type PropsWithChildren,
+  type ReactNode,
+} from 'react';
 
 type TErrorBoundaryState = { hasError: boolean };
 
-export class ErrorBoundary extends React.Component<
-  React.PropsWithChildren,
+export class ErrorBoundary extends Component<
+  PropsWithChildren,
   TErrorBoundaryState
 > {
   state: TErrorBoundaryState = { hasError: false };
@@ -12,11 +17,11 @@ export class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
+  componentDidCatch(error: Error, info: ErrorInfo) {
     console.error(error, info.componentStack);
   }
 
-  render(): React.ReactNode {
+  render(): ReactNode {
     if (this.state.hasError) {
       return (
         <>

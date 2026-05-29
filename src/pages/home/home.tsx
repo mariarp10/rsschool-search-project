@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect, useRef, useCallback } from 'react';
+import { type FC, useReducer, useEffect, useRef, useCallback } from 'react';
 
 import { Search } from '@components/search';
 import { Results } from '@components/results';
@@ -21,7 +21,7 @@ import { useNavigate } from '@tanstack/react-router';
 
 const PAGE_CHANGE_DELAY_MS = 1000;
 
-export const HomePage: React.FC = () => {
+export const HomePage: FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
   const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
     null
