@@ -4,14 +4,14 @@ import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-type TUIButtonProps = {
+type ButtonProps = {
   text: string;
   disabled?: boolean;
   handleClick: () => void;
   extraClass?: string;
 };
 
-export const UIButton: FC<TUIButtonProps> = ({
+export const Button: FC<ButtonProps> = ({
   text,
   disabled,
   handleClick,

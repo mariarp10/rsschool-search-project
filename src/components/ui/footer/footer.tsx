@@ -7,7 +7,14 @@ const cn = classNames.bind(styles);
 export const Footer: FC = () => {
   return (
     <footer className={cn('footer')}>
-      <p>RSSchool 2026</p>
+      <a
+        href="https://rs.school/"
+        rel="noopener noreferrer"
+        target="_blank"
+        className={cn('link')}
+      >
+        RSSchool 2026
+      </a>
     </footer>
   );
 };

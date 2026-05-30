@@ -49,7 +49,7 @@ describe('Results Component', () => {
   });
   test(`shows and removes loader while waiting for results`, () => {
     const { rerender } = render(<Results {...defaultProps} isLoading={true} />);
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
 
     rerender(
       <Results
@@ -58,12 +58,12 @@ describe('Results Component', () => {
         isLoading={false}
       />
     );
-    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
   test(`shows only loader when isLoading is true`, () => {
     render(<Results {...defaultProps} isLoading={true} />);
 
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });

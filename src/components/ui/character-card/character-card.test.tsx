@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { CharacterCard } from './character-card';
 import { MockCharacters } from '@tests/fixtures';
 import { type ReactNode } from 'react';
@@ -27,11 +27,13 @@ const character = MockCharacters[0];
 
 describe('CharacterCard Component', () => {
   test('shows placeholder image when image request fails with an error', () => {
-    render(<CharacterCard character={character} />);
+    const { container } = render(<CharacterCard character={character} />);
 
-    const img = screen.getByRole('img', { name: 'Picture of character' });
+    const img = container.querySelector('img');
 
-    fireEvent.error(img);
+    expect(img).toBeInTheDocument();
+
+    fireEvent.error(img!);
 
     expect(img).toHaveAttribute('src', '/images/placeholder-image.png');
   });

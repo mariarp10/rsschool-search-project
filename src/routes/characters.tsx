@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SplitLayout } from '@components/split-layout';
+import { SplitLayout } from '@components/split-layout/split-layoyt';
 import { z } from 'zod';
 
 const searchSchema = z.object({

@@ -5,13 +5,13 @@ import {
   type ReactNode,
 } from 'react';
 
-type TErrorBoundaryState = { hasError: boolean };
+type ErrorBoundaryState = { hasError: boolean };
 
 export class ErrorBoundary extends Component<
   PropsWithChildren,
-  TErrorBoundaryState
+  ErrorBoundaryState
 > {
-  state: TErrorBoundaryState = { hasError: false };
+  state: ErrorBoundaryState = { hasError: false };
 
   static getDerivedStateFromError() {
     return { hasError: true };

@@ -7,3 +7,18 @@
 
   background-color: var(--color-bg-primary);
 }
+
+.link {
+  transition: transform 120ms ease;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-light-blue);
+    text-decoration: underline;
+    text-underline-offset: 10px;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}

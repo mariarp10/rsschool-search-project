@@ -1,15 +1,14 @@
-import { type FC, useReducer, useEffect, useRef, useCallback } from 'react';
+import { type FC, useReducer, useEffect, useCallback } from 'react';
 
-import { Search } from '@components/search';
-import { Results } from '@components/results';
-import { ErrorThrower } from '@components/error-thrower';
+import { Search } from '@components/search/search';
+import { Results } from '@components/results/results';
+import { ErrorThrower } from '@components/error-thrower/error-thrower';
 
-import { UIPagination } from '@ui/pagination';
-import { UIErrorNotification } from '@ui/error-notification';
-
-import { getStatusCode } from '@utils/helpers';
+import { Pagination } from '@ui/pagination/pagination';
+import { ErrorNotification } from '@ui/error-notification/error-notification';
 
 import { getCharacters } from '@utils/api';
+import { ApiError } from '@utils/api-error';
 
 import { useLocalStorage } from '@hooks/use-local-storage';
 
@@ -19,13 +18,9 @@ import { Route } from '@routes/characters.index';
 
 import { useNavigate } from '@tanstack/react-router';
 
-const PAGE_CHANGE_DELAY_MS = 1000;
-
 export const HomePage: FC = () => {
   const [state, dispatch] = useReducer(homePageReducer, initialHomePageState);
-  const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(
-    null
-  );
+
   const { getValue: getLastSearch, setValue: saveLastSearch } =
     useLocalStorage('lastSearch');
   const { page = 1, name } = Route.useSearch();
@@ -36,13 +31,14 @@ export const HomePage: FC = () => {
     lastSearch,
     charactersForPage,
     totalPages,
+    hasError,
     isLoading,
     errorCode,
   } = state;
 
   const loadCharacters = useCallback(
     async (page: number, searchTerm: string) => {
-      dispatch({ type: 'startLoading' });
+      dispatch({ type: 'START_LOADING' });
 
       try {
         const { info, results } = searchTerm
@@ -50,7 +46,7 @@ export const HomePage: FC = () => {
           : await getCharacters(page);
 
         dispatch({
-          type: 'loadSuccess',
+          type: 'LOAD_SUCCESS',
           payload: {
             totalPages: info.pages,
             charactersForPage: results,
@@ -58,9 +54,9 @@ export const HomePage: FC = () => {
         });
       } catch (err) {
         dispatch({
-          type: 'loadError',
+          type: 'LOAD_ERROR',
           payload: {
-            errorCode: getStatusCode(err),
+            errorCode: err instanceof ApiError ? err.status : null,
             shouldResetResults: !(err instanceof TypeError),
           },
         });
@@ -84,14 +80,8 @@ export const HomePage: FC = () => {
       return;
     }
 
-    dispatch({ type: 'initLastSearch', payload: name ?? '' });
+    dispatch({ type: 'INIT_LAST_SEARCH', payload: name ?? '' });
     void loadCharacters(page, name!);
-
-    return () => {
-      if (pageChangeTimeoutId.current) {
-        clearTimeout(pageChangeTimeoutId.current);
-      }
-    };
   }, [page, name, getLastSearch, navigate, loadCharacters]);
 
   const handleNextPage = () => {
@@ -103,23 +93,20 @@ export const HomePage: FC = () => {
   };
 
   const changePage = (nextPage: number) => {
-    dispatch({ type: 'startLoading' });
+    dispatch({ type: 'START_LOADING' });
 
-    pageChangeTimeoutId.current = setTimeout(() => {
-      void navigate({
-        search: (prev) => ({
-          ...prev,
-          page: nextPage,
-        }),
-      });
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        page: nextPage,
+      }),
+    });
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      pageChangeTimeoutId.current = null;
-    }, PAGE_CHANGE_DELAY_MS);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSearchChange = (value: string) => {
-    dispatch({ type: 'setSearchValue', payload: value });
+    dispatch({ type: 'SET_SEARCH_VALUE', payload: value });
   };
 
   const handleSearch = (userInput: string) => {
@@ -131,7 +118,7 @@ export const HomePage: FC = () => {
 
     saveLastSearch(trimmedSearch);
 
-    dispatch({ type: 'search', payload: trimmedSearch });
+    dispatch({ type: 'SEARCH', payload: trimmedSearch });
 
     void navigate({
       search: {
@@ -150,14 +137,14 @@ export const HomePage: FC = () => {
           onSearch={handleSearch}
         />
 
-        {errorCode && errorCode !== 1 ? (
-          <UIErrorNotification errorCode={errorCode} />
+        {hasError ? (
+          <ErrorNotification errorCode={errorCode} />
         ) : (
           <>
-            {errorCode === 1 && <UIErrorNotification errorCode={errorCode} />}
+            {errorCode === 1 && <ErrorNotification errorCode={errorCode} />}
 
             {totalPages > 1 && (
-              <UIPagination
+              <Pagination
                 currentPage={page}
                 totalPages={totalPages}
                 isLoading={isLoading}

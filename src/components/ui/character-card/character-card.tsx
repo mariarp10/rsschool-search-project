@@ -1,16 +1,16 @@
 import { type FC } from 'react';
-import type { TCharacter } from '@utils/types';
+import type { Character } from '@utils/types';
 import styles from './character-card.module.css';
 import classNames from 'classnames/bind';
 import { Link } from '@tanstack/react-router';
 
 const cn = classNames.bind(styles);
 
-type TCharacterCardProps = {
-  character: TCharacter;
+type CharacterCardProps = {
+  character: Character;
 };
 
-export const CharacterCard: FC<TCharacterCardProps> = ({ character }) => {
+export const CharacterCard: FC<CharacterCardProps> = ({ character }) => {
   return (
     <li className={cn('list-item')}>
       <Link
@@ -26,16 +26,14 @@ export const CharacterCard: FC<TCharacterCardProps> = ({ character }) => {
           <img
             className={cn('avatar')}
             src={character.image}
-            alt={'Picture of character'}
+            alt=""
             loading="lazy"
             onError={(e) => {
               e.currentTarget.onerror = null;
               e.currentTarget.src = '/images/placeholder-image.png';
             }}
           />
-          <div className={cn('overlay')}>
-            <h3 className={cn('name')}>{character.name}</h3>
-          </div>
+          <h3 className={cn('name')}>{character.name}</h3>
         </div>
       </Link>
     </li>

@@ -4,14 +4,14 @@ import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-type TUIInputProps = {
+type InputProps = {
   placeholder: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export const UIInput: FC<TUIInputProps> = ({
+export const Input: FC<InputProps> = ({
   placeholder,
   value,
   onChange,
@@ -19,13 +19,12 @@ export const UIInput: FC<TUIInputProps> = ({
 }) => {
   return (
     <input
-      type="text"
+      type="search"
       className={cn('input')}
       placeholder={placeholder}
       onChange={onChange}
       onKeyDown={onKeyDown}
       value={value}
-      id="search"
     />
   );
 };

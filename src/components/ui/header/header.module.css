@@ -32,3 +32,9 @@
     transform: scale(0.96);
   }
 }
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}

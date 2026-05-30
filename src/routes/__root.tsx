@@ -2,8 +2,8 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Header } from '@ui/header/header';
 import { Footer } from '@ui/footer/footer';
-import { ErrorBoundary } from '@components/error-boundary';
-import { NotFoundPage } from '@pages/not-found';
+import { ErrorBoundary } from '@components/error-boundary/error-boundary';
+import { NotFoundPage } from '@pages/not-found/not-found';
 
 export const Route = createRootRoute({
   component: RootComponent,

@@ -1,4 +1,4 @@
-export type TCharacter = {
+export type Character = {
   id: number;
   name: string;
   status: string;
@@ -19,12 +19,12 @@ export type TCharacter = {
   created: string;
 };
 
-export type TCharacterResponse = {
+export type CharacterResponse = {
   info: {
     count: number;
     pages: number;
     next: null | string;
     prev: null | string;
   };
-  results: TCharacter[];
+  results: Character[];
 };

@@ -4,9 +4,9 @@ import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-export const UILoader: FC = () => {
+export const Loader: FC = () => {
   return (
-    <div role="progressbar" aria-label="Loading" className={cn('loader')}>
+    <div role="status" aria-label="Loading" className={cn('loader')}>
       <div className={cn('loader-circle')} />
     </div>
   );

@@ -1,11 +1,11 @@
 import { type FC } from 'react';
-import { UIButton } from '@ui/button';
+import { Button } from '@ui/button/button';
 import styles from './pagination.module.css';
 import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-type TUIPaginationProps = {
+type PaginationProps = {
   currentPage: number;
   totalPages: number;
   isLoading: boolean;
@@ -13,7 +13,7 @@ type TUIPaginationProps = {
   handleNextPage: () => void;
 };
 
-export const UIPagination: FC<TUIPaginationProps> = ({
+export const Pagination: FC<PaginationProps> = ({
   currentPage,
   totalPages,
   isLoading,
@@ -22,7 +22,7 @@ export const UIPagination: FC<TUIPaginationProps> = ({
 }) => {
   return (
     <section role="navigation" className={cn('container')}>
-      <UIButton
+      <Button
         text="Previous"
         handleClick={handlePreviousPage}
         disabled={isLoading || currentPage === 1}
@@ -30,7 +30,7 @@ export const UIPagination: FC<TUIPaginationProps> = ({
       <span>
         Page {currentPage} of {totalPages}
       </span>
-      <UIButton
+      <Button
         text="Next"
         handleClick={handleNextPage}
         disabled={isLoading || currentPage === totalPages}

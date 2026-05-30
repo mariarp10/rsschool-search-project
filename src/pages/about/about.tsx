@@ -8,7 +8,7 @@ export const AboutPage: FC = () => {
   return (
     <section className={cn('container')}>
       <h1>{`Howdy y'all`}</h1>
-      <article className={cn('wrapper')}>
+      <div className={cn('wrapper')}>
         <div className={cn('content')}>
           <p>
             This is a search application for Rick and Morty characters. It
@@ -17,7 +17,7 @@ export const AboutPage: FC = () => {
             <a
               href="https://rickandmortyapi.com/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={cn('link')}
             >
               Rick and Morty API
@@ -28,7 +28,7 @@ export const AboutPage: FC = () => {
             <a
               href="https://rs.school/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={cn('link')}
             >
               RSSchool React Bootcamp
@@ -40,7 +40,7 @@ export const AboutPage: FC = () => {
             <a
               href="https://github.com/mariarp10"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={cn('link')}
             >
               GitHub
@@ -48,8 +48,8 @@ export const AboutPage: FC = () => {
             , though it&apos;s a major work in progress.
           </p>
         </div>
-        <img src="/images/about-page-picture.jpg" />
-      </article>
+        <img src="/images/about-page-picture.jpg" alt="" />
+      </div>
     </section>
   );
 };

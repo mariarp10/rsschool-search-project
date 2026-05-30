@@ -1,6 +1,6 @@
-import type { TCharacter } from '../src/utils/types';
+import type { Character } from '../src/utils/types';
 
-export const MockCharacters: TCharacter[] = [
+export const MockCharacters: Character[] = [
   {
     id: 1,
     name: 'Rick Sanchez',

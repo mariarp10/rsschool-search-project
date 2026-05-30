@@ -1,48 +1,46 @@
 import { type FC, useEffect, useState } from 'react';
-import { type TCharacter } from '@utils/types';
+import { type Character } from '@utils/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
 import { getDetails } from '@utils/api';
-import { getStatusCode } from '@utils/helpers';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
-import { UIErrorNotification } from '@ui/error-notification';
+import { ErrorNotification } from '@ui/error-notification/error-notification';
 import { CrossIcon } from '@assets/icons/cross-icon';
-
-const DETAILS_CHANGE_DELAY_MS = 1000;
+import { ApiError } from '@utils/api-error';
 
 const cn = classNames.bind(styles);
 
-type TCharacterDetailsProps = {
+type CharacterDetailsProps = {
   id: number;
 };
 
-type TCharacterDetailsState = {
+type CharacterDetailsState = {
   isLoading: boolean;
+  hasError: boolean;
   errorCode: number | null;
-  character: TCharacter | null;
+  character: Character | null;
 };
 
-const initialState: TCharacterDetailsState = {
+const initialState: CharacterDetailsState = {
   isLoading: false,
+  hasError: false,
   errorCode: null,
   character: null,
 };
 
-export const CharacterDetails: FC<TCharacterDetailsProps> = ({ id }) => {
-  const [state, setState] = useState<TCharacterDetailsState>(initialState);
+export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
+  const [state, setState] = useState<CharacterDetailsState>(initialState);
 
   const navigate = useNavigate();
   const search = CharactersRoute.useSearch();
 
   useEffect(() => {
-    let isCancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
     const loadDetails = async () => {
       setState((prev) => ({
         ...prev,
         isLoading: true,
+        hasError: false,
         errorCode: null,
         character: null,
       }));
@@ -50,49 +48,23 @@ export const CharacterDetails: FC<TCharacterDetailsProps> = ({ id }) => {
       try {
         const character = await getDetails(id);
 
-        if (isCancelled) {
-          return;
-        }
-
-        timeoutId = setTimeout(() => {
-          if (isCancelled) {
-            return;
-          }
-
-          setState({
-            isLoading: false,
-            errorCode: null,
-            character,
-          });
-        }, DETAILS_CHANGE_DELAY_MS);
-      } catch (err: unknown) {
-        if (isCancelled) {
-          return;
-        }
-
-        timeoutId = setTimeout(() => {
-          if (isCancelled) {
-            return;
-          }
-
-          setState({
-            isLoading: false,
-            character: null,
-            errorCode: getStatusCode(err),
-          });
-        }, DETAILS_CHANGE_DELAY_MS);
+        setState({
+          isLoading: false,
+          hasError: false,
+          errorCode: null,
+          character,
+        });
+      } catch (err) {
+        setState({
+          isLoading: false,
+          character: null,
+          hasError: true,
+          errorCode: err instanceof ApiError ? err.status : null,
+        });
       }
     };
 
     loadDetails();
-
-    return () => {
-      isCancelled = true;
-
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
   }, [id]);
 
   const handleClose = () => {
@@ -109,8 +81,8 @@ export const CharacterDetails: FC<TCharacterDetailsProps> = ({ id }) => {
     return <p>Loading...</p>;
   }
 
-  if (state.errorCode) {
-    return <UIErrorNotification errorCode={state.errorCode} />;
+  if (state.hasError) {
+    return <ErrorNotification errorCode={state.errorCode} />;
   }
 
   if (!state.character) {
@@ -144,7 +116,7 @@ export const CharacterDetails: FC<TCharacterDetailsProps> = ({ id }) => {
             e.currentTarget.src = '/images/placeholder-details-image.png';
           }}
         />
-        <h3 className={cn('facts-titile')}>{name}</h3>
+        <h3 className={cn('facts-title')}>{name}</h3>
         <div className={cn('facts-container')}>
           <p>{`Status: ${status}`}</p>
           <p>{`Species: ${species}`}</p>

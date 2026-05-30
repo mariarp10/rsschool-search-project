@@ -1,103 +1,102 @@
-import type { TCharacter } from '@utils/types';
+import type { Character } from '@utils/types';
 
-export type THomePageState = {
+export type HomePageState = {
   searchValue: string;
   lastSearch: string;
   totalPages: number;
-  charactersForPage: TCharacter[];
+  charactersForPage: Character[];
   isLoading: boolean;
+  hasError: boolean;
   errorCode: number | null;
 };
 
-export type THomePageAction =
-  | { type: 'setSearchValue'; payload: string }
-  | { type: 'initLastSearch'; payload: string }
-  | { type: 'startLoading' }
+export type HomePageAction =
+  | { type: 'SET_SEARCH_VALUE'; payload: string }
+  | { type: 'INIT_LAST_SEARCH'; payload: string }
+  | { type: 'START_LOADING' }
   | {
-      type: 'loadSuccess';
+      type: 'LOAD_SUCCESS';
       payload: {
         totalPages: number;
-        charactersForPage: TCharacter[];
+        charactersForPage: Character[];
       };
     }
   | {
-      type: 'loadError';
+      type: 'LOAD_ERROR';
       payload: {
         errorCode: number | null;
         shouldResetResults: boolean;
       };
     }
-  | { type: 'search'; payload: string };
+  | { type: 'SEARCH'; payload: string };
 
-export const initialHomePageState: THomePageState = {
+export const initialHomePageState: HomePageState = {
   searchValue: '',
   lastSearch: '',
   totalPages: 0,
   charactersForPage: [],
   isLoading: false,
+  hasError: false,
   errorCode: null,
 };
 
 export function homePageReducer(
-  state: THomePageState,
-  action: THomePageAction
-): THomePageState {
+  state: HomePageState,
+  action: HomePageAction
+): HomePageState {
   switch (action.type) {
-    case 'setSearchValue':
+    case 'SET_SEARCH_VALUE':
       return {
         ...state,
         searchValue: action.payload,
       };
 
-    case 'initLastSearch':
+    case 'INIT_LAST_SEARCH':
       return {
         ...state,
+        hasError: false,
+        errorCode: null,
         searchValue: action.payload,
         lastSearch: action.payload,
       };
 
-    case 'startLoading':
+    case 'START_LOADING':
       return {
         ...state,
+        hasError: false,
         isLoading: true,
         errorCode: null,
       };
 
-    case 'loadSuccess':
+    case 'LOAD_SUCCESS':
       return {
         ...state,
         totalPages: action.payload.totalPages,
         charactersForPage: action.payload.charactersForPage,
+        hasError: false,
         isLoading: false,
         errorCode: null,
       };
 
-    case 'loadError':
+    case 'LOAD_ERROR':
       return {
         ...state,
         isLoading: false,
+        hasError: true,
         errorCode: action.payload.errorCode,
         charactersForPage: action.payload.shouldResetResults
           ? []
           : state.charactersForPage,
-        currentPage: action.payload.shouldResetResults
-          ? 1
-          : Math.max(state.currentPage - 1, 1),
         totalPages: action.payload.shouldResetResults ? 0 : state.totalPages,
       };
 
-    case 'setPage':
-      return {
-        ...state,
-        currentPage: action.payload,
-      };
-
-    case 'search':
+    case 'SEARCH':
       return {
         ...state,
         searchValue: action.payload,
         lastSearch: action.payload,
-        currentPage: 1,
+        hasError: false,
+        errorCode: null,
       };
 
     default:

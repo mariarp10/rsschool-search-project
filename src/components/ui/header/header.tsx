@@ -8,12 +8,15 @@ const cn = classNames.bind(styles);
 export const Header: FC = () => {
   return (
     <header className={cn('header')}>
-      <Link to="/" className={cn('link')}>
-        <h1 className={cn('title')}>Rick and Morty Search</h1>
-      </Link>
-      <Link to="/about" className={cn('link')}>
-        About
-      </Link>
+      <h1 className={cn('title')}>Rick and Morty Search</h1>
+      <nav className={cn('menu')}>
+        <Link to="/" className={cn('link')}>
+          Home
+        </Link>
+        <Link to="/about" className={cn('link')}>
+          About
+        </Link>
+      </nav>
     </header>
   );
 };

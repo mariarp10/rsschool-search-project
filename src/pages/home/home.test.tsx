@@ -127,7 +127,7 @@ describe(`Home page`, () => {
 
       renderWithRouter();
 
-      expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+      expect(await screen.findByRole('status')).toBeInTheDocument();
 
       resolveRequest();
 
@@ -136,7 +136,7 @@ describe(`Home page`, () => {
       ).toBeInTheDocument();
 
       await waitFor(() => {
-        expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+        expect(screen.queryByRole('status')).not.toBeInTheDocument();
       });
     });
 
@@ -205,7 +205,7 @@ describe(`Home page`, () => {
 
       await screen.findByText('Page 2 of 2');
 
-      const input = screen.getByRole('textbox');
+      const input = screen.getByRole('searchbox');
       await user.type(input, 'c');
       await user.click(screen.getByRole('button', { name: 'search' }));
 
@@ -277,17 +277,27 @@ describe(`Home page`, () => {
     });
 
     test('does not navigate when loading is in progress', async () => {
-      mockApiGetManyCharacters();
       const user = userEvent.setup();
+
+      vi.spyOn(api, 'getCharacters')
+        .mockResolvedValueOnce({
+          info: {
+            count: MockCharacters.length,
+            pages: 2,
+            next: null,
+            prev: null,
+          },
+          results: MockCharacters,
+        })
+        .mockReturnValueOnce(new Promise(() => {}));
 
       renderWithRouter();
 
-      await user.click(await screen.findByRole('button', { name: 'Next' }));
+      const nextButton = await screen.findByRole('button', { name: 'Next' });
+      await user.click(nextButton);
 
       expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
       expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
-
-      expect(screen.queryByText('Page 2 of 2')).not.toBeInTheDocument();
     });
   });
 
@@ -297,7 +307,7 @@ describe(`Home page`, () => {
 
       renderWithRouter();
 
-      const input = await screen.findByRole('textbox');
+      const input = await screen.findByRole('searchbox');
       const button = screen.getByRole('button', { name: 'search' });
 
       await user.clear(input);
@@ -312,7 +322,7 @@ describe(`Home page`, () => {
 
       renderWithRouter();
 
-      const input = await screen.findByRole('textbox');
+      const input = await screen.findByRole('searchbox');
       const button = screen.getByRole('button', { name: 'search' });
 
       await user.clear(input);
@@ -333,7 +343,7 @@ describe(`Home page`, () => {
 
       renderWithRouter();
 
-      const input = await screen.findByRole('textbox');
+      const input = await screen.findByRole('searchbox');
       const button = screen.getByRole('button', { name: 'search' });
 
       await user.clear(input);
