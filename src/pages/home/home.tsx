@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 
 import { Search } from '@components/search';
 import { Results } from '@components/results';
@@ -7,37 +7,27 @@ import { ErrorThrower } from '@components/error-thrower';
 import { UIPagination } from '@ui/pagination';
 import { UIErrorNotification } from '@ui/error-notification';
 
-import { useLocalStorage } from '@hooks/use-local-storage';
+import { useLocalStorage } from '@hooks/local-storage/use-local-storage';
 
 import { Route } from '@routes/characters.index';
 
 import { useNavigate } from '@tanstack/react-router';
 
-import { useResultsStore } from '@store/results.store';
+import { useCharactersQuery } from '@hooks/query/use-characters-query';
 
-const PAGE_CHANGE_DELAY_MS = 1000;
+import { ApiError } from '@utils/api-error';
 
 export const HomePage: React.FC = () => {
-  const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
 
   const { page = 1, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
 
-  const characters = useResultsStore((state) => state.characters);
-  const totalPages = useResultsStore((state) => state.totalPages);
-  const isLoading = useResultsStore((state) => state.isLoading);
-  const errorCode = useResultsStore((state) => state.errorCode);
-  const setLoading = useResultsStore((state) => state.setLoading);
-  const fetchCharacters = useResultsStore((state) => state.fetchCharacters);
+  const { data, isLoading, isFetching, isError, error } = useCharactersQuery(page, name);
 
-  const cancelCurrentTimer = () => {
-    if (pageChangeTimeoutId.current) {
-      clearTimeout(pageChangeTimeoutId.current);
-      pageChangeTimeoutId.current = null;
-    }
-  };
+  const characters = data?.results || [];
+  const totalPages = data?.info.pages || 0;
+  const errorCode = error instanceof ApiError ? error.status : null;
 
   useEffect(() => {
     if (!name && lastSearch) {
@@ -51,15 +41,7 @@ export const HomePage: React.FC = () => {
 
       return;
     }
-
-    void fetchCharacters(page, name ?? '');
-  }, [page, name, lastSearch, navigate, fetchCharacters]);
-
-  useEffect(() => {
-    return () => {
-      cancelCurrentTimer();
-    };
-  }, []);
+  }, [page, name, lastSearch, navigate]);
 
   const handleNextPage = () => {
     changePage(page + 1);
@@ -70,20 +52,14 @@ export const HomePage: React.FC = () => {
   };
 
   const changePage = (nextPage: number) => {
-    cancelCurrentTimer();
-    setLoading();
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        page: nextPage,
+      }),
+    });
 
-    pageChangeTimeoutId.current = setTimeout(() => {
-      void navigate({
-        search: (prev) => ({
-          ...prev,
-          page: nextPage,
-        }),
-      });
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      pageChangeTimeoutId.current = null;
-    }, PAGE_CHANGE_DELAY_MS);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSearch = (userInput: string) => {
@@ -93,21 +69,14 @@ export const HomePage: React.FC = () => {
       return;
     }
 
-    cancelCurrentTimer();
-    setLoading();
+    setLastSearch(trimmedSearch);
 
-    pageChangeTimeoutId.current = setTimeout(() => {
-      setLastSearch(trimmedSearch);
-
-      void navigate({
-        search: {
-          page: 1,
-          name: trimmedSearch || undefined,
-        },
-      });
-
-      pageChangeTimeoutId.current = null;
-    }, PAGE_CHANGE_DELAY_MS);
+    void navigate({
+      search: {
+        page: 1,
+        name: trimmedSearch || undefined,
+      },
+    });
   };
 
   return (
@@ -115,23 +84,21 @@ export const HomePage: React.FC = () => {
       <section style={{ paddingInline: '100px' }}>
         <Search savedSearch={lastSearch} onSearch={handleSearch} />
 
-        {errorCode && errorCode !== 1 ? (
+        {isError ? (
           <UIErrorNotification errorCode={errorCode} />
         ) : (
           <>
-            {errorCode === 1 && <UIErrorNotification errorCode={errorCode} />}
-
             {totalPages > 1 && (
               <UIPagination
                 currentPage={page}
                 totalPages={totalPages}
-                isLoading={isLoading}
+                isLoading={isLoading || isFetching}
                 handleNextPage={handleNextPage}
                 handlePreviousPage={handlePreviousPage}
               />
             )}
 
-            <Results characters={characters} isLoading={isLoading} />
+            <Results characters={characters} isLoading={isLoading || isFetching} />
           </>
         )}
         <ErrorThrower />
