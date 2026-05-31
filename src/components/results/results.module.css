@@ -4,5 +4,10 @@
 
 .title {
   font-size: 22px;
-  padding-bottom: 5px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }

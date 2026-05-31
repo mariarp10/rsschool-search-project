@@ -16,12 +16,16 @@ import { useNavigate } from '@tanstack/react-router';
 import { useCharactersQuery } from '@hooks/query/use-characters-query';
 
 import { ApiError } from '@utils/api-error';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@utils/query-keys';
 
 export const HomePage: React.FC = () => {
   const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
 
   const { page = 1, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
+
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, isError, error } = useCharactersQuery(page, name);
 
@@ -79,6 +83,12 @@ export const HomePage: React.FC = () => {
     });
   };
 
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.characters(page, name),
+    });
+  };
+
   return (
     <>
       <section style={{ paddingInline: '100px' }}>
@@ -98,7 +108,11 @@ export const HomePage: React.FC = () => {
               />
             )}
 
-            <Results characters={characters} isLoading={isLoading || isFetching} />
+            <Results
+              handleRefresh={handleRefresh}
+              characters={characters}
+              isLoading={isLoading || isFetching}
+            />
           </>
         )}
         <ErrorThrower />

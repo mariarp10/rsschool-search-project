@@ -6,6 +6,10 @@ import styles from './character-details.module.css';
 import { UIErrorNotification } from '@ui/error-notification';
 import { useCharacterQuery } from '@hooks/query/use-character-details';
 import { ApiError } from '@utils/api-error';
+import { CrossIcon } from '@assets/icons/cross-icon';
+import { RefreshIcon } from '@assets/icons/refresh-icon';
+import { useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@utils/query-keys';
 
 const cn = classNames.bind(styles);
 
@@ -17,7 +21,10 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
   const navigate = useNavigate();
   const search = CharactersRoute.useSearch();
 
+  const queryClient = useQueryClient();
+
   const { data: character, isLoading, isFetching, isError, error } = useCharacterQuery(id);
+
   const errorCode = error instanceof ApiError ? error.status : null;
 
   const handleClose = () => {
@@ -27,6 +34,12 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
         page: search.page,
         ...(search.name ? { name: search.name } : {}),
       },
+    });
+  };
+
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.characterDetails(id),
     });
   };
 
@@ -50,20 +63,11 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
     <>
       <div className={cn('card-header')}>
         <h2>Details about character</h2>
-        <button
-          onClick={handleClose}
-          type="button"
-          aria-label="Close"
-          className={cn('close-button')}
-        >
-          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path
-              d="M18 6L6 18M6 6l12 12"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+        <button onClick={handleRefresh} type="button" aria-label="refresh" className={cn('button')}>
+          <RefreshIcon />
+        </button>
+        <button onClick={handleClose} type="button" aria-label="Close" className={cn('button')}>
+          <CrossIcon />
         </button>
       </div>
       <section className={cn('card')}>
