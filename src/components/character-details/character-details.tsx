@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { type TCharacter } from '@utils/types';
+import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
-import { getDetails } from '@utils/api';
-import { getStatusCode } from '@utils/helpers';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
 import { UIErrorNotification } from '@ui/error-notification';
-
-const DETAILS_CHANGE_DELAY_MS = 1000;
+import { useCharacterQuery } from '@hooks/query/use-character-details';
+import { ApiError } from '@utils/api-error';
 
 const cn = classNames.bind(styles);
 
@@ -16,83 +13,12 @@ type TCharacterDetailsProps = {
   id: number;
 };
 
-type TCharacterDetailsState = {
-  isLoading: boolean;
-  errorCode: number | null;
-  character: TCharacter | null;
-};
-
-const initialState: TCharacterDetailsState = {
-  isLoading: false,
-  errorCode: null,
-  character: null,
-};
-
 export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
-  const [state, setState] = useState<TCharacterDetailsState>(initialState);
-
   const navigate = useNavigate();
   const search = CharactersRoute.useSearch();
 
-  useEffect(() => {
-    let isCancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-    const loadDetails = async () => {
-      setState((prev) => ({
-        ...prev,
-        isLoading: true,
-        errorCode: null,
-        character: null,
-      }));
-
-      try {
-        const character = await getDetails(id);
-
-        if (isCancelled) {
-          return;
-        }
-
-        timeoutId = setTimeout(() => {
-          if (isCancelled) {
-            return;
-          }
-
-          setState({
-            isLoading: false,
-            errorCode: null,
-            character,
-          });
-        }, DETAILS_CHANGE_DELAY_MS);
-      } catch (err: unknown) {
-        if (isCancelled) {
-          return;
-        }
-
-        timeoutId = setTimeout(() => {
-          if (isCancelled) {
-            return;
-          }
-
-          setState({
-            isLoading: false,
-            character: null,
-            errorCode: getStatusCode(err),
-          });
-        }, DETAILS_CHANGE_DELAY_MS);
-      }
-    };
-
-    loadDetails();
-
-    return () => {
-      isCancelled = true;
-
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
-  }, [id]);
+  const { data: character, isLoading, isFetching, isError, error } = useCharacterQuery(id);
+  const errorCode = error instanceof ApiError ? error.status : null;
 
   const handleClose = () => {
     navigate({
@@ -104,19 +30,19 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
     });
   };
 
-  if (state.isLoading) {
+  if (isLoading || isFetching) {
     return <p>Loading...</p>;
   }
 
-  if (state.errorCode) {
-    return <UIErrorNotification errorCode={state.errorCode} />;
+  if (isError) {
+    return <UIErrorNotification errorCode={errorCode} />;
   }
 
-  if (!state.character) {
+  if (!character) {
     return null;
   }
 
-  const { name, status, species, image, episode, origin } = state.character;
+  const { name, status, species, image, episode, origin } = character;
 
   const episodesCount = episode.length;
 
