@@ -8,7 +8,8 @@ import { MockCharacters } from '@tests/fixtures';
 import { convertToCSV, downloadFile } from '@utils/helpers';
 
 vi.mock('@utils/helpers', async () => {
-  const actual = await vi.importActual<typeof import('@utils/helpers')>('@utils/helpers');
+  const actual =
+    await vi.importActual<typeof import('@utils/helpers')>('@utils/helpers');
 
   return {
     ...actual,
@@ -48,7 +49,9 @@ describe('FlyAway', () => {
     expect(screen.getByText(MockCharacters[0].name)).toBeInTheDocument();
     expect(screen.getByText(MockCharacters[1].name)).toBeInTheDocument();
 
-    expect(screen.getByRole('button', { name: /download \(2\)/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /download \(2\)/i }),
+    ).toBeInTheDocument();
 
     expect(screen.getByRole('button', { name: /clear/i })).toBeInTheDocument();
   });
@@ -70,7 +73,9 @@ describe('FlyAway', () => {
       }),
     );
 
-    expect(useSelectionStore.getState().selectedCharacters).toEqual([MockCharacters[1]]);
+    expect(useSelectionStore.getState().selectedCharacters).toEqual([
+      MockCharacters[1],
+    ]);
 
     expect(screen.queryByText(MockCharacters[0].name)).not.toBeInTheDocument();
     expect(screen.getByText(MockCharacters[1].name)).toBeInTheDocument();
@@ -115,6 +120,9 @@ describe('FlyAway', () => {
     expect(mockedConvertToCSV).toHaveBeenCalledWith(selectedCharacters);
 
     expect(mockedDownloadFile).toHaveBeenCalledTimes(1);
-    expect(mockedDownloadFile).toHaveBeenCalledWith('name,status\nRick,Alive', '2_characters.csv');
+    expect(mockedDownloadFile).toHaveBeenCalledWith(
+      'name,status\nRick,Alive',
+      '2_characters.csv',
+    );
   });
 });

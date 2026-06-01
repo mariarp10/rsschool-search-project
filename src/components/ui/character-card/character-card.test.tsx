@@ -68,7 +68,9 @@ describe('CharacterCard', () => {
   test('renders character data', () => {
     render(<CharacterCard character={character} />);
 
-    expect(screen.getByRole('heading', { name: character.name })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: character.name }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('checkbox')).toBeInTheDocument();
     expect(screen.getByRole('link')).toHaveAttribute('href', '/characters');
   });
@@ -86,7 +88,9 @@ describe('CharacterCard', () => {
     await user.click(checkbox);
 
     expect(checkbox).toBeChecked();
-    expect(useSelectionStore.getState().selectedCharacters).toEqual([character]);
+    expect(useSelectionStore.getState().selectedCharacters).toEqual([
+      character,
+    ]);
   });
 
   test('unselects character and updates store when checkbox is unchecked', async () => {
@@ -101,7 +105,9 @@ describe('CharacterCard', () => {
     const checkbox = screen.getByRole('checkbox');
 
     expect(checkbox).toBeChecked();
-    expect(useSelectionStore.getState().selectedCharacters).toEqual([character]);
+    expect(useSelectionStore.getState().selectedCharacters).toEqual([
+      character,
+    ]);
 
     await user.click(checkbox);
 

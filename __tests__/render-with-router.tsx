@@ -1,6 +1,14 @@
 import { render, type RenderOptions } from '@testing-library/react';
-import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
-import { QueryClient, QueryClientProvider, type DefaultOptions } from '@tanstack/react-query';
+import {
+  createMemoryHistory,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router';
+import {
+  QueryClient,
+  QueryClientProvider,
+  type DefaultOptions,
+} from '@tanstack/react-query';
 
 import { routeTree } from '../src/routeTree.gen';
 

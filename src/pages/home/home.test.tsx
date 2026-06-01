@@ -34,7 +34,9 @@ describe('Home page', () => {
     test('adds lastSearch to search params when there is no name in URL', async () => {
       localStorage.setItem('lastSearch', JSON.stringify('rick'));
 
-      const { router } = renderWithRouter({ initialLocation: '/characters?page=1' });
+      const { router } = renderWithRouter({
+        initialLocation: '/characters?page=1',
+      });
 
       await waitFor(() => {
         expect(router.state.location.search).toEqual({ page: 1, name: 'rick' });
@@ -85,12 +87,16 @@ describe('Home page', () => {
         },
       });
 
-      expect(await screen.findByText(MockCharacters[0].name)).toBeInTheDocument();
+      expect(
+        await screen.findByText(MockCharacters[0].name),
+      ).toBeInTheDocument();
       expect(getCharactersSpy).toHaveBeenCalledTimes(1);
 
       await user.click(screen.getByRole('button', { name: /refresh/i }));
 
-      expect(await screen.findByText(MockCharacters[1].name)).toBeInTheDocument();
+      expect(
+        await screen.findByText(MockCharacters[1].name),
+      ).toBeInTheDocument();
       expect(getCharactersSpy).toHaveBeenCalledTimes(2);
     });
   });
@@ -134,7 +140,9 @@ describe('Home page', () => {
         initialLocation: '/characters?page=1',
       });
 
-      const input = await screen.findByPlaceholderText(/look up rick and morty characters/i);
+      const input = await screen.findByPlaceholderText(
+        /look up rick and morty characters/i,
+      );
 
       await user.type(input, 'Rick');
 
@@ -161,7 +169,9 @@ describe('Home page', () => {
         initialLocation: '/characters?page=1&name=rick',
       });
 
-      const input = await screen.findByPlaceholderText(/look up rick and morty characters/i);
+      const input = await screen.findByPlaceholderText(
+        /look up rick and morty characters/i,
+      );
 
       await user.clear(input);
 

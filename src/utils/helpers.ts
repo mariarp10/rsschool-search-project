@@ -1,7 +1,14 @@
 import type { TCharacter } from './types';
 
 export const convertToCSV = (characters: TCharacter[]) => {
-  const headers = ['id', 'name', 'status', 'species', 'episodesCount', 'origin'];
+  const headers = [
+    'id',
+    'name',
+    'status',
+    'species',
+    'episodesCount',
+    'origin',
+  ];
 
   const rows = characters.map((character) => [
     character.id,
@@ -12,7 +19,9 @@ export const convertToCSV = (characters: TCharacter[]) => {
     character.origin.name,
   ]);
 
-  return [headers, ...rows].map((row) => row.map((item) => `"${item}"`).join(',')).join('\n');
+  return [headers, ...rows]
+    .map((row) => row.map((item) => `"${item}"`).join(','))
+    .join('\n');
 };
 
 export const downloadFile = (data: string, fileName: string) => {

@@ -10,8 +10,9 @@ export const AboutPage: React.FC = () => {
       <article className={cn('wrapper')}>
         <div className={cn('content')}>
           <p>
-            This is a search application for Rick and Morty characters. It allows users to search
-            characters from a popular TV-show called &quot;Rick and Morty&quot;. Data is provided by{' '}
+            This is a search application for Rick and Morty characters. It
+            allows users to search characters from a popular TV-show called
+            &quot;Rick and Morty&quot;. Data is provided by{' '}
             <a
               href="https://rickandmortyapi.com/"
               target="_blank"
@@ -23,7 +24,12 @@ export const AboutPage: React.FC = () => {
           </p>
           <p>
             The application is made as a pet-project for{' '}
-            <a href="https://rs.school/" target="_blank" rel="noreferrer" className={cn('link')}>
+            <a
+              href="https://rs.school/"
+              target="_blank"
+              rel="noreferrer"
+              className={cn('link')}
+            >
               RSSchool React Bootcamp
             </a>
             .

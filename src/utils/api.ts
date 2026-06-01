@@ -3,7 +3,10 @@ import { ApiError } from './api-error';
 
 const baseURL = 'https://rickandmortyapi.com/api';
 
-export const getCharacters = async (page: number, name?: string): Promise<TCharacterResponse> => {
+export const getCharacters = async (
+  page: number,
+  name?: string,
+): Promise<TCharacterResponse> => {
   const url: URL = new URL(`${baseURL}/character`);
 
   if (name) {

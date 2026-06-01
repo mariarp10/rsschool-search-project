@@ -7,7 +7,9 @@ import { convertToCSV, downloadFile } from '@utils/helpers';
 const cn = classNames.bind(styles);
 
 export const FlyAway = () => {
-  const selectedCharacters = useSelectionStore((state) => state.selectedCharacters);
+  const selectedCharacters = useSelectionStore(
+    (state) => state.selectedCharacters,
+  );
   const clearSelection = useSelectionStore((state) => state.clearSelection);
   const toggleSelection = useSelectionStore((state) => state.toggleSelection);
 
@@ -44,7 +46,10 @@ export const FlyAway = () => {
           ))}
         </ul>
         <div className={cn('controls')}>
-          <UIButton text={`Download (${itemsCount})`} handleClick={handleDownload} />
+          <UIButton
+            text={`Download (${itemsCount})`}
+            handleClick={handleDownload}
+          />
           <UIButton text={'Clear'} handleClick={clearSelection} />
         </div>
       </div>

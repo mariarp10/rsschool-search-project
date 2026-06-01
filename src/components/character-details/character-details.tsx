@@ -23,7 +23,13 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
 
   const queryClient = useQueryClient();
 
-  const { data: character, isLoading, isFetching, isError, error } = useCharacterQuery(id);
+  const {
+    data: character,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+  } = useCharacterQuery(id);
 
   const errorCode = error instanceof ApiError ? error.status : null;
 
@@ -63,10 +69,20 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
     <>
       <div className={cn('card-header')}>
         <h2>Details about character</h2>
-        <button onClick={handleRefresh} type="button" aria-label="refresh" className={cn('button')}>
+        <button
+          onClick={handleRefresh}
+          type="button"
+          aria-label="refresh"
+          className={cn('button')}
+        >
           <RefreshIcon />
         </button>
-        <button onClick={handleClose} type="button" aria-label="Close" className={cn('button')}>
+        <button
+          onClick={handleClose}
+          type="button"
+          aria-label="Close"
+          className={cn('button')}
+        >
           <CrossIcon />
         </button>
       </div>

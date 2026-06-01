@@ -6,7 +6,9 @@ import { ApiError } from '@utils/api-error';
 export const mockApiGetCharacters = () => {
   vi.spyOn(api, 'getCharacters').mockImplementation(async (_page, name) => {
     const results = name
-      ? MockCharacters.filter((c) => c.name.toLowerCase().includes(name.toLowerCase()))
+      ? MockCharacters.filter((c) =>
+          c.name.toLowerCase().includes(name.toLowerCase()),
+        )
       : MockCharacters;
     return {
       info: { count: results.length, pages: 1, next: null, prev: null },
@@ -28,12 +30,16 @@ export const mockApiGetManyCharacters = () => {
 };
 
 export const mockApiNotFound = () => {
-  vi.spyOn(api, 'getCharacters').mockRejectedValue(new ApiError('Character not found', 404));
+  vi.spyOn(api, 'getCharacters').mockRejectedValue(
+    new ApiError('Character not found', 404),
+  );
 };
 
 export const mockApiServerError = () => {
   vi.spyOn(api, 'getCharacters').mockRejectedValue(
-    new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 }),
+    new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+      status: 500,
+    }),
   );
 };
 

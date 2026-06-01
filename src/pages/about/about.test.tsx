@@ -5,18 +5,26 @@ describe('AboutPage', () => {
   test('renders page heading', () => {
     render(<AboutPage />);
 
-    expect(screen.getByRole('heading', { name: /howdy y'all/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: /howdy y'all/i }),
+    ).toBeInTheDocument();
   });
 
   test('renders description text', () => {
     render(<AboutPage />);
 
     expect(
-      screen.getByText(/this is a search application for rick and morty characters/i),
+      screen.getByText(
+        /this is a search application for rick and morty characters/i,
+      ),
     ).toBeInTheDocument();
 
-    expect(screen.getByText(/the application is made as a pet-project/i)).toBeInTheDocument();
-    expect(screen.getByText(/though it's a major work in progress/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/the application is made as a pet-project/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/though it's a major work in progress/i),
+    ).toBeInTheDocument();
   });
 
   test('renders external links', () => {

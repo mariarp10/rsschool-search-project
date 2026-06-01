@@ -7,7 +7,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ApiError } from '@utils/api-error';
 
 // 1 day
-const cacheTime = Number(import.meta.env.VITE_CACHE_TTL_MS) || 24 * 60 * 60 * 1000;
+const cacheTime =
+  Number(import.meta.env.VITE_CACHE_TTL_MS) || 24 * 60 * 60 * 1000;
 
 const queryClient = new QueryClient({
   defaultOptions: {

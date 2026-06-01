@@ -11,11 +11,15 @@ export const useSelectionStore = create<TSelectionState>()((set, get) => ({
   selectedCharacters: [],
 
   toggleSelection: (character: TCharacter) => {
-    const isSelected = get().selectedCharacters.some((item) => item.id === character.id);
+    const isSelected = get().selectedCharacters.some(
+      (item) => item.id === character.id,
+    );
 
     if (isSelected) {
       set((state) => ({
-        selectedCharacters: state.selectedCharacters.filter((item) => item.id !== character.id),
+        selectedCharacters: state.selectedCharacters.filter(
+          (item) => item.id !== character.id,
+        ),
       }));
 
       return;

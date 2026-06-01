@@ -19,7 +19,9 @@ describe('helpers', () => {
     });
 
     test('returns only headers when characters array is empty', () => {
-      expect(convertToCSV([])).toBe('"id","name","status","species","episodesCount","origin"');
+      expect(convertToCSV([])).toBe(
+        '"id","name","status","species","episodesCount","origin"',
+      );
     });
   });
 
@@ -31,7 +33,9 @@ describe('helpers', () => {
     test('creates CSV file link, clicks it, and revokes object URL', () => {
       const objectUrl = 'blob:test-url';
 
-      const createObjectURLMock = vi.spyOn(URL, 'createObjectURL').mockReturnValue(objectUrl);
+      const createObjectURLMock = vi
+        .spyOn(URL, 'createObjectURL')
+        .mockReturnValue(objectUrl);
 
       const revokeObjectURLMock = vi
         .spyOn(URL, 'revokeObjectURL')
@@ -56,9 +60,13 @@ describe('helpers', () => {
       downloadFile('csv-data', 'characters.csv');
 
       expect(createObjectURLMock).toHaveBeenCalledWith(expect.any(Blob));
-      expect(appendChildSpy).toHaveBeenCalledWith(expect.any(HTMLAnchorElement));
+      expect(appendChildSpy).toHaveBeenCalledWith(
+        expect.any(HTMLAnchorElement),
+      );
       expect(clickMock).toHaveBeenCalledTimes(1);
-      expect(removeChildSpy).toHaveBeenCalledWith(expect.any(HTMLAnchorElement));
+      expect(removeChildSpy).toHaveBeenCalledWith(
+        expect.any(HTMLAnchorElement),
+      );
       expect(revokeObjectURLMock).toHaveBeenCalledWith(objectUrl);
     });
   });

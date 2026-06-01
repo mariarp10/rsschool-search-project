@@ -18,7 +18,9 @@ export const ThemeProvider: React.FC<TThemeProps> = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <ThemeUpdateContext.Provider value={toggleTheme}>{children}</ThemeUpdateContext.Provider>
+      <ThemeUpdateContext.Provider value={toggleTheme}>
+        {children}
+      </ThemeUpdateContext.Provider>
     </ThemeContext.Provider>
   );
 };

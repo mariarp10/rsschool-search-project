@@ -9,7 +9,9 @@ type TUIErrorNotificationProps = {
   errorCode: number | null;
 };
 
-export const UIErrorNotification: React.FC<TUIErrorNotificationProps> = ({ errorCode }) => {
+export const UIErrorNotification: React.FC<TUIErrorNotificationProps> = ({
+  errorCode,
+}) => {
   const getErrorMessage = () => {
     if (errorCode) {
       return ErrorMessages[errorCode];
@@ -20,7 +22,8 @@ export const UIErrorNotification: React.FC<TUIErrorNotificationProps> = ({ error
   return (
     <div role="alert" className={cn('container')}>
       <p className={cn('error-message')}>
-        {getErrorMessage() ?? 'We know about the issue and are working to resolve it'}
+        {getErrorMessage() ??
+          'We know about the issue and are working to resolve it'}
       </p>
     </div>
   );

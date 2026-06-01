@@ -33,7 +33,8 @@
   font-style: normal;
 
   font-display: swap;
-  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2') format('woff2-variations');
+  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2')
+    format('woff2-variations');
 }
 
 *,

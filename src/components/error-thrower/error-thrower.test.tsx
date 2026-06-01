@@ -16,7 +16,9 @@ describe(`Error Thrower Component`, () => {
 
   test(`shows test button to initiate error throw`, () => {
     render(<ErrorThrower />);
-    expect(screen.getByRole('button', { name: /test error/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /test error/i }),
+    ).toBeInTheDocument();
   });
 
   test(`throws error when button is clicked`, async () => {

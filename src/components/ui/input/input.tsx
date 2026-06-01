@@ -10,7 +10,11 @@ type TUIInputProps = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const UIInput: React.FC<TUIInputProps> = ({ placeholder, value, onChange }) => {
+export const UIInput: React.FC<TUIInputProps> = ({
+  placeholder,
+  value,
+  onChange,
+}) => {
   return (
     <input
       type="text"

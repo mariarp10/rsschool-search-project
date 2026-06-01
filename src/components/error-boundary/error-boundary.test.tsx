@@ -17,9 +17,14 @@ describe(`ErrorBoundry Component`, () => {
     expect(screen.getByText('Example child node')).toBeInTheDocument();
   });
   test(`renders fallback UI when child throws error`, async () => {
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
     const reload = vi.fn();
-    vi.spyOn(window, 'location', 'get').mockReturnValue({ ...window.location, reload });
+    vi.spyOn(window, 'location', 'get').mockReturnValue({
+      ...window.location,
+      reload,
+    });
 
     const user = userEvent.setup();
 
@@ -32,7 +37,9 @@ describe(`ErrorBoundry Component`, () => {
     const reloadButton = screen.getByRole('button', { name: 'Reload page' });
 
     expect(
-      screen.getByText('The thrown error has been successfully caught by the ErrorBoundary'),
+      screen.getByText(
+        'The thrown error has been successfully caught by the ErrorBoundary',
+      ),
     ).toBeInTheDocument();
     expect(reloadButton).toBeInTheDocument();
 

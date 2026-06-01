@@ -1,6 +1,9 @@
 import style from './theme-controls.module.css';
 import classNames from 'classnames/bind';
-import { useTheme, useToggleTheme } from '@components/theme-provider/theme-context';
+import {
+  useTheme,
+  useToggleTheme,
+} from '@components/theme-provider/theme-context';
 import { MoonIcon } from '@assets/icons/moon-icon';
 import { SunIcon } from '@assets/icons/sun-icon';
 

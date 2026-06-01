@@ -54,7 +54,9 @@ const createTestQueryClient = () =>
 const renderWithQueryClient = (component: ReactNode) => {
   const queryClient = createTestQueryClient();
 
-  return render(<QueryClientProvider client={queryClient}>{component}</QueryClientProvider>);
+  return render(
+    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>,
+  );
 };
 
 describe('CharacterDetails Component', () => {
@@ -97,8 +99,12 @@ describe('CharacterDetails Component', () => {
     ).toBeInTheDocument();
 
     expect(screen.getByText(`Status: ${character.status}`)).toBeInTheDocument();
-    expect(screen.getByText(`Species: ${character.species}`)).toBeInTheDocument();
-    expect(screen.getByText(`Origin planet: ${character.origin.name}`)).toBeInTheDocument();
+    expect(
+      screen.getByText(`Species: ${character.species}`),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(`Origin planet: ${character.origin.name}`),
+    ).toBeInTheDocument();
 
     expect(
       screen.getByText(`Appeared in ${character.episode.length} episode(s)`),
@@ -134,11 +140,16 @@ describe('CharacterDetails Component', () => {
 
     fireEvent.error(image);
 
-    expect(image).toHaveAttribute('src', '/images/placeholder-details-image.png');
+    expect(image).toHaveAttribute(
+      'src',
+      '/images/placeholder-details-image.png',
+    );
   });
 
   test('shows error notification when details request fails', async () => {
-    mockedGetDetails.mockRejectedValue(new ApiError('There is nothing here', 404));
+    mockedGetDetails.mockRejectedValue(
+      new ApiError('There is nothing here', 404),
+    );
 
     renderWithQueryClient(<CharacterDetails id={999} />);
 
@@ -223,7 +234,9 @@ describe('CharacterDetails Component', () => {
       status: 'unknown',
     };
 
-    mockedGetDetails.mockResolvedValueOnce(firstCharacter).mockResolvedValueOnce(updatedCharacter);
+    mockedGetDetails
+      .mockResolvedValueOnce(firstCharacter)
+      .mockResolvedValueOnce(updatedCharacter);
 
     renderWithQueryClient(<CharacterDetails id={firstCharacter.id} />);
 
@@ -247,7 +260,9 @@ describe('CharacterDetails Component', () => {
       }),
     ).toBeInTheDocument();
 
-    expect(screen.getByText(`Status: ${updatedCharacter.status}`)).toBeInTheDocument();
+    expect(
+      screen.getByText(`Status: ${updatedCharacter.status}`),
+    ).toBeInTheDocument();
     expect(mockedGetDetails).toHaveBeenCalledTimes(2);
   });
 });

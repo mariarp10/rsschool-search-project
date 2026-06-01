@@ -14,7 +14,11 @@ type TResultsProps = {
   isLoading: boolean;
   handleRefresh: () => void;
 };
-export const Results: React.FC<TResultsProps> = ({ characters, isLoading, handleRefresh }) => {
+export const Results: React.FC<TResultsProps> = ({
+  characters,
+  isLoading,
+  handleRefresh,
+}) => {
   return (
     <>
       {isLoading ? (

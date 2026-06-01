@@ -27,7 +27,10 @@ export const HomePage: React.FC = () => {
 
   const queryClient = useQueryClient();
 
-  const { data, isLoading, isFetching, isError, error } = useCharactersQuery(page, name);
+  const { data, isLoading, isFetching, isError, error } = useCharactersQuery(
+    page,
+    name,
+  );
 
   const characters = data?.results || [];
   const totalPages = data?.info.pages || 0;

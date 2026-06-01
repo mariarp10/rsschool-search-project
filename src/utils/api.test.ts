@@ -39,7 +39,9 @@ describe('api', () => {
 
       const requestUrl = String(fetchMock.mock.calls[0]?.[0]);
 
-      expect(requestUrl).toBe('https://rickandmortyapi.com/api/character?page=1');
+      expect(requestUrl).toBe(
+        'https://rickandmortyapi.com/api/character?page=1',
+      );
     });
 
     test('fetches characters by page and name', async () => {
@@ -59,7 +61,9 @@ describe('api', () => {
 
       const requestUrl = String(fetchMock.mock.calls[0]?.[0]);
 
-      expect(requestUrl).toBe('https://rickandmortyapi.com/api/character?name=rick&page=2');
+      expect(requestUrl).toBe(
+        'https://rickandmortyapi.com/api/character?name=rick&page=2',
+      );
     });
 
     test('throws ApiError when characters request fails', async () => {
@@ -71,7 +75,9 @@ describe('api', () => {
 
       vi.stubGlobal('fetch', fetchMock);
 
-      await expect(getCharacters(1, 'unknown')).rejects.toBeInstanceOf(ApiError);
+      await expect(getCharacters(1, 'unknown')).rejects.toBeInstanceOf(
+        ApiError,
+      );
 
       await expect(getCharacters(1, 'unknown')).rejects.toMatchObject({
         message: 'Failed to fetch characters',
