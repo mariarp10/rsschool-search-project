@@ -1,5 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { vi } from 'vitest';
+
 import { Results } from './results';
 import { MockCharacters } from '@tests/fixtures';
 
@@ -25,14 +28,15 @@ vi.mock('@tanstack/react-router', async () => {
   };
 });
 
-const defaultProps = {
+const createDefaultProps = () => ({
   characters: [],
   isLoading: false,
-};
+  handleRefresh: vi.fn(),
+});
 
 describe('Results Component', () => {
-  test(`renders cards with results on the screen`, () => {
-    render(<Results {...defaultProps} characters={MockCharacters} />);
+  test('renders cards with results on the screen', () => {
+    render(<Results {...createDefaultProps()} characters={MockCharacters} />);
 
     const title = screen.getByRole('heading', { level: 2 });
     const charactersList = screen.getByRole('list');
@@ -41,52 +45,71 @@ describe('Results Component', () => {
     expect(charactersList).toBeInTheDocument();
   });
 
-  test(`renders correct number of items`, () => {
-    render(<Results {...defaultProps} characters={MockCharacters} />);
+  test('renders correct number of items', () => {
+    render(<Results {...createDefaultProps()} characters={MockCharacters} />);
 
     const cards = screen.getAllByRole('listitem');
 
     expect(cards.length).toEqual(MockCharacters.length);
   });
 
-  test(`shows and removes loader while waiting for results`, () => {
-    const { rerender } = render(<Results {...defaultProps} isLoading={true} />);
+  test('shows and removes loader while waiting for results', () => {
+    const props = createDefaultProps();
+    const { rerender } = render(<Results {...props} isLoading={true} />);
+
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
 
     rerender(
-      <Results
-        {...defaultProps}
-        characters={MockCharacters}
-        isLoading={false}
-      />,
+      <Results {...props} characters={MockCharacters} isLoading={false} />,
     );
+
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
 
-  test(`shows only loader when isLoading is true`, () => {
-    render(<Results {...defaultProps} isLoading={true} />);
+  test('shows only loader when isLoading is true', () => {
+    render(<Results {...createDefaultProps()} isLoading={true} />);
 
     expect(screen.getByRole('progressbar')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /refresh/i }),
+    ).not.toBeInTheDocument();
   });
 
   test('shows new results after characters prop changes', () => {
+    const props = createDefaultProps();
+
     const initialCharacters = [MockCharacters[0]];
     const changedCharacters = MockCharacters.slice(1);
 
     const { rerender } = render(
-      <Results {...defaultProps} characters={initialCharacters} />,
+      <Results {...props} characters={initialCharacters} />,
     );
 
     expect(screen.getByText(initialCharacters[0].name)).toBeInTheDocument();
 
-    rerender(<Results {...defaultProps} characters={changedCharacters} />);
+    rerender(<Results {...props} characters={changedCharacters} />);
 
     expect(screen.queryByText(MockCharacters[0].name)).not.toBeInTheDocument();
 
     changedCharacters.forEach((character) => {
       expect(screen.getByText(character.name)).toBeInTheDocument();
     });
+  });
+
+  test('calls refresh handler when Refresh button is clicked', async () => {
+    const user = userEvent.setup();
+    const props = createDefaultProps();
+
+    render(<Results {...props} characters={MockCharacters} />);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: /refresh/i,
+      }),
+    );
+
+    expect(props.handleRefresh).toHaveBeenCalledTimes(1);
   });
 });
