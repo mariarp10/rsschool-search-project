@@ -45,7 +45,8 @@ const createTestQueryClient = () =>
     defaultOptions: {
       queries: {
         retry: false,
-        gcTime: 0,
+        gcTime: Infinity,
+        staleTime: Infinity,
       },
     },
   });
@@ -212,5 +213,41 @@ describe('CharacterDetails Component', () => {
         page: 3,
       },
     });
+  });
+
+  test('refreshes character details when refresh button is clicked', async () => {
+    const firstCharacter = MockCharacters[0];
+    const updatedCharacter = {
+      ...firstCharacter,
+      name: 'Updated Rick',
+      status: 'unknown',
+    };
+
+    mockedGetDetails.mockResolvedValueOnce(firstCharacter).mockResolvedValueOnce(updatedCharacter);
+
+    renderWithQueryClient(<CharacterDetails id={firstCharacter.id} />);
+
+    expect(
+      await screen.findByRole('heading', {
+        name: firstCharacter.name,
+      }),
+    ).toBeInTheDocument();
+
+    expect(mockedGetDetails).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /refresh/i,
+      }),
+    );
+
+    expect(
+      await screen.findByRole('heading', {
+        name: updatedCharacter.name,
+      }),
+    ).toBeInTheDocument();
+
+    expect(screen.getByText(`Status: ${updatedCharacter.status}`)).toBeInTheDocument();
+    expect(mockedGetDetails).toHaveBeenCalledTimes(2);
   });
 });

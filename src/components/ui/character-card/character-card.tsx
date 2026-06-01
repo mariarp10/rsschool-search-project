@@ -44,7 +44,7 @@ export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
           <img
             className={cn('avatar')}
             src={character.image}
-            alt={'Picture of character'}
+            alt={''}
             loading="lazy"
             onError={(e) => {
               e.currentTarget.onerror = null;

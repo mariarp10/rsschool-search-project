@@ -36,15 +36,9 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'html'],
 
-      include: ['src/**/*.{tsx, ts}'],
+      include: ['src/**/*.{tsx,ts}'],
 
-      exclude: [
-        'src/main.tsx',
-        'src/App.tsx',
-        'src/components/ui/**',
-        'src/routes/**',
-        'src/assets/**',
-      ],
+      exclude: ['src/main.tsx', 'src/App.tsx', 'src/routes/**'],
 
       thresholds: {
         statements: 80,

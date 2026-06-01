@@ -26,7 +26,12 @@ export const FlyAway = () => {
             <li key={character.id}>
               <div className={cn('item')}>
                 <p>{character.name}</p>
-                <button className={cn('delete-button')} onClick={() => toggleSelection(character)}>
+                <button
+                  type="button"
+                  aria-label={`Remove ${character.name}`}
+                  className={cn('delete-button')}
+                  onClick={() => toggleSelection(character)}
+                >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path
                       fill="currentColor"

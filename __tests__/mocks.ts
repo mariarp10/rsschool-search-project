@@ -40,3 +40,26 @@ export const mockApiServerError = () => {
 export const infiniteApi = () => {
   vi.spyOn(api, 'getCharacters').mockReturnValue(new Promise(() => {}));
 };
+
+export const mockApiRefreshCharacters = () => {
+  return vi
+    .spyOn(api, 'getCharacters')
+    .mockResolvedValueOnce({
+      info: {
+        count: 1,
+        pages: 1,
+        next: null,
+        prev: null,
+      },
+      results: [MockCharacters[0]],
+    })
+    .mockResolvedValueOnce({
+      info: {
+        count: 1,
+        pages: 1,
+        next: null,
+        prev: null,
+      },
+      results: [MockCharacters[1]],
+    });
+};

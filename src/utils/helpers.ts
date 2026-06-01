@@ -1,10 +1,5 @@
 import type { TCharacter } from './types';
 
-export const getStatusCode = (err: unknown): number => {
-  if (err instanceof Response) return err.status;
-  return 1;
-};
-
 export const convertToCSV = (characters: TCharacter[]) => {
   const headers = ['id', 'name', 'status', 'species', 'episodesCount', 'origin'];
 

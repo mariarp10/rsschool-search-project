@@ -12,7 +12,7 @@ export const UIThemeControls: React.FC = () => {
 
   return (
     <div className={cn('container')}>
-      <button className={cn('button')} onClick={toggleTheme}>
+      <button type="button" className={cn('button')} onClick={toggleTheme}>
         {theme === 'dark' ? <MoonIcon /> : <SunIcon />}
       </button>
     </div>
