@@ -5,9 +5,9 @@
 }
 
 .card {
-  background-color: var(--color-bg-elevated);
   padding: 15px;
   border-radius: 20px;
+  background-color: var(--color-bg-elevated);
 }
 
 .image {
@@ -26,15 +26,19 @@
 }
 
 .button {
-  display: flex;
-  border: none;
-  background: none;
-  color: var(--color-text-primary);
   cursor: pointer;
+
+  display: flex;
   align-items: center;
   justify-content: center;
+
   width: 40px;
   height: 40px;
+  border: none;
+
+  color: var(--color-text-primary);
+
+  background: none;
 
   &:hover {
     color: var(--color-button-hover);

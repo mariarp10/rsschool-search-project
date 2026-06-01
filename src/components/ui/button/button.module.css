@@ -1,10 +1,12 @@
 .button {
+  padding: 5px 15px;
   border: 1px solid var(--color-border);
   border-radius: 5px;
-  padding: 5px 15px;
+
   font: inherit;
   font-size: 14px;
   text-transform: capitalize;
+
   background-color: white;
 
   &:hover {
@@ -16,8 +18,8 @@
   }
 
   &:disabled {
-    opacity: 0.9;
-    color: var(--color-text-secondary);
     pointer-events: none;
+    color: var(--color-text-secondary);
+    opacity: 0.9;
   }
 }

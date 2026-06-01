@@ -1,38 +1,45 @@
 .container {
-  width: 450px;
-  background-color: var(--color-bg-primary);
-  bottom: 61.5px;
-  left: 100px;
   position: sticky;
   z-index: 3;
+  bottom: 61.5px;
+  left: 100px;
+
+  width: 450px;
   border-radius: 20px;
+
+  background-color: var(--color-bg-primary);
   box-shadow: 1px 1px 10px 0 var(--color-accent-primary);
 }
 
 .list {
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  list-style: none;
+
   max-height: 200px;
-  overflow-y: scroll;
   padding: 10px 20px 0;
+
+  list-style: none;
 }
 
 .item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .delete-button {
-  background-color: transparent;
-  border: none;
-  color: inherit;
-  height: 30px;
-  width: 30px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  border: none;
+
+  color: inherit;
+
+  background-color: transparent;
 
   &:hover {
     color: var(--color-error-primary);
@@ -45,7 +52,7 @@
 
 .controls {
   display: flex;
-  justify-content: center;
   gap: 30px;
+  justify-content: center;
   padding-block: 10px;
 }

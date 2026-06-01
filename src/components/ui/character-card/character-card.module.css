@@ -1,42 +1,50 @@
 .list-item {
-  list-style: none;
   position: relative;
+  list-style: none;
 }
 
 .card-container {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 20px;
-  border: 1px solid var(--color-border);
   cursor: pointer;
+
+  display: block;
+
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+
   box-shadow: 1px 1px 10px 0 var(--color-accent-primary);
+
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
-  padding: 0;
-  margin: 0;
 
   &:hover {
-    box-shadow: 3px 8px 20px 0 var(--color-accent-primary);
     transform: translateY(-4px);
+    box-shadow: 3px 8px 20px 0 var(--color-accent-primary);
   }
 }
 
 .image-container {
   position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  border-radius: 20px;
+
   overflow: hidden;
+
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  border-radius: 20px;
 }
 
 .overlay {
   position: absolute;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
+
   padding: 50px 15px 15px;
+
   background: linear-gradient(transparent, rgb(0 0 0 / 80%));
 }
 
@@ -48,8 +56,8 @@
 
 .name {
   font-family: inherit;
-  color: white;
   font-weight: 500;
+  color: white;
 }
 
 .checkbox {
@@ -57,6 +65,7 @@
   z-index: 1;
   top: 10px;
   left: 10px;
+
   width: 25px;
   height: 25px;
 }
