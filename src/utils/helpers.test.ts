@@ -55,34 +55,24 @@ describe('helpers', () => {
 
       const revokeObjectURLMock = vi
         .spyOn(URL, 'revokeObjectURL')
-        .mockImplementation(() => undefined);
+        .mockImplementation((): void => undefined);
 
-      const appendChildSpy = vi.spyOn(document.body, 'appendChild');
-      const removeChildSpy = vi.spyOn(document.body, 'removeChild');
-
-      const clickMock = vi.fn();
-
-      vi.spyOn(document, 'createElement').mockImplementation((tagName) => {
-        const element = document.createElementNS(
-          'http://www.w3.org/1999/xhtml',
-          tagName,
-        ) as HTMLAnchorElement;
-
-        element.click = clickMock;
-
-        return element;
-      });
+      const appendSpy = vi.spyOn(document.body, 'append');
+      const removeSpy = vi.spyOn(HTMLAnchorElement.prototype, 'remove');
+      const clickSpy = vi
+        .spyOn(HTMLAnchorElement.prototype, 'click')
+        .mockImplementation((): void => undefined);
 
       downloadFile('csv-data', 'characters.csv');
 
       expect(createObjectURLMock).toHaveBeenCalledWith(expect.any(Blob));
-      expect(appendChildSpy).toHaveBeenCalledWith(
-        expect.any(HTMLAnchorElement),
-      );
-      expect(clickMock).toHaveBeenCalledTimes(1);
-      expect(removeChildSpy).toHaveBeenCalledWith(
-        expect.any(HTMLAnchorElement),
-      );
+
+      expect(appendSpy).toHaveBeenCalledTimes(1);
+      expect(appendSpy).toHaveBeenCalledWith(expect.any(HTMLAnchorElement));
+
+      expect(clickSpy).toHaveBeenCalledTimes(1);
+      expect(removeSpy).toHaveBeenCalledTimes(1);
+
       expect(revokeObjectURLMock).toHaveBeenCalledWith(objectUrl);
     });
   });

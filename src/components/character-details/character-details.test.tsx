@@ -8,16 +8,23 @@ import { getDetails } from '@utils/api';
 import { MockCharacters } from '@tests/fixtures';
 import { ApiError } from '@utils/api-error';
 
-const mocks = vi.hoisted(() => ({
-  navigate: vi.fn(),
-  search: {
-    page: 1,
-  } as {
-    page: number;
-    name?: string;
-    detailsId?: number;
-  },
-}));
+type MockSearch = {
+  page: number;
+  name?: string;
+  detailsId?: number;
+};
+
+const mocks = vi.hoisted(
+  (): {
+    navigate: ReturnType<typeof vi.fn>;
+    search: MockSearch;
+  } => ({
+    navigate: vi.fn(),
+    search: {
+      page: 1,
+    },
+  }),
+);
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -71,7 +78,11 @@ describe('CharacterDetails Component', () => {
   });
 
   test('shows loader while character details are loading', () => {
-    mockedGetDetails.mockReturnValue(new Promise(() => {}));
+    const pendingPromise = new Promise<never>(() => {
+      return undefined;
+    });
+
+    mockedGetDetails.mockReturnValue(pendingPromise);
 
     renderWithQueryClient(<CharacterDetails id={MockCharacters[0].id} />);
 
@@ -107,7 +118,9 @@ describe('CharacterDetails Component', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText(`Appeared in ${character.episode.length} episode(s)`),
+      screen.getByText(
+        `Appeared in ${String(character.episode.length)} episode(s)`,
+      ),
     ).toBeInTheDocument();
 
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
@@ -147,8 +160,10 @@ describe('CharacterDetails Component', () => {
   });
 
   test('shows error notification when details request fails', async () => {
+    const NotFoundStatusCode = 404;
+
     mockedGetDetails.mockRejectedValue(
-      new ApiError('There is nothing here', 404),
+      new ApiError('There is nothing here', NotFoundStatusCode),
     );
 
     renderWithQueryClient(<CharacterDetails id={999} />);
@@ -157,7 +172,7 @@ describe('CharacterDetails Component', () => {
 
     expect(
       await screen.findByText(
-        `Looks like this character wasn't in the show. Try looking up someone else`,
+        'Looks like this character was not in the show. Try looking up someone else.',
       ),
     ).toBeInTheDocument();
 

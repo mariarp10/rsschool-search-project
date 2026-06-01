@@ -68,7 +68,7 @@ describe('Home page', () => {
 
       expect(
         await screen.findByText(
-          `Looks like this character wasn't in the show. Try looking up someone else`,
+          'Looks like this character was not in the show. Try looking up someone else.',
         ),
       ).toBeInTheDocument();
     });

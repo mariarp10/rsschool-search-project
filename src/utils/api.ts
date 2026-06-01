@@ -32,7 +32,7 @@ export const getCharacters = async (
 export const getDetails = async (detailsId: number): Promise<TCharacter> => {
   const url: URL = new URL(`${baseURL}/character/${String(detailsId)}`);
 
-  const response: Response = await fetch(url);
+  const response: Response = await fetch(url.toString());
 
   if (!response.ok) {
     throw new ApiError('Failed to fetch character details', response.status);
