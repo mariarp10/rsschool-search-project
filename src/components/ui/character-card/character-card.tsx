@@ -18,14 +18,19 @@ export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
     state.selectedCharacters.some((selection) => selection.id === character.id),
   );
 
-  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     toggleSelection(character);
   };
 
   return (
     <li className={cn('list-item')}>
-      <input checked={isChecked} className={cn('checkbox')} type="checkbox" onClick={handleClick} />
+      <input
+        checked={isChecked}
+        className={cn('checkbox')}
+        type="checkbox"
+        onChange={handleChange}
+      />
       <Link
         to="/characters"
         search={(prev) => ({
