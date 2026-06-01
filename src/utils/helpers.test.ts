@@ -7,15 +7,31 @@ describe('helpers', () => {
   describe('convertToCSV', () => {
     test('converts characters to CSV string', () => {
       const characters = [MockCharacters[0]];
+      const character = characters[0];
 
       const result = convertToCSV(characters);
 
-      expect(result).toBe(
-        [
-          '"id","name","status","species","episodesCount","origin"',
-          `"${characters[0].id}","${characters[0].name}","${characters[0].status}","${characters[0].species}","${characters[0].episode.length}","${characters[0].origin.name}"`,
-        ].join('\n'),
-      );
+      const expectedHeaders = [
+        '"id"',
+        '"name"',
+        '"status"',
+        '"species"',
+        '"episodesCount"',
+        '"origin"',
+      ].join(',');
+
+      const expectedRow = [
+        String(character.id),
+        character.name,
+        character.status,
+        character.species,
+        String(character.episode.length),
+        character.origin.name,
+      ]
+        .map((item) => `"${item}"`)
+        .join(',');
+
+      expect(result).toBe([expectedHeaders, expectedRow].join('\n'));
     });
 
     test('returns only headers when characters array is empty', () => {

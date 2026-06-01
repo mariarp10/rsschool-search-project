@@ -1,4 +1,5 @@
 import type { TCharacter, TCharacterResponse } from './types';
+import { CharacterResponseSchema, CharacterSchema } from './api.schemas';
 import { ApiError } from './api-error';
 
 const baseURL = 'https://rickandmortyapi.com/api';
@@ -23,13 +24,13 @@ export const getCharacters = async (
     throw new ApiError('Failed to fetch characters', response.status);
   }
 
-  const data: TCharacterResponse = await response.clone().json();
+  const data: unknown = await response.json();
 
-  return data;
+  return CharacterResponseSchema.parse(data);
 };
 
 export const getDetails = async (detailsId: number): Promise<TCharacter> => {
-  const url: string = `${baseURL}/character/${String(detailsId)}`;
+  const url: URL = new URL(`${baseURL}/character/${String(detailsId)}`);
 
   const response: Response = await fetch(url);
 
@@ -37,7 +38,7 @@ export const getDetails = async (detailsId: number): Promise<TCharacter> => {
     throw new ApiError('Failed to fetch character details', response.status);
   }
 
-  const data: TCharacter = await response.clone().json();
+  const data: unknown = await response.json();
 
-  return data;
+  return CharacterSchema.parse(data);
 };

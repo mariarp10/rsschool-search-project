@@ -1,6 +1,6 @@
 import type { TCharacter } from './types';
 
-export const convertToCSV = (characters: TCharacter[]) => {
+export const convertToCSV = (characters: TCharacter[]): string => {
   const headers = [
     'id',
     'name',
@@ -20,11 +20,11 @@ export const convertToCSV = (characters: TCharacter[]) => {
   ]);
 
   return [headers, ...rows]
-    .map((row) => row.map((item) => `"${item}"`).join(','))
+    .map((row) => row.map((item) => `"${String(item)}"`).join(','))
     .join('\n');
 };
 
-export const downloadFile = (data: string, fileName: string) => {
+export const downloadFile = (data: string, fileName: string): void => {
   const blob = new Blob([data], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -32,8 +32,8 @@ export const downloadFile = (data: string, fileName: string) => {
   link.href = url;
   link.download = fileName;
 
-  document.body.appendChild(link);
+  document.body.append(link);
   link.click();
-  document.body.removeChild(link);
+  link.remove();
   URL.revokeObjectURL(url);
 };

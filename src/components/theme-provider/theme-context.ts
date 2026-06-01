@@ -2,8 +2,20 @@ import { createContext, useContext } from 'react';
 
 export type TTheme = 'light' | 'dark';
 
-export const ThemeContext = createContext<TTheme>('dark');
-export const ThemeUpdateContext = createContext<() => void>(() => {});
+const throwMissingThemeProviderError = (): never => {
+  throw new Error('useToggleTheme must be used within ThemeProvider');
+};
 
-export const useTheme = () => useContext(ThemeContext);
-export const useToggleTheme = () => useContext(ThemeUpdateContext);
+export const ThemeContext = createContext<TTheme>('dark');
+
+export const ThemeUpdateContext = createContext<() => void>(
+  throwMissingThemeProviderError,
+);
+
+export const useTheme = (): TTheme => {
+  return useContext(ThemeContext);
+};
+
+export const useToggleTheme = (): (() => void) => {
+  return useContext(ThemeUpdateContext);
+};

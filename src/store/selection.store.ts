@@ -10,7 +10,7 @@ type TSelectionState = {
 export const useSelectionStore = create<TSelectionState>()((set, get) => ({
   selectedCharacters: [],
 
-  toggleSelection: (character: TCharacter) => {
+  toggleSelection: (character: TCharacter): void => {
     const isSelected = get().selectedCharacters.some(
       (item) => item.id === character.id,
     );
@@ -30,7 +30,7 @@ export const useSelectionStore = create<TSelectionState>()((set, get) => ({
     }));
   },
 
-  clearSelection: () => {
+  clearSelection: (): void => {
     set({
       selectedCharacters: [],
     });

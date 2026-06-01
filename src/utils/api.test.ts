@@ -3,8 +3,9 @@ import { afterEach, describe, expect, test, vi } from 'vitest';
 import { getCharacters, getDetails } from './api';
 import { ApiError } from './api-error';
 import { MockCharacters } from '@tests/fixtures';
+import type { TCharacterResponse } from './types';
 
-const createCharactersResponse = () => ({
+const createCharactersResponse = (): TCharacterResponse => ({
   info: {
     count: MockCharacters.length,
     pages: 1,
@@ -25,7 +26,7 @@ describe('api', () => {
       const responseData = createCharactersResponse();
 
       const fetchMock = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify(responseData), {
+        Response.json(responseData, {
           status: 200,
         }),
       );
@@ -48,7 +49,7 @@ describe('api', () => {
       const responseData = createCharactersResponse();
 
       const fetchMock = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify(responseData), {
+        Response.json(responseData, {
           status: 200,
         }),
       );
@@ -68,9 +69,12 @@ describe('api', () => {
 
     test('throws ApiError when characters request fails', async () => {
       const fetchMock = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ error: 'Not found' }), {
-          status: 404,
-        }),
+        Response.json(
+          { error: 'Not found' },
+          {
+            status: 404,
+          },
+        ),
       );
 
       vi.stubGlobal('fetch', fetchMock);
@@ -91,7 +95,7 @@ describe('api', () => {
       const character = MockCharacters[0];
 
       const fetchMock = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify(character), {
+        Response.json(character, {
           status: 200,
         }),
       );
@@ -109,16 +113,21 @@ describe('api', () => {
 
     test('throws ApiError when character details request fails', async () => {
       const fetchMock = vi.fn().mockResolvedValue(
-        new Response(JSON.stringify({ error: 'Not found' }), {
-          status: 404,
-        }),
+        Response.json(
+          { error: 'Not found' },
+          {
+            status: 404,
+          },
+        ),
       );
+
+      const nonExistentId = 999;
 
       vi.stubGlobal('fetch', fetchMock);
 
-      await expect(getDetails(999)).rejects.toBeInstanceOf(ApiError);
+      await expect(getDetails(nonExistentId)).rejects.toBeInstanceOf(ApiError);
 
-      await expect(getDetails(999)).rejects.toMatchObject({
+      await expect(getDetails(nonExistentId)).rejects.toMatchObject({
         message: 'Failed to fetch character details',
         status: 404,
       });
