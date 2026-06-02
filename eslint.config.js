@@ -1,48 +1,169 @@
 import js from '@eslint/js';
-import globals from 'globals';
-import react from 'eslint-plugin-react';
+import { defineConfig } from 'eslint/config';
+import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
+import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
+import eslintPluginUnicorn from 'eslint-plugin-unicorn';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import eslintConfigPrettier from 'eslint-config-prettier';
-import { defineConfig, globalIgnores } from 'eslint/config';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 
 export default defineConfig([
-  globalIgnores(['dist', '**/routeTree.gen.ts']),
+  js.configs.recommended,
+  tseslint.configs.strictTypeChecked,
+  tseslint.configs.stylisticTypeChecked,
+  reactPlugin.configs.flat.recommended,
+  reactHooks.configs.flat.recommended,
+  reactRefresh.configs.vite,
+  eslintPluginUnicorn.configs.recommended,
+  eslintPluginPrettier,
 
   {
     files: ['**/*.{ts,tsx}'],
-
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      react.configs.flat.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-      eslintConfigPrettier,
-    ],
-
     languageOptions: {
       globals: {
         ...globals.browser,
+        ...globals.es2021,
+        ...globals.node,
+      },
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+        ecmaFeatures: {
+          globalReturn: false,
+          jsx: true,
+        },
       },
     },
-
     settings: {
-      react: {
-        version: 'detect',
-      },
+      react: { version: 'detect' },
     },
-
+    plugins: {},
+    linterOptions: {
+      noInlineConfig: true,
+    },
     rules: {
+      // 🔴 Mandatory
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/explicit-member-accessibility': [
+        'error',
+        { accessibility: 'explicit', overrides: { constructors: 'off' } },
+      ],
+      '@typescript-eslint/no-unsafe-argument': 'error',
+      '@typescript-eslint/no-unsafe-member-access': 'error',
+      '@typescript-eslint/no-unsafe-return': 'error',
+      '@typescript-eslint/no-unsafe-call': 'error',
+      '@typescript-eslint/no-confusing-void-expression': [
+        'error',
+        { ignoreArrowShorthand: true },
+      ],
+
+      'react-hooks/exhaustive-deps': 'warn',
+
+      // 🟡 Good practices
+      'no-console': ['warn', { allow: ['info', 'error'] }],
+      'no-magic-numbers': [
+        'error',
+        { ignore: [0, 1, 2, -1, 10, 100, 1000, 1000000] },
+      ],
+      'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
+      'max-lines-per-function': [
+        'warn',
+        { max: 40, skipBlankLines: true, skipComments: true },
+      ],
+
+      '@typescript-eslint/consistent-type-assertions': [
+        'error',
+        { assertionStyle: 'never' },
+      ],
+      '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        {
+          prefer: 'type-imports',
+          disallowTypeAnnotations: false,
+        },
+      ],
+      '@typescript-eslint/prefer-nullish-coalescing': 'warn',
+      '@typescript-eslint/prefer-optional-chain': 'error',
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/no-inferrable-types': 'error',
+
+      'unicorn/prefer-node-protocol': 'error',
+      'unicorn/prefer-top-level-await': 'error',
+
+      // 🎨 Styles
+      quotes: ['error', 'single', { avoidEscape: true }],
+      semi: ['error', 'always'],
+      curly: ['error', 'all'],
+      indent: ['error', 2, { SwitchCase: 1 }],
+      'comma-dangle': ['error', 'always-multiline'],
+      'object-curly-spacing': ['error', 'always'],
+      'brace-style': [
+        'error',
+        '1tbs',
+        {
+          allowSingleLine: false,
+        },
+      ],
+      'arrow-parens': ['error', 'always'],
+      'max-len': ['warn', { code: 120, ignoreComments: true }],
+
+      // 🔧 Switched off
+      'no-undef': 'off',
+      'no-restricted-exports': 'off',
+      'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
+
+      'unicorn/no-array-reduce': 'off',
+      'unicorn/no-array-for-each': 'off',
+      'unicorn/no-null': 'off',
+      'unicorn/no-useless-undefined': 'off',
+      'unicorn/filename-case': 'off',
+      'unicorn/number-literal-case': 'off',
+      'unicorn/prefer-query-selector': 'off',
+      'unicorn/prevent-abbreviations': 'off',
+      'unicorn/explicit-length-check': 'off',
     },
   },
-
   {
-    files: ['src/routes/**/*.{ts,tsx}'],
+    files: ['**/*.tsx'],
     rules: {
-      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      'max-lines-per-function': [
+        'warn',
+        { max: 80, skipBlankLines: true, skipComments: true },
+      ],
     },
+  },
+  {
+    files: ['**/*.test.ts', '**/*.test.tsx'],
+    rules: {
+      'max-lines-per-function': 'off',
+      '@typescript-eslint/consistent-type-assertions': 'off',
+    },
+  },
+  {
+    ignores: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      '**/*.d.ts',
+      '*.config.js',
+      '**/routeTree.gen.ts',
+      '.tanstack',
+    ],
   },
 ]);
