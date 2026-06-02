@@ -1,5 +1,6 @@
 import type { Character, CharacterResponse } from './types';
 import { ApiError } from './api-error';
+import { CharacterResponseSchema, CharacterSchema } from './api.schemas';
 
 const baseURL = 'https://rickandmortyapi.com/api';
 
@@ -20,7 +21,7 @@ const addToCache = async (url: string, response: Response): Promise<void> => {
 
 export const getCharacters = async (
   page: number,
-  name?: string
+  name?: string,
 ): Promise<CharacterResponse> => {
   const url: URL = new URL(`${baseURL}/character`);
 
@@ -35,8 +36,8 @@ export const getCharacters = async (
   const cached: Response | undefined = await getFromCache(urlString);
 
   if (cached) {
-    const data: CharacterResponse = await cached.json();
-    return data;
+    const data: unknown = await cached.json();
+    return CharacterResponseSchema.parse(data);
   }
 
   const response: Response = await fetch(urlString);
@@ -45,21 +46,21 @@ export const getCharacters = async (
     throw new ApiError('Failed to fetch characters', response.status);
   }
 
-  const data: CharacterResponse = await response.clone().json();
+  const data: unknown = await response.clone().json();
 
   await addToCache(urlString, response);
 
-  return data;
+  return CharacterResponseSchema.parse(data);
 };
 
 export const getDetails = async (detailsId: number): Promise<Character> => {
-  const url: string = `${baseURL}/character/${String(detailsId)}`;
+  const url = `${baseURL}/character/${String(detailsId)}`;
 
   const cached: Response | undefined = await getFromCache(url);
 
   if (cached) {
-    const data: Character = await cached.json();
-    return data;
+    const data: unknown = await cached.json();
+    return CharacterSchema.parse(data);
   }
 
   const response: Response = await fetch(url);
@@ -68,9 +69,9 @@ export const getDetails = async (detailsId: number): Promise<Character> => {
     throw new ApiError('Failed to fetch character details', response.status);
   }
 
-  const data: Character = await response.clone().json();
+  const data: unknown = await response.clone().json();
 
   await addToCache(url, response);
 
-  return data;
+  return CharacterSchema.parse(data);
 };

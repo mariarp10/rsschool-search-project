@@ -1,36 +1,32 @@
 import { z } from 'zod';
 
-const characterOriginSchema = z.object({
-  name: z.string(),
-  url: z.string(),
-});
-
-const characterLocationSchema = z.object({
-  name: z.string(),
-  url: z.string(),
-});
-
-export const characterSchema = z.object({
+export const CharacterSchema = z.object({
   id: z.number(),
   name: z.string(),
   status: z.string(),
   species: z.string(),
   type: z.string(),
   gender: z.string(),
-  origin: characterOriginSchema,
-  location: characterLocationSchema,
+  origin: z.object({
+    name: z.string(),
+    url: z.string(),
+  }),
+  location: z.object({
+    name: z.string(),
+    url: z.string(),
+  }),
   image: z.string(),
   episode: z.array(z.string()),
   url: z.string(),
   created: z.string(),
 });
 
-export const characterResponseSchema = z.object({
+export const CharacterResponseSchema = z.object({
   info: z.object({
     count: z.number(),
     pages: z.number(),
     next: z.string().nullable(),
     prev: z.string().nullable(),
   }),
-  results: z.array(characterSchema),
+  results: z.array(CharacterSchema),
 });

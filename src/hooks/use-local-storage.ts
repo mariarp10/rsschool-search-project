@@ -1,6 +1,14 @@
 import { useCallback } from 'react';
 
-export const useLocalStorage = (key: string, defaultValue: string = '') => {
+type UseLocalStorageReturn = {
+  getValue: () => string;
+  setValue: (value: string, defaultValue?: string) => void;
+};
+
+export const useLocalStorage = (
+  key: string,
+  defaultValue = '',
+): UseLocalStorageReturn => {
   const getValue = useCallback(() => {
     try {
       return localStorage.getItem(key) ?? defaultValue;
@@ -10,14 +18,14 @@ export const useLocalStorage = (key: string, defaultValue: string = '') => {
   }, [key, defaultValue]);
 
   const setValue = useCallback(
-    (value: string, defaultValue: string = '') => {
+    (value: string, defaultValue = '') => {
       try {
         localStorage.setItem(key, value);
       } catch {
         return defaultValue;
       }
     },
-    [key]
+    [key],
   );
 
   return { getValue, setValue };

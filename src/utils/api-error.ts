@@ -1,5 +1,5 @@
 export class ApiError extends Error {
-  status: number;
+  public status: number;
 
   constructor(message: string, status: number) {
     super(message);

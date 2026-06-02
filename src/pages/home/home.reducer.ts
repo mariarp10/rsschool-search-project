@@ -42,16 +42,17 @@ export const initialHomePageState: HomePageState = {
 
 export function homePageReducer(
   state: HomePageState,
-  action: HomePageAction
+  action: HomePageAction,
 ): HomePageState {
   switch (action.type) {
-    case 'SET_SEARCH_VALUE':
+    case 'SET_SEARCH_VALUE': {
       return {
         ...state,
         searchValue: action.payload,
       };
+    }
 
-    case 'INIT_LAST_SEARCH':
+    case 'INIT_LAST_SEARCH': {
       return {
         ...state,
         hasError: false,
@@ -59,16 +60,18 @@ export function homePageReducer(
         searchValue: action.payload,
         lastSearch: action.payload,
       };
+    }
 
-    case 'START_LOADING':
+    case 'START_LOADING': {
       return {
         ...state,
         hasError: false,
         isLoading: true,
         errorCode: null,
       };
+    }
 
-    case 'LOAD_SUCCESS':
+    case 'LOAD_SUCCESS': {
       return {
         ...state,
         totalPages: action.payload.totalPages,
@@ -77,8 +80,9 @@ export function homePageReducer(
         isLoading: false,
         errorCode: null,
       };
+    }
 
-    case 'LOAD_ERROR':
+    case 'LOAD_ERROR': {
       return {
         ...state,
         isLoading: false,
@@ -89,8 +93,9 @@ export function homePageReducer(
           : state.charactersForPage,
         totalPages: action.payload.shouldResetResults ? 0 : state.totalPages,
       };
+    }
 
-    case 'SEARCH':
+    case 'SEARCH': {
       return {
         ...state,
         searchValue: action.payload,
@@ -98,8 +103,10 @@ export function homePageReducer(
         hasError: false,
         errorCode: null,
       };
+    }
 
-    default:
+    default: {
       return state;
+    }
   }
 }

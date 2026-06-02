@@ -5,16 +5,23 @@ import { getDetails } from '@utils/api';
 import { MockCharacters } from '@tests/fixtures';
 import { ApiError } from '@utils/api-error';
 
-const mocks = vi.hoisted(() => ({
-  navigate: vi.fn(),
-  search: {
-    page: 1,
-  } as {
-    page: number;
-    name?: string;
-    detailsId?: number;
-  },
-}));
+type MockSearch = {
+  page: number;
+  name?: string;
+  detailsId?: number;
+};
+
+const mocks = vi.hoisted(
+  (): {
+    navigate: ReturnType<typeof vi.fn>;
+    search: MockSearch;
+  } => ({
+    navigate: vi.fn(),
+    search: {
+      page: 1,
+    },
+  }),
+);
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual('@tanstack/react-router');
@@ -85,13 +92,15 @@ describe('CharacterDetails Component', () => {
 
     expect(image).toHaveAttribute(
       'src',
-      '/images/placeholder-details-image.png'
+      '/images/placeholder-details-image.png',
     );
   });
 
   test('shows error notification when details request fails', async () => {
+    const NotFoundStatusCode = 404;
+
     mockedGetDetails.mockRejectedValue(
-      new ApiError('Failed to fetch character details', 404)
+      new ApiError('Failed to fetch character details', NotFoundStatusCode),
     );
 
     render(<CharacterDetails id={999} />);
@@ -100,8 +109,8 @@ describe('CharacterDetails Component', () => {
 
     expect(
       await screen.findByText(
-        `Looks like this character wasn't in the show. Try looking up someone else`
-      )
+        'Looks like this character was not in the show. Try looking up someone else',
+      ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
@@ -122,7 +131,7 @@ describe('CharacterDetails Component', () => {
     fireEvent.click(
       await screen.findByRole('button', {
         name: 'Close',
-      })
+      }),
     );
 
     expect(mocks.navigate).toHaveBeenCalledWith({
@@ -149,7 +158,7 @@ describe('CharacterDetails Component', () => {
     fireEvent.click(
       await screen.findByRole('button', {
         name: 'Close',
-      })
+      }),
     );
 
     expect(mocks.navigate).toHaveBeenCalledWith({
