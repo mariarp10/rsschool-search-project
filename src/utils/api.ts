@@ -1,6 +1,6 @@
 import type { Character, CharacterResponse } from './types';
 import { ApiError } from './api-error';
-import { CharacterResponseSchema, CharacterSchema } from './api.schemas';
+import { CharacterSchema, CharacterResponseSchema } from './api.schemas';
 
 const baseURL = 'https://rickandmortyapi.com/api';
 

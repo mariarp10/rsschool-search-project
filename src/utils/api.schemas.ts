@@ -9,15 +9,15 @@ export const CharacterSchema = z.object({
   gender: z.string(),
   origin: z.object({
     name: z.string(),
-    url: z.url(),
+    url: z.string(),
   }),
   location: z.object({
     name: z.string(),
-    url: z.url(),
+    url: z.string(),
   }),
   image: z.string(),
   episode: z.array(z.string()),
-  url: z.url(),
+  url: z.string(),
   created: z.string(),
 });
 
@@ -25,8 +25,8 @@ export const CharacterResponseSchema = z.object({
   info: z.object({
     count: z.number().int().positive(),
     pages: z.number().int().positive(),
-    next: z.url().nullable(),
-    prev: z.url().nullable(),
+    next: z.string().nullable(),
+    prev: z.string().nullable(),
   }),
   results: z.array(CharacterSchema),
 });

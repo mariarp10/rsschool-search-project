@@ -23,7 +23,7 @@ export const HomePage: FC = () => {
 
   const { getValue: getLastSearch, setValue: saveLastSearch } =
     useLocalStorage('lastSearch');
-  const { page = 1, name } = Route.useSearch();
+  const { page, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
 
   const {
@@ -52,17 +52,17 @@ export const HomePage: FC = () => {
             charactersForPage: results,
           },
         });
-      } catch (err) {
+      } catch (error) {
         dispatch({
           type: 'LOAD_ERROR',
           payload: {
-            errorCode: err instanceof ApiError ? err.status : null,
-            shouldResetResults: !(err instanceof TypeError),
+            errorCode: error instanceof ApiError ? error.status : null,
+            shouldResetResults: !(error instanceof TypeError),
           },
         });
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
@@ -81,7 +81,7 @@ export const HomePage: FC = () => {
     }
 
     dispatch({ type: 'INIT_LAST_SEARCH', payload: name ?? '' });
-    void loadCharacters(page, name!);
+    void loadCharacters(page, name ?? '');
   }, [page, name, getLastSearch, navigate, loadCharacters]);
 
   const handleNextPage = () => {
@@ -141,8 +141,6 @@ export const HomePage: FC = () => {
           <ErrorNotification errorCode={errorCode} />
         ) : (
           <>
-            {errorCode === 1 && <ErrorNotification errorCode={errorCode} />}
-
             {totalPages > 1 && (
               <Pagination
                 currentPage={page}
