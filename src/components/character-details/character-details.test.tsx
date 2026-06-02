@@ -109,7 +109,7 @@ describe('CharacterDetails Component', () => {
 
     expect(
       await screen.findByText(
-        'Looks like this character was not in the show. Try looking up someone else',
+        'Looks like this character was not in the show. Try looking up someone else.',
       ),
     ).toBeInTheDocument();
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
