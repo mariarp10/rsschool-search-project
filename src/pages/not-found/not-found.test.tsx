@@ -5,7 +5,7 @@ import { NotFoundPage } from './not-found';
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual<typeof import('@tanstack/react-router')>(
-    '@tanstack/react-router'
+    '@tanstack/react-router',
   );
 
   return {
@@ -34,19 +34,18 @@ describe('NotFoundPage Component', () => {
       screen.getByRole('heading', {
         level: 1,
         name: 'Sorry we could not find that page',
-      })
+      }),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('img', {
-        name: 'Background picture',
-      })
-    ).toHaveAttribute('src', '/images/not-found-image.png');
+    expect(screen.getByTestId('not-found-image')).toHaveAttribute(
+      'src',
+      '/images/not-found-image.png',
+    );
 
     expect(
       screen.getByRole('link', {
         name: 'Back to homepage',
-      })
+      }),
     ).toHaveAttribute('href', '/');
   });
 });

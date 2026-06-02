@@ -10,8 +10,9 @@ export const NotFoundPage: FC = () => {
     <article className={cn('container')}>
       <h1 className={cn('titile')}>Sorry we could not find that page</h1>
       <img
+        data-testid="not-found-image"
         src="/images/not-found-image.png"
-        alt="Background picture"
+        alt=""
         className={cn('image')}
       />
       <Link to="/" className={cn('link')}>

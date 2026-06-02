@@ -1,4 +1,4 @@
-import type { Character } from '../src/utils/types';
+import type { Character } from '@utils/types';
 
 export const MockCharacters: Character[] = [
   {
@@ -73,7 +73,7 @@ export const MockCharacters: Character[] = [
 
 export const ManyCharacters = Array.from({ length: 23 }, (_, i) => ({
   id: i + 1,
-  name: `Character ${i + 1}`,
+  name: `Character ${String(i + 1)}`,
   status: 'Alive',
   species: 'Human',
   type: '',

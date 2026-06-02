@@ -6,23 +6,21 @@ const ThrowError = () => {
   throw new Error('Test error');
 };
 
-describe(`ErrorBoundry Component`, () => {
-  test(`renders children when there's no error`, () => {
+describe('ErrorBoundry Component', () => {
+  test("renders children when there's no error", () => {
     render(
       <ErrorBoundary>
         <p>Example child node</p>
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     expect(screen.getByText('Example child node')).toBeInTheDocument();
   });
-  test(`renders fallback UI when child throws error`, async () => {
-    const consoleError = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => {});
+  test('renders fallback UI when child throws error', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockReturnValue(undefined);
     const reload = vi.fn();
-    vi.spyOn(window, 'location', 'get').mockReturnValue({
-      ...window.location,
+
+    vi.stubGlobal('location', {
       reload,
     });
 
@@ -31,15 +29,15 @@ describe(`ErrorBoundry Component`, () => {
     render(
       <ErrorBoundary>
         <ThrowError />
-      </ErrorBoundary>
+      </ErrorBoundary>,
     );
 
     const reloadButton = screen.getByRole('button', { name: 'Reload page' });
 
     expect(
       screen.getByText(
-        'The thrown error has been successfully caught by the ErrorBoundary'
-      )
+        'The thrown error has been successfully caught. Please reload the page to continue using the app.',
+      ),
     ).toBeInTheDocument();
     expect(reloadButton).toBeInTheDocument();
 

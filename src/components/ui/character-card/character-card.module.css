@@ -45,17 +45,17 @@
 
 .name {
   position: absolute;
+  z-index: 1;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: 1;
 
   margin: 0;
   padding: 50px 15px 15px;
-  color: var(--color-text-primary);
 
   font-family: inherit;
   font-weight: 500;
+  color: var(--color-text-primary);
   text-align: center;
 }
 
@@ -63,8 +63,8 @@
   content: '';
 
   position: absolute;
-  inset: 0;
   z-index: -1;
+  inset: 0;
 
   background: linear-gradient(transparent, rgb(0 0 0 / 80%));
 }

@@ -11,24 +11,27 @@ export class ErrorBoundary extends Component<
   PropsWithChildren,
   ErrorBoundaryState
 > {
-  state: ErrorBoundaryState = { hasError: false };
+  public state: ErrorBoundaryState = { hasError: false };
 
-  static getDerivedStateFromError() {
+  public static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, info: ErrorInfo) {
+  public componentDidCatch(error: Error, info: ErrorInfo) {
     console.error(error, info.componentStack);
   }
 
-  render(): ReactNode {
+  public render(): ReactNode {
     if (this.state.hasError) {
       return (
         <>
           <p>
-            The thrown error has been successfully caught by the ErrorBoundary
+            The thrown error has been successfully caught. Please reload the
+            page to continue using the app.
           </p>
-          <button onClick={() => window.location.reload()}>Reload page</button>
+          <button onClick={() => globalThis.location.reload()}>
+            Reload page
+          </button>
         </>
       );
     }

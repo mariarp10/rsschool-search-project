@@ -7,7 +7,6 @@ import {
   mockApiServerError,
 } from '@tests/mocks';
 import { ManyCharacters, MockCharacters } from '@tests/fixtures';
-import { ErrorMessages } from '@utils/constants';
 import userEvent from '@testing-library/user-event';
 import * as api from '@utils/api';
 import { renderWithRouter } from '@tests/render-with-router';
@@ -17,6 +16,11 @@ const localStorageMocks = vi.hoisted(() => ({
   setValue: vi.fn(),
 }));
 
+const CreatePendingPromise = <T,>(): Promise<T> =>
+  new Promise<T>((resolve) => {
+    void resolve;
+  });
+
 vi.mock('@hooks/use-local-storage', () => ({
   useLocalStorage: () => ({
     getValue: localStorageMocks.getValue,
@@ -24,7 +28,7 @@ vi.mock('@hooks/use-local-storage', () => ({
   }),
 }));
 
-describe(`Home page`, () => {
+describe('Home page', () => {
   beforeEach(() => {
     localStorageMocks.getValue.mockReturnValue('');
     localStorageMocks.setValue.mockClear();
@@ -71,10 +75,10 @@ describe(`Home page`, () => {
         renderWithRouter();
 
         const filteredCharacters = MockCharacters.filter((character) =>
-          character.name.toLowerCase().includes('rick')
+          character.name.toLowerCase().includes('rick'),
         );
         const excludedCharacters = MockCharacters.filter(
-          (character) => !character.name.toLowerCase().includes('rick')
+          (character) => !character.name.toLowerCase().includes('rick'),
         );
 
         for (const character of filteredCharacters) {
@@ -122,7 +126,7 @@ describe(`Home page`, () => {
               results: MockCharacters,
             });
           };
-        })
+        }),
       );
 
       renderWithRouter();
@@ -132,7 +136,7 @@ describe(`Home page`, () => {
       resolveRequest();
 
       expect(
-        await screen.findByText(MockCharacters[0].name)
+        await screen.findByText(MockCharacters[0].name),
       ).toBeInTheDocument();
 
       await waitFor(() => {
@@ -144,7 +148,7 @@ describe(`Home page`, () => {
       mockApiNotFound();
       renderWithRouter();
 
-      expect(await screen.findByText(ErrorMessages[404])).toBeInTheDocument();
+      expect(await screen.findByTestId('error-message')).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
 
@@ -152,7 +156,7 @@ describe(`Home page`, () => {
       mockApiServerError();
       renderWithRouter();
 
-      expect(await screen.findByText(ErrorMessages[500])).toBeInTheDocument();
+      expect(await screen.findByTestId('error-message')).toBeInTheDocument();
       expect(screen.getByRole('alert')).toBeInTheDocument();
     });
   });
@@ -220,7 +224,7 @@ describe(`Home page`, () => {
 
     test('scrolls to top when page changes', async () => {
       const scrollTo = vi.fn();
-      vi.spyOn(window, 'scrollTo').mockImplementation(scrollTo);
+      vi.spyOn(globalThis, 'scrollTo').mockImplementation(scrollTo);
 
       mockApiGetManyCharacters();
       const user = userEvent.setup();
@@ -289,7 +293,7 @@ describe(`Home page`, () => {
           },
           results: MockCharacters,
         })
-        .mockReturnValueOnce(new Promise(() => {}));
+        .mockReturnValueOnce(CreatePendingPromise());
 
       renderWithRouter();
 

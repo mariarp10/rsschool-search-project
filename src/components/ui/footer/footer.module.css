@@ -9,8 +9,8 @@
 }
 
 .link {
-  transition: transform 120ms ease;
   cursor: pointer;
+  transition: transform 120ms ease;
 
   &:hover {
     color: var(--color-light-blue);

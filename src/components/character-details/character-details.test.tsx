@@ -70,9 +70,7 @@ describe('CharacterDetails Component', () => {
 
     render(<CharacterDetails id={character.id} />);
 
-    const image = await screen.findByRole('img', {
-      name: 'Picture of character',
-    });
+    const image = await screen.findByTestId('character-image');
 
     expect(image).toHaveAttribute('src', character.image);
   });
@@ -84,9 +82,7 @@ describe('CharacterDetails Component', () => {
 
     render(<CharacterDetails id={character.id} />);
 
-    const image = await screen.findByRole('img', {
-      name: 'Picture of character',
-    });
+    const image = await screen.findByTestId('character-image');
 
     fireEvent.error(image);
 

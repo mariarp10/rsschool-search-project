@@ -1,5 +1,5 @@
 import { type FC, useEffect, useState } from 'react';
-import { type Character } from '@utils/types';
+import type { Character } from '@utils/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
 import { getDetails } from '@utils/api';
@@ -10,6 +10,18 @@ import { CrossIcon } from '@assets/icons/cross-icon';
 import { ApiError } from '@utils/api-error';
 
 const cn = classNames.bind(styles);
+
+const PLACEHOLDER_IMAGE = '/images/placeholder-details-image.png';
+
+const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+  const image = event.currentTarget;
+
+  if (image.src.includes(PLACEHOLDER_IMAGE)) {
+    return;
+  }
+
+  image.src = PLACEHOLDER_IMAGE;
+};
 
 type CharacterDetailsProps = {
   id: number;
@@ -36,6 +48,8 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
   const search = CharactersRoute.useSearch();
 
   useEffect(() => {
+    let isActive = true;
+
     const loadDetails = async () => {
       setState((prev) => ({
         ...prev,
@@ -48,27 +62,39 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
       try {
         const character = await getDetails(id);
 
+        if (!isActive) {
+          return;
+        }
+
         setState({
           isLoading: false,
           hasError: false,
           errorCode: null,
           character,
         });
-      } catch (err) {
+      } catch (error) {
+        if (!isActive) {
+          return;
+        }
+
         setState({
           isLoading: false,
           character: null,
           hasError: true,
-          errorCode: err instanceof ApiError ? err.status : null,
+          errorCode: error instanceof ApiError ? error.status : null,
         });
       }
     };
 
-    loadDetails();
+    void loadDetails();
+
+    return () => {
+      isActive = false;
+    };
   }, [id]);
 
   const handleClose = () => {
-    navigate({
+    void navigate({
       to: '/characters',
       search: {
         page: search.page,
@@ -106,22 +132,23 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
           <CrossIcon />
         </button>
       </div>
+
       <section className={cn('card')}>
         <img
+          data-testid="character-image"
           className={cn('image')}
           src={image}
-          alt="Picture of character"
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = '/images/placeholder-details-image.png';
-          }}
+          alt=""
+          onError={handleImageError}
         />
+
         <h3 className={cn('facts-title')}>{name}</h3>
+
         <div className={cn('facts-container')}>
           <p>{`Status: ${status}`}</p>
           <p>{`Species: ${species}`}</p>
           <p>{`Origin planet: ${origin.name}`}</p>
-          <p>{`Appeared in ${episodesCount} episode(s)`}</p>
+          <p>{`Appeared in ${String(episodesCount)} episode(s)`}</p>
         </div>
       </section>
     </>
