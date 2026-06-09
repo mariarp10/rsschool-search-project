@@ -1,0 +1,50 @@
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 30px;
+}
+
+.card {
+  padding: 15px;
+  border-radius: 20px;
+  background-color: var(--color-bg-elevated);
+}
+
+.image {
+  width: 100%;
+  border-radius: 20px;
+}
+
+.facts-title {
+  padding-block: 15px;
+}
+
+.facts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.close-button {
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  border: none;
+
+  color: white;
+
+  background: none;
+
+  &:hover {
+    color: var(--color-light-green);
+  }
+
+  &:active {
+    color: var(--color-dark-green);
+  }
+}

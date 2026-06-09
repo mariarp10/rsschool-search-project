@@ -1,25 +1,24 @@
 .loader {
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
-  flex: 1;
 }
 
-.loader_circle {
+.loader-circle {
+  position: relative;
+  inset: 0;
+
   display: block;
+
   width: 100px;
   height: 100px;
+  margin: auto;
   border: 2px solid;
   border-color: #d1d2d6 #9fa0a5 #626368 #1a1b22;
   border-radius: 50%;
-  animation: spin 0.75s infinite linear;
 
-  position: relative;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  margin: auto;
+  animation: spin 0.75s infinite linear;
 }
 
 @keyframes spin {

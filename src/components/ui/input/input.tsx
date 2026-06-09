@@ -1,26 +1,30 @@
-import React from 'react';
-
+import { type FC, type ChangeEvent, type KeyboardEvent } from 'react';
 import styles from './input.module.css';
+import classNames from 'classnames/bind';
 
-type UIInputProps = {
+const cn = classNames.bind(styles);
+
+type InputProps = {
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export class UIInput extends React.Component<UIInputProps> {
-  render(): React.ReactNode {
-    return (
-      <input
-        type="text"
-        className={styles.input}
-        placeholder={this.props.placeholder}
-        onChange={this.props.onChange}
-        onKeyDown={this.props.onKeyDown}
-        value={this.props.value}
-        id="search"
-      ></input>
-    );
-  }
-}
+export const Input: FC<InputProps> = ({
+  placeholder,
+  value,
+  onChange,
+  onKeyDown,
+}) => {
+  return (
+    <input
+      type="search"
+      className={cn('input')}
+      placeholder={placeholder}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      value={value}
+    />
+  );
+};

@@ -1,29 +1,41 @@
-import React from 'react';
-import type { TCharacter } from '@utils/types';
+import { type FC } from 'react';
+import type { Character } from '@utils/types';
 import styles from './character-card.module.css';
+import classNames from 'classnames/bind';
+import { Link } from '@tanstack/react-router';
 
-type TCharacterCardProps = {
-  character: TCharacter;
+const cn = classNames.bind(styles);
+
+type CharacterCardProps = {
+  character: Character;
 };
 
-export class CharacterCard extends React.Component<TCharacterCardProps> {
-  render(): React.ReactNode {
-    return (
-      <li className={styles.list_item}>
-        <button className={`${styles.card_container}`}>
-          <div className={`${styles.image_container}`}>
-            <img
-              className={`${styles.avatar}`}
-              src={`${this.props.character.image}`}
-              alt={`Picture of ${this.props.character.name}`}
-              loading="lazy"
-            ></img>
-            <div className={styles.overlay}>
-              <span className={styles.name}>{this.props.character.name}</span>
-            </div>
-          </div>
-        </button>
-      </li>
-    );
-  }
-}
+export const CharacterCard: FC<CharacterCardProps> = ({ character }) => {
+  return (
+    <li className={cn('list-item')}>
+      <Link
+        to="/characters"
+        search={(prev) => ({
+          page: prev.page ?? 1,
+          name: prev.name,
+          detailsId: character.id,
+        })}
+        className={cn('card-container')}
+      >
+        <div className={cn('image-container')}>
+          <img
+            className={cn('avatar')}
+            src={character.image}
+            alt=""
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/images/placeholder-image.png';
+            }}
+          />
+          <h3 className={cn('name')}>{character.name}</h3>
+        </div>
+      </Link>
+    </li>
+  );
+};

@@ -3,28 +3,28 @@
   --color-bg-secondary: #13151c;
   --color-bg-card: #1c1f2e;
   --color-bg-elevated: #252840;
-
   --color-text-primary: #f5f5f5;
   --color-text-secondary: #cdd5e4;
-
+  --color-text-placeholder: #7a7a7a;
   --color-light-green: #00e5b0;
   --color-dark-green: #00b389;
   --color-light-blue: #97e8ff;
+  --color-dark-blue: #1e90ff;
   --color-light-purple: #c44dff;
-
   --color-error: #ff4757;
   --color-error-bg: #2a0e12;
   --color-warning: #ffd166;
-
   --color-border: #2e3150;
 }
 
 @font-face {
-  font-family: 'Nunito';
-  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2') format('woff2-variations');
+  font-family: Nunito;
   font-weight: 200 900;
   font-style: normal;
+
   font-display: swap;
+  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2')
+    format('woff2-variations');
 }
 
 *,
@@ -34,10 +34,16 @@
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100vh;
   margin: 0 auto;
-  padding: 0;
-  font-family: 'Nunito', sans-serif;
-  background-color: black;
+
+  font-family: Nunito, sans-serif;
+  color: var(--color-text-primary);
+
+  background-color: var(--color-bg-primary);
 }
 
 h1,

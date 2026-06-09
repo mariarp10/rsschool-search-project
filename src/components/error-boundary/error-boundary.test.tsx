@@ -6,8 +6,8 @@ const ThrowError = () => {
   throw new Error('Test error');
 };
 
-describe(`ErrorBoundry Component`, () => {
-  test(`renders children when there's no error`, () => {
+describe('ErrorBoundry Component', () => {
+  test("renders children when there's no error", () => {
     render(
       <ErrorBoundary>
         <p>Example child node</p>
@@ -16,10 +16,13 @@ describe(`ErrorBoundry Component`, () => {
 
     expect(screen.getByText('Example child node')).toBeInTheDocument();
   });
-  test(`renders fallback UI when child throws error`, async () => {
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+  test('renders fallback UI when child throws error', async () => {
+    const consoleError = vi.spyOn(console, 'error').mockReturnValue(undefined);
     const reload = vi.fn();
-    vi.spyOn(window, 'location', 'get').mockReturnValue({ ...window.location, reload });
+
+    vi.stubGlobal('location', {
+      reload,
+    });
 
     const user = userEvent.setup();
 
@@ -31,7 +34,11 @@ describe(`ErrorBoundry Component`, () => {
 
     const reloadButton = screen.getByRole('button', { name: 'Reload page' });
 
-    expect(screen.getByText('The app has crashed')).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        'The thrown error has been successfully caught. Please reload the page to continue using the app.',
+      ),
+    ).toBeInTheDocument();
     expect(reloadButton).toBeInTheDocument();
 
     await user.click(reloadButton);

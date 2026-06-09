@@ -1,0 +1,14 @@
+.container {
+  flex: 1;
+}
+
+.title {
+  padding-bottom: 5px;
+  font-size: 22px;
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px 25px;
+}

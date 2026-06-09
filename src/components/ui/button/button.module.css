@@ -1,24 +1,26 @@
 .button {
+  width: 80px;
+  padding: 5px 0;
   border: 1px solid var(--color-border);
   border-radius: 5px;
-  background-color: var(--color-text-primary);
-  padding: 5px 0;
+
   font: inherit;
   font-size: 14px;
   text-transform: capitalize;
-  width: 80px;
-}
 
-.button:hover {
-  background-color: var(--color-light-green);
-}
+  background-color: var(--color-text-primary);
 
-.button:active {
-  background-color: var(--color-dark-green);
-}
+  &:hover {
+    background-color: var(--color-light-green);
+  }
 
-.button:disabled {
-  color: var(--color-text-secondary);
-  opacity: 0.9;
-  pointer-events: none;
+  &:active {
+    background-color: var(--color-dark-green);
+  }
+
+  &:disabled {
+    pointer-events: none;
+    color: var(--color-text-secondary);
+    opacity: 0.9;
+  }
 }

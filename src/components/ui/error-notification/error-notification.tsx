@@ -1,21 +1,33 @@
-import React from 'react';
+import { type FC } from 'react';
 import styles from './error-notification.module.css';
-import { ErrorMessages } from '../../../error-messages';
+import classNames from 'classnames/bind';
 
-type UIErrorNotificationProps = {
-  errorCode: number;
+const cn = classNames.bind(styles);
+
+const ERROR_MESSAGES: Record<number, string> = {
+  404: 'Looks like this character was not in the show. Try looking up someone else.',
+  500: 'Something is wrong with the server.',
 };
 
-export class UIErrorNotification extends React.Component<UIErrorNotificationProps> {
-  getErrorMessage() {
-    return ErrorMessages[this.props.errorCode];
-  }
+type ErrorNotificationProps = {
+  errorCode: number | null;
+};
 
-  render(): React.ReactNode {
-    return (
-      <div role="alert" className={styles.container}>
-        <p className={styles.error_message}>{this.getErrorMessage()}</p>
-      </div>
-    );
-  }
-}
+export const ErrorNotification: FC<ErrorNotificationProps> = ({
+  errorCode,
+}) => {
+  const getErrorMessage = () => {
+    if (errorCode) {
+      return ERROR_MESSAGES[errorCode];
+    }
+    return 'Please wait a bit longer when switching between pages';
+  };
+
+  return (
+    <div role="alert" className={cn('container')}>
+      <p data-testid="error-message" className={cn('error-message')}>
+        {getErrorMessage()}
+      </p>
+    </div>
+  );
+};

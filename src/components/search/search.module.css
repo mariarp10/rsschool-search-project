@@ -1,0 +1,15 @@
+.container {
+  padding-bottom: 40px;
+  background-color: var(--color-bg-primary);
+}
+
+.search {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 5px;
+}
+
+.hint {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}

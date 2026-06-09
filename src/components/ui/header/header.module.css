@@ -1,0 +1,40 @@
+.header {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  padding-block: 20px;
+  padding-inline: 100px;
+
+  background-color: var(--color-bg-primary);
+}
+
+.title {
+  color: var(--color-light-blue);
+}
+
+.link {
+  cursor: pointer;
+  transition: transform 120ms ease;
+
+  &:hover {
+    color: var(--color-light-blue);
+    text-decoration: underline;
+    text-underline-offset: 10px;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}

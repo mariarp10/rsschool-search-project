@@ -1,1 +1,0 @@
-export { UIPagination } from './pagination';

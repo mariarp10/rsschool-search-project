@@ -1,22 +1,30 @@
-import React from 'react';
+import { type FC } from 'react';
 import styles from './button.module.css';
+import classNames from 'classnames/bind';
 
-type UIButtonProps = {
+const cn = classNames.bind(styles);
+
+type ButtonProps = {
   text: string;
   disabled?: boolean;
   handleClick: () => void;
+  extraClass?: string;
 };
-export class UIButton extends React.Component<UIButtonProps> {
-  render(): React.ReactNode {
-    return (
-      <button
-        className={styles.button}
-        onClick={this.props.handleClick}
-        type="button"
-        disabled={this.props.disabled}
-      >
-        {this.props.text}
-      </button>
-    );
-  }
-}
+
+export const Button: FC<ButtonProps> = ({
+  text,
+  disabled,
+  handleClick,
+  extraClass,
+}) => {
+  return (
+    <button
+      className={cn('button', extraClass)}
+      onClick={handleClick}
+      type="button"
+      disabled={disabled}
+    >
+      {text}
+    </button>
+  );
+};

@@ -1,8 +1,11 @@
-import React from 'react';
-import { UIButton } from '@ui/button';
+import { type FC } from 'react';
+import { Button } from '@ui/button/button';
 import styles from './pagination.module.css';
+import classNames from 'classnames/bind';
 
-type UIPaginationProps = {
+const cn = classNames.bind(styles);
+
+type PaginationProps = {
   currentPage: number;
   totalPages: number;
   isLoading: boolean;
@@ -10,24 +13,28 @@ type UIPaginationProps = {
   handleNextPage: () => void;
 };
 
-export class UIPagination extends React.Component<UIPaginationProps> {
-  render(): React.ReactNode {
-    return (
-      <div role="navigation" className={styles.container}>
-        <UIButton
-          text="Previous"
-          handleClick={this.props.handlePreviousPage}
-          disabled={this.props.isLoading || this.props.currentPage === 1}
-        ></UIButton>
-        <span>
-          Page {this.props.currentPage} of {this.props.totalPages}
-        </span>
-        <UIButton
-          text="Next"
-          handleClick={this.props.handleNextPage}
-          disabled={this.props.isLoading || this.props.currentPage === this.props.totalPages}
-        ></UIButton>
-      </div>
-    );
-  }
-}
+export const Pagination: FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  isLoading,
+  handlePreviousPage,
+  handleNextPage,
+}) => {
+  return (
+    <section role="navigation" className={cn('container')}>
+      <Button
+        text="Previous"
+        handleClick={handlePreviousPage}
+        disabled={isLoading || currentPage === 1}
+      />
+      <span>
+        Page {currentPage} of {totalPages}
+      </span>
+      <Button
+        text="Next"
+        handleClick={handleNextPage}
+        disabled={isLoading || currentPage === totalPages}
+      />
+    </section>
+  );
+};

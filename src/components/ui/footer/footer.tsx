@@ -1,13 +1,20 @@
-import React from 'react';
+import { type FC } from 'react';
 import styles from './footer.module.css';
-import { BrokenComponent } from '@components/broken-component';
+import classNames from 'classnames/bind';
 
-export class Footer extends React.Component {
-  render(): React.ReactNode {
-    return (
-      <footer className={styles.footer}>
-        <BrokenComponent />
-      </footer>
-    );
-  }
-}
+const cn = classNames.bind(styles);
+
+export const Footer: FC = () => {
+  return (
+    <footer className={cn('footer')}>
+      <a
+        href="https://rs.school/"
+        rel="noopener noreferrer"
+        target="_blank"
+        className={cn('link')}
+      >
+        RSSchool 2026
+      </a>
+    </footer>
+  );
+};
