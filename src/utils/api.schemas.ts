@@ -9,7 +9,7 @@ export const CharacterSchema = z.object({
   gender: z.string(),
   origin: z.object({
     name: z.string(),
-    url: z.string(),
+    url: z.url(),
   }),
   location: z.object({
     name: z.string(),
@@ -17,7 +17,7 @@ export const CharacterSchema = z.object({
   }),
   image: z.string(),
   episode: z.array(z.string()),
-  url: z.string(),
+  url: z.url(),
   created: z.string(),
 });
 
