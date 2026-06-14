@@ -1,21 +1,23 @@
 import classNames from 'classnames/bind';
 import styles from './about.module.css';
+import { type FC } from 'react';
 
 const cn = classNames.bind(styles);
 
-export const AboutPage: React.FC = () => {
+export const AboutPage: FC = () => {
   return (
     <section className={cn('container')}>
-      <h1>{`Howdy y'all`}</h1>
-      <article className={cn('wrapper')}>
+      <h1>{"Howdy y'all"}</h1>
+      <div className={cn('wrapper')}>
         <div className={cn('content')}>
           <p>
-            This is a search application for Rick and Morty characters. It allows users to search
-            characters from a popular TV-show called &quot;Rick and Morty&quot;. Data is provided by{' '}
+            This is a search application for Rick and Morty characters. It
+            allows users to search characters from a popular TV-show called
+            &quot;Rick and Morty&quot;. Data is provided by{' '}
             <a
               href="https://rickandmortyapi.com/"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={cn('link')}
             >
               Rick and Morty API
@@ -23,7 +25,12 @@ export const AboutPage: React.FC = () => {
           </p>
           <p>
             The application is made as a pet-project for{' '}
-            <a href="https://rs.school/" target="_blank" rel="noreferrer" className={cn('link')}>
+            <a
+              href="https://rs.school/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn('link')}
+            >
               RSSchool React Bootcamp
             </a>
             .
@@ -33,7 +40,7 @@ export const AboutPage: React.FC = () => {
             <a
               href="https://github.com/mariarp10"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={cn('link')}
             >
               GitHub
@@ -41,8 +48,12 @@ export const AboutPage: React.FC = () => {
             , though it&apos;s a major work in progress.
           </p>
         </div>
-        <img src="/images/about-page-picture.jpg" alt="Picture of a meme" />
-      </article>
+        <img
+          data-testid="about-page-image"
+          src="/images/about-page-picture.jpg"
+          alt=""
+        />
+      </div>
     </section>
   );
 };

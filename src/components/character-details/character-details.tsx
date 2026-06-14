@@ -1,47 +1,60 @@
-import React, { useEffect, useState } from 'react';
-import { type TCharacter } from '@utils/types';
+import { type FC, useEffect, useState, type SyntheticEvent } from 'react';
+import type { Character } from '@utils/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
 import { getDetails } from '@utils/api';
-import { getStatusCode } from '@utils/helpers';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
-import { UIErrorNotification } from '@ui/error-notification';
-
-const DETAILS_CHANGE_DELAY_MS = 1000;
+import { ErrorNotification } from '@ui/error-notification/error-notification';
+import { CrossIcon } from '@assets/icons/cross-icon';
+import { ApiError } from '@utils/api-error';
 
 const cn = classNames.bind(styles);
 
-type TCharacterDetailsProps = {
+const PLACEHOLDER_IMAGE = '/images/placeholder-details-image.png';
+
+const handleImageError = (event: SyntheticEvent<HTMLImageElement>) => {
+  const image = event.currentTarget;
+
+  if (image.src.includes(PLACEHOLDER_IMAGE)) {
+    return;
+  }
+
+  image.src = PLACEHOLDER_IMAGE;
+};
+
+type CharacterDetailsProps = {
   id: number;
 };
 
-type TCharacterDetailsState = {
+type CharacterDetailsState = {
   isLoading: boolean;
+  hasError: boolean;
   errorCode: number | null;
-  character: TCharacter | null;
+  character: Character | null;
 };
 
-const initialState: TCharacterDetailsState = {
+const initialState: CharacterDetailsState = {
   isLoading: false,
+  hasError: false,
   errorCode: null,
   character: null,
 };
 
-export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
-  const [state, setState] = useState<TCharacterDetailsState>(initialState);
+export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
+  const [state, setState] = useState<CharacterDetailsState>(initialState);
 
   const navigate = useNavigate();
   const search = CharactersRoute.useSearch();
 
   useEffect(() => {
-    let isCancelled = false;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+    let isActive = true;
 
     const loadDetails = async () => {
       setState((prev) => ({
         ...prev,
         isLoading: true,
+        hasError: false,
         errorCode: null,
         character: null,
       }));
@@ -49,53 +62,39 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
       try {
         const character = await getDetails(id);
 
-        if (isCancelled) {
+        if (!isActive) {
           return;
         }
 
-        timeoutId = setTimeout(() => {
-          if (isCancelled) {
-            return;
-          }
-
-          setState({
-            isLoading: false,
-            errorCode: null,
-            character,
-          });
-        }, DETAILS_CHANGE_DELAY_MS);
-      } catch (err: unknown) {
-        if (isCancelled) {
+        setState({
+          isLoading: false,
+          hasError: false,
+          errorCode: null,
+          character,
+        });
+      } catch (error) {
+        if (!isActive) {
           return;
         }
 
-        timeoutId = setTimeout(() => {
-          if (isCancelled) {
-            return;
-          }
-
-          setState({
-            isLoading: false,
-            character: null,
-            errorCode: getStatusCode(err),
-          });
-        }, DETAILS_CHANGE_DELAY_MS);
+        setState({
+          isLoading: false,
+          character: null,
+          hasError: true,
+          errorCode: error instanceof ApiError ? error.status : null,
+        });
       }
     };
 
-    loadDetails();
+    void loadDetails();
 
     return () => {
-      isCancelled = true;
-
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
+      isActive = false;
     };
   }, [id]);
 
   const handleClose = () => {
-    navigate({
+    void navigate({
       to: '/characters',
       search: {
         page: search.page,
@@ -108,8 +107,8 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
     return <p>Loading...</p>;
   }
 
-  if (state.errorCode) {
-    return <UIErrorNotification errorCode={state.errorCode} />;
+  if (state.hasError) {
+    return <ErrorNotification errorCode={state.errorCode} />;
   }
 
   if (!state.character) {
@@ -130,32 +129,26 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
           aria-label="Close"
           className={cn('close-button')}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path
-              d="M18 6L6 18M6 6l12 12"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
+          <CrossIcon />
         </button>
       </div>
+
       <section className={cn('card')}>
         <img
+          data-testid="character-image"
           className={cn('image')}
           src={image}
-          alt="Picture of character"
-          onError={(e) => {
-            e.currentTarget.onerror = null;
-            e.currentTarget.src = '/images/placeholder-details-image.png';
-          }}
+          alt=""
+          onError={handleImageError}
         />
+
         <h3 className={cn('facts-title')}>{name}</h3>
+
         <div className={cn('facts-container')}>
           <p>{`Status: ${status}`}</p>
           <p>{`Species: ${species}`}</p>
           <p>{`Origin planet: ${origin.name}`}</p>
-          <p>{`Appeared in ${episodesCount} episode(s)`}</p>
+          <p>{`Appeared in ${String(episodesCount)} episode(s)`}</p>
         </div>
       </section>
     </>

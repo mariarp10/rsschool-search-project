@@ -1,21 +1,25 @@
 import { create } from 'zustand';
-import type { TCharacter } from '@utils/types';
+import type { Character } from '@utils/types';
 
-type TSelectionState = {
-  selectedCharacters: TCharacter[];
-  toggleSelection: (character: TCharacter) => void;
+type SelectionState = {
+  selectedCharacters: Character[];
+  toggleSelection: (character: Character) => void;
   clearSelection: () => void;
 };
 
-export const useSelectionStore = create<TSelectionState>()((set, get) => ({
+export const useSelectionStore = create<SelectionState>()((set, get) => ({
   selectedCharacters: [],
 
-  toggleSelection: (character: TCharacter) => {
-    const isSelected = get().selectedCharacters.some((item) => item.id === character.id);
+  toggleSelection: (character: Character): void => {
+    const isSelected = get().selectedCharacters.some(
+      (item) => item.id === character.id,
+    );
 
     if (isSelected) {
       set((state) => ({
-        selectedCharacters: state.selectedCharacters.filter((item) => item.id !== character.id),
+        selectedCharacters: state.selectedCharacters.filter(
+          (item) => item.id !== character.id,
+        ),
       }));
 
       return;
@@ -26,7 +30,7 @@ export const useSelectionStore = create<TSelectionState>()((set, get) => ({
     }));
   },
 
-  clearSelection: () => {
+  clearSelection: (): void => {
     set({
       selectedCharacters: [],
     });

@@ -1,15 +1,13 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { screen, waitFor, act, fireEvent } from '@testing-library/react';
+import { screen, waitFor, act } from '@testing-library/react';
 import { renderWithRouter } from '@tests/render-with-router';
 import {
   infiniteApi,
   mockApiGetCharacters,
-  mockApiGetManyCharacters,
   mockApiNotFound,
 } from '@tests/mocks';
 import { MockCharacters } from '@tests/fixtures';
 import { useResultsStore } from '@store/results.store';
-import userEvent from '@testing-library/user-event';
 
 const initialStateStore = useResultsStore.getState();
 
@@ -37,7 +35,9 @@ describe('Home page', () => {
     test('adds lastSearch to search params when there is no name in URL', async () => {
       localStorage.setItem('lastSearch', JSON.stringify('rick'));
 
-      const { router } = renderWithRouter({ initialLocation: '/characters?page=1' });
+      const { router } = renderWithRouter({
+        initialLocation: '/characters?page=1',
+      });
 
       await waitFor(() => {
         expect(router.state.location.search).toEqual({ page: 1, name: 'rick' });
@@ -63,7 +63,7 @@ describe('Home page', () => {
 
       renderWithRouter({ initialLocation: '/characters?page=1' });
 
-      expect(await screen.findByRole('progressbar')).toBeInTheDocument();
+      expect(await screen.findByRole('status')).toBeInTheDocument();
     });
 
     test('shows error notification when character is not found', async () => {
@@ -80,97 +80,9 @@ describe('Home page', () => {
 
       expect(
         await screen.findByText(
-          `Looks like this character wasn't in the show. Try looking up someone else`,
+          'Looks like this character was not in the show. Try looking up someone else.',
         ),
       ).toBeInTheDocument();
-    });
-  });
-
-  describe('delay when changing pages', () => {
-    test('navigates to next page only after delay', async () => {
-      mockApiGetManyCharacters();
-
-      window.scrollTo = vi.fn();
-
-      const { router } = renderWithRouter({
-        initialLocation: '/characters?page=1',
-      });
-
-      await screen.findByPlaceholderText(/look up rick and morty characters/i);
-
-      const nextButton = await screen.findByRole('button', {
-        name: /next/i,
-      });
-
-      vi.useFakeTimers();
-
-      fireEvent.click(nextButton);
-
-      expect(router.state.location.search).toEqual({
-        page: 1,
-      });
-
-      act(() => {
-        vi.advanceTimersByTime(999);
-      });
-
-      expect(router.state.location.search).toEqual({
-        page: 1,
-      });
-
-      act(() => {
-        vi.advanceTimersByTime(1);
-      });
-
-      expect(router.state.location.search).toEqual({
-        page: 2,
-      });
-
-      expect(window.scrollTo).toHaveBeenCalledWith({
-        top: 0,
-        behavior: 'smooth',
-      });
-
-      vi.useRealTimers();
-    });
-
-    test('shows new search results after delay', async () => {
-      const user = userEvent.setup();
-
-      const { router } = renderWithRouter({
-        initialLocation: '/characters?page=1',
-      });
-
-      const inputField = await screen.findByPlaceholderText(/look up rick and morty characters/i);
-
-      await user.type(inputField, 'rick');
-
-      vi.useFakeTimers();
-
-      fireEvent.click(screen.getByRole('button', { name: /search/i }));
-
-      expect(router.state.location.search).toEqual({
-        page: 1,
-      });
-
-      act(() => {
-        vi.advanceTimersByTime(999);
-      });
-
-      expect(router.state.location.search).toEqual({
-        page: 1,
-      });
-
-      act(() => {
-        vi.advanceTimersByTime(1);
-      });
-
-      expect(router.state.location.search).toEqual({
-        page: 1,
-        name: 'rick',
-      });
-
-      vi.useRealTimers();
     });
   });
 });

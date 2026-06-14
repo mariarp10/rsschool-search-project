@@ -1,11 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 
-export const useLocalStorage = (key: string, defaultValue: string = '') => {
+type useLocalStorageReturn = [string, Dispatch<SetStateAction<string>>];
+
+const parseString = (value: string): string | null => {
+  const parsed: unknown = JSON.parse(value);
+
+  if (typeof parsed === 'string') {
+    return parsed;
+  }
+
+  return null;
+};
+
+export const useLocalStorage = (
+  key: string,
+  defaultValue = '',
+): useLocalStorageReturn => {
   const [lastSearch, setLastSearch] = useState(() => {
     try {
       const value = localStorage.getItem(key);
 
-      return value ? JSON.parse(value) : defaultValue;
+      if (value === null) {
+        return defaultValue;
+      }
+
+      return parseString(value) ?? defaultValue;
     } catch {
       console.error('A problem occured when retrieving data from localStorage');
       return defaultValue;

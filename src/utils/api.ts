@@ -1,59 +1,77 @@
-import type { TCharacter, TCharacterResponse } from './types';
-
-const checkResponse = async (response: Response) => {
-  if (response.ok) {
-    return response.json();
-  }
-  return Promise.reject(response);
-};
+import type { Character, CharacterResponse } from './types';
+import { ApiError } from './api-error';
+import { CharacterSchema, CharacterResponseSchema } from './api.schemas';
 
 const baseURL = 'https://rickandmortyapi.com/api';
 
-const _cacheName = 'rick-and-morty-cache';
+const cacheName = 'rick-and-morty-cache';
 
-const _getFromCache = async (url: string): Promise<Response | undefined> => {
-  const cache = await caches.open(_cacheName);
-  const cachedResponse = await cache.match(url);
+const getFromCache = async (url: string): Promise<Response | undefined> => {
+  const cache: Cache = await caches.open(cacheName);
+  const cachedResponse: Response | undefined = await cache.match(url);
+
   return cachedResponse;
 };
 
-const _addToCache = async (url: string, response: Response): Promise<void> => {
-  const cache = await caches.open(_cacheName);
+const addToCache = async (url: string, response: Response): Promise<void> => {
+  const cache: Cache = await caches.open(cacheName);
+
   await cache.put(url, response.clone());
 };
 
-export const getCharacters = async (page: number, name?: string): Promise<TCharacterResponse> => {
-  const url = new URL(`${baseURL}/character`);
+export const getCharacters = async (
+  page: number,
+  name?: string,
+): Promise<CharacterResponse> => {
+  const url: URL = new URL(`${baseURL}/character`);
+
   if (name) {
     url.searchParams.set('name', name);
   }
+
   url.searchParams.set('page', String(page));
 
-  const cached = await _getFromCache(url.toString());
+  const urlString: string = url.toString();
+
+  const cached: Response | undefined = await getFromCache(urlString);
+
   if (cached) {
-    return cached.json();
+    const data: unknown = await cached.json();
+    return CharacterResponseSchema.parse(data);
   }
 
-  const response = await fetch(url);
-  const data = await checkResponse(response.clone());
+  const response: Response = await fetch(urlString);
 
-  await _addToCache(url.toString(), response);
+  if (!response.ok) {
+    throw new ApiError('Failed to fetch characters', response.status);
+  }
 
-  return data;
+  const data: unknown = await response.clone().json();
+
+  await addToCache(urlString, response);
+
+  return CharacterResponseSchema.parse(data);
 };
 
-export const getDetails = async (detailsId: number): Promise<TCharacter> => {
-  const url = `${baseURL}/character/${detailsId}`;
+export const getDetails = async (detailsId: number): Promise<Character> => {
+  const url = `${baseURL}/character/${String(detailsId)}`;
 
-  const cached = await _getFromCache(url);
+  const cached: Response | undefined = await getFromCache(url);
+
   if (cached) {
-    return cached.json();
+    const data: unknown = await cached.json();
+    return CharacterSchema.parse(data);
   }
 
-  const response = await fetch(url);
-  const data = await checkResponse(response.clone());
+  const response: Response = await fetch(url);
 
-  await _addToCache(url, response);
+  if (!response.ok) {
+    throw new ApiError('Failed to fetch character details', response.status);
+  }
 
-  return data;
+  const data: unknown = await response.clone().json();
+
+  await addToCache(url, response);
+
+  return CharacterSchema.parse(data);
 };

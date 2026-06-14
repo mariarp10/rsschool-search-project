@@ -1,5 +1,9 @@
 import { render, type RenderOptions } from '@testing-library/react';
-import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
+import {
+  createMemoryHistory,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router';
 
 import { routeTree } from '../src/routeTree.gen';
 

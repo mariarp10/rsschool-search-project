@@ -29,10 +29,12 @@
 
 @font-face {
   font-family: Nunito;
-  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2') format('woff2-variations');
   font-weight: 200 900;
   font-style: normal;
+
   font-display: swap;
+  src: url('./assets/fonts/Nunito-VariableFont_wght.woff2')
+    format('woff2-variations');
 }
 
 *,
@@ -42,12 +44,15 @@
 }
 
 body {
-  margin: 0 auto;
-  font-family: Nunito, sans-serif;
   display: flex;
   flex-direction: column;
+
   min-height: 100vh;
+  margin: 0 auto;
+
+  font-family: Nunito, sans-serif;
   color: var(--color-text-primary);
+
   background-color: var(--color-bg-primary);
 }
 

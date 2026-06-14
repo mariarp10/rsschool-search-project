@@ -1,14 +1,17 @@
 .header {
   position: sticky;
+  z-index: 1;
   top: 0;
-  z-index: 2;
-  padding-block: 20px;
-  padding-inline: 100px;
-  background-color: var(--color-bg-primary);
+
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+
+  padding-block: 20px;
+  padding-inline: 100px;
+
+  background-color: var(--color-bg-primary);
 }
 
 .title {
@@ -20,12 +23,18 @@
   transition: transform 120ms ease;
 
   &:hover {
+    color: var(--color-light-blue);
     text-decoration: underline;
     text-underline-offset: 10px;
-    color: var(--color-accent-primary);
   }
 
   &:active {
     transform: scale(0.96);
   }
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }

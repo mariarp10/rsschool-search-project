@@ -1,10 +1,10 @@
-import type { TCharacter } from '@utils/types';
+import type { Character } from '@utils/types';
 import { create } from 'zustand';
 import { getCharacters } from '@utils/api';
-import { getStatusCode } from '@utils/helpers';
+import { ApiError } from '@utils/api-error';
 
-type TResultsState = {
-  characters: TCharacter[];
+type ResultsState = {
+  characters: Character[];
   totalPages: number;
   isLoading: boolean;
   errorCode: number | null;
@@ -13,20 +13,20 @@ type TResultsState = {
   fetchCharacters: (page: number, searchTerm?: string) => Promise<void>;
 };
 
-export const useResultsStore = create<TResultsState>()((set) => ({
+export const useResultsStore = create<ResultsState>()((set) => ({
   characters: [],
   totalPages: 0,
   isLoading: false,
   errorCode: null,
 
-  setLoading: () => {
+  setLoading: (): void => {
     set({
       isLoading: true,
       errorCode: null,
     });
   },
 
-  fetchCharacters: async (page: number, searchTerm?: string) => {
+  fetchCharacters: async (page: number, searchTerm?: string): Promise<void> => {
     set({
       isLoading: true,
       errorCode: null,
@@ -41,10 +41,10 @@ export const useResultsStore = create<TResultsState>()((set) => ({
         characters: response.results,
         totalPages: response.info.pages,
       });
-    } catch (err) {
+    } catch (error) {
       set({
         isLoading: false,
-        errorCode: getStatusCode(err),
+        errorCode: error instanceof ApiError ? error.status : null,
         totalPages: 0,
         characters: [],
       });

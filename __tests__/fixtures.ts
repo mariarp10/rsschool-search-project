@@ -1,6 +1,6 @@
-import type { TCharacter } from '../src/utils/types';
+import type { Character } from '@utils/types';
 
-export const MockCharacters: TCharacter[] = [
+export const MockCharacters: Character[] = [
   {
     id: 1,
     name: 'Rick Sanchez',
@@ -73,7 +73,7 @@ export const MockCharacters: TCharacter[] = [
 
 export const ManyCharacters = Array.from({ length: 23 }, (_, i) => ({
   id: i + 1,
-  name: `Character ${i + 1}`,
+  name: `Character ${String(i + 1)}`,
   status: 'Alive',
   species: 'Human',
   type: '',

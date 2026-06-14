@@ -1,4 +1,4 @@
-import { HomePage } from '@pages/home';
+import { HomePage } from '@pages/home/home';
 import { Outlet } from '@tanstack/react-router';
 import classNames from 'classnames/bind';
 import styles from './split-layout.module.css';

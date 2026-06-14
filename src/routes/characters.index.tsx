@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Route as CharactersRoute } from './characters';
-import { CharacterDetails } from '@components/character-details';
+import { CharacterDetails } from '@components/character-details/character-details';
 
 export const Route = createFileRoute('/characters/')({
   component: CharacterIndex,

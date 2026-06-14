@@ -1,24 +1,37 @@
-import React from 'react';
+import {
+  Component,
+  type ErrorInfo,
+  type PropsWithChildren,
+  type ReactNode,
+} from 'react';
 
-type TErrorBoundaryState = { hasError: boolean };
+type ErrorBoundaryState = { hasError: boolean };
 
-export class ErrorBoundary extends React.Component<React.PropsWithChildren, TErrorBoundaryState> {
-  state: TErrorBoundaryState = { hasError: false };
+export class ErrorBoundary extends Component<
+  PropsWithChildren,
+  ErrorBoundaryState
+> {
+  public state: ErrorBoundaryState = { hasError: false };
 
-  static getDerivedStateFromError() {
+  public static getDerivedStateFromError() {
     return { hasError: true };
   }
 
-  componentDidCatch(error: Error, info: React.ErrorInfo) {
+  public componentDidCatch(error: Error, info: ErrorInfo) {
     console.error(error, info.componentStack);
   }
 
-  render(): React.ReactNode {
+  public render(): ReactNode {
     if (this.state.hasError) {
       return (
         <>
-          <p>The thrown error has been successfully caught by the ErrorBoundary</p>
-          <button onClick={() => window.location.reload()}>Reload page</button>
+          <p>
+            The thrown error has been successfully caught. Please reload the
+            page to continue using the app.
+          </p>
+          <button onClick={() => globalThis.location.reload()}>
+            Reload page
+          </button>
         </>
       );
     }

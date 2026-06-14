@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import { type FC, useEffect } from 'react';
 
-import { Search } from '@components/search';
-import { Results } from '@components/results';
-import { ErrorThrower } from '@components/error-thrower';
+import { Search } from '@components/search/search';
+import { Results } from '@components/results/results';
+import { ErrorThrower } from '@components/error-thrower/error-thrower';
 
-import { UIPagination } from '@ui/pagination';
-import { UIErrorNotification } from '@ui/error-notification';
+import { Pagination } from '@ui/pagination/pagination';
+import { ErrorNotification } from '@ui/error-notification/error-notification';
 
 import { useLocalStorage } from '@hooks/use-local-storage';
 
@@ -15,14 +15,10 @@ import { useNavigate } from '@tanstack/react-router';
 
 import { useResultsStore } from '@store/results.store';
 
-const PAGE_CHANGE_DELAY_MS = 1000;
-
-export const HomePage: React.FC = () => {
-  const pageChangeTimeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+export const HomePage: FC = () => {
   const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
 
-  const { page = 1, name } = Route.useSearch();
+  const { page, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
 
   const characters = useResultsStore((state) => state.characters);
@@ -31,13 +27,6 @@ export const HomePage: React.FC = () => {
   const errorCode = useResultsStore((state) => state.errorCode);
   const setLoading = useResultsStore((state) => state.setLoading);
   const fetchCharacters = useResultsStore((state) => state.fetchCharacters);
-
-  const cancelCurrentTimer = () => {
-    if (pageChangeTimeoutId.current) {
-      clearTimeout(pageChangeTimeoutId.current);
-      pageChangeTimeoutId.current = null;
-    }
-  };
 
   useEffect(() => {
     if (!name && lastSearch) {
@@ -55,12 +44,6 @@ export const HomePage: React.FC = () => {
     void fetchCharacters(page, name ?? '');
   }, [page, name, lastSearch, navigate, fetchCharacters]);
 
-  useEffect(() => {
-    return () => {
-      cancelCurrentTimer();
-    };
-  }, []);
-
   const handleNextPage = () => {
     changePage(page + 1);
   };
@@ -70,20 +53,16 @@ export const HomePage: React.FC = () => {
   };
 
   const changePage = (nextPage: number) => {
-    cancelCurrentTimer();
     setLoading();
 
-    pageChangeTimeoutId.current = setTimeout(() => {
-      void navigate({
-        search: (prev) => ({
-          ...prev,
-          page: nextPage,
-        }),
-      });
+    void navigate({
+      search: (prev) => ({
+        ...prev,
+        page: nextPage,
+      }),
+    });
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      pageChangeTimeoutId.current = null;
-    }, PAGE_CHANGE_DELAY_MS);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSearch = (userInput: string) => {
@@ -93,21 +72,16 @@ export const HomePage: React.FC = () => {
       return;
     }
 
-    cancelCurrentTimer();
     setLoading();
 
-    pageChangeTimeoutId.current = setTimeout(() => {
-      setLastSearch(trimmedSearch);
+    setLastSearch(trimmedSearch);
 
-      void navigate({
-        search: {
-          page: 1,
-          name: trimmedSearch || undefined,
-        },
-      });
-
-      pageChangeTimeoutId.current = null;
-    }, PAGE_CHANGE_DELAY_MS);
+    void navigate({
+      search: {
+        page: 1,
+        name: trimmedSearch || undefined,
+      },
+    });
   };
 
   return (
@@ -115,14 +89,12 @@ export const HomePage: React.FC = () => {
       <section style={{ paddingInline: '100px' }}>
         <Search savedSearch={lastSearch} onSearch={handleSearch} />
 
-        {errorCode && errorCode !== 1 ? (
-          <UIErrorNotification errorCode={errorCode} />
+        {errorCode ? (
+          <ErrorNotification errorCode={errorCode} />
         ) : (
           <>
-            {errorCode === 1 && <UIErrorNotification errorCode={errorCode} />}
-
             {totalPages > 1 && (
-              <UIPagination
+              <Pagination
                 currentPage={page}
                 totalPages={totalPages}
                 isLoading={isLoading}

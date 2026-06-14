@@ -1,20 +1,23 @@
 import { vi } from 'vitest';
 import { MockCharacters, ManyCharacters } from './fixtures';
 import * as api from '@utils/api';
+import { ApiError } from '@utils/api-error';
 
-export const mockApiGetCharacters = () => {
-  vi.spyOn(api, 'getCharacters').mockImplementation(async (_page, name) => {
+export const mockApiGetCharacters = (): void => {
+  vi.spyOn(api, 'getCharacters').mockImplementation((_page, name) => {
     const results = name
-      ? MockCharacters.filter((c) => c.name.toLowerCase().includes(name.toLowerCase()))
+      ? MockCharacters.filter((c) =>
+          c.name.toLowerCase().includes(name.toLowerCase()),
+        )
       : MockCharacters;
-    return {
+    return Promise.resolve({
       info: { count: results.length, pages: 1, next: null, prev: null },
       results,
-    };
+    });
   });
 };
 
-export const mockApiGetManyCharacters = () => {
+export const mockApiGetManyCharacters = (): void => {
   vi.spyOn(api, 'getCharacters').mockResolvedValue({
     info: {
       count: ManyCharacters.length,
@@ -26,18 +29,26 @@ export const mockApiGetManyCharacters = () => {
   });
 };
 
-export const mockApiNotFound = () => {
+export const mockApiNotFound = (): void => {
+  const notFoundCode = 404;
+
   vi.spyOn(api, 'getCharacters').mockRejectedValue(
-    new Response(JSON.stringify({ error: 'There is nothing here' }), { status: 404 }),
+    new ApiError('Not Found', notFoundCode),
   );
 };
 
-export const mockApiServerError = () => {
+export const mockApiServerError = (): void => {
+  const serverErrorCode = 500;
+
   vi.spyOn(api, 'getCharacters').mockRejectedValue(
-    new Response(JSON.stringify({ error: 'Internal Server Error' }), { status: 500 }),
+    new ApiError('Internal Server Error', serverErrorCode),
   );
 };
 
-export const infiniteApi = () => {
-  vi.spyOn(api, 'getCharacters').mockReturnValue(new Promise(() => {}));
+export const infiniteApi = (): void => {
+  vi.spyOn(api, 'getCharacters').mockReturnValue(
+    new Promise(() => {
+      // noop
+    }),
+  );
 };

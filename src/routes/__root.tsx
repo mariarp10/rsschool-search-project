@@ -2,10 +2,10 @@ import { Outlet, createRootRoute } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Header } from '@ui/header/header';
 import { Footer } from '@ui/footer/footer';
-import { ErrorBoundary } from '@components/error-boundary';
-import { NotFoundPage } from '@pages/not-found';
-import { FlyAway } from '@components/fly-away';
-import { ThemeProvider } from '@components/theme-provider';
+import { ErrorBoundary } from '@components/error-boundary/error-boundary';
+import { NotFoundPage } from '@pages/not-found/not-found';
+import { FlyAway } from '@components/fly-away/fly-away';
+import { ThemeProvider } from '@components/theme-provider/theme-provider';
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -14,7 +14,9 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+    <div
+      style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}
+    >
       <ErrorBoundary>
         <ThemeProvider>
           <Header />

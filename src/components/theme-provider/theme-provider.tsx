@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { ThemeContext, ThemeUpdateContext, type TTheme } from './theme-context';
+import { type FC, type ReactNode, useState, useEffect } from 'react';
+import { ThemeContext, ThemeUpdateContext, type Theme } from './theme-context';
 
-type TThemeProps = {
-  children: React.ReactNode;
+type ThemeProps = {
+  children: ReactNode;
 };
 
-export const ThemeProvider: React.FC<TThemeProps> = ({ children }) => {
-  const [theme, setTheme] = useState<TTheme>('dark');
+export const ThemeProvider: FC<ThemeProps> = ({ children }) => {
+  const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -18,7 +18,9 @@ export const ThemeProvider: React.FC<TThemeProps> = ({ children }) => {
 
   return (
     <ThemeContext.Provider value={theme}>
-      <ThemeUpdateContext.Provider value={toggleTheme}>{children}</ThemeUpdateContext.Provider>
+      <ThemeUpdateContext.Provider value={toggleTheme}>
+        {children}
+      </ThemeUpdateContext.Provider>
     </ThemeContext.Provider>
   );
 };
