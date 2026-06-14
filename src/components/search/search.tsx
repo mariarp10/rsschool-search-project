@@ -1,4 +1,4 @@
-import { type FC, type ChangeEvent, type SubmitEvent, useState } from 'react';
+import { type FC, type ChangeEvent, type SubmitEvent } from 'react';
 import { Button } from '@ui/button/button';
 import { Input } from '@ui/input/input';
 import styles from './search.module.css';
@@ -7,21 +7,19 @@ import classNames from 'classnames/bind';
 const cn = classNames.bind(styles);
 
 type SearchProps = {
-  savedSearch: string;
+  value: string;
+  onChange: (value: string) => void;
   onSearch: (value: string) => void;
 };
 
-export const Search: FC<SearchProps> = ({ savedSearch, onSearch }) => {
-  const [userInput, setUserInput] = useState(savedSearch);
-
+export const Search: FC<SearchProps> = ({ value, onChange, onSearch }) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setUserInput(event.target.value);
+    onChange(event.target.value);
   };
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    onSearch(userInput);
+    onSearch(value);
   };
 
   return (
@@ -29,7 +27,7 @@ export const Search: FC<SearchProps> = ({ savedSearch, onSearch }) => {
       <form className={cn('search')} onSubmit={handleSubmit}>
         <Input
           placeholder="Look up Rick and Morty characters"
-          value={userInput}
+          value={value}
           onChange={handleChange}
         />
         <Button text="search" type="submit" />

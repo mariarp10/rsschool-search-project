@@ -1,6 +1,7 @@
 :root {
   --color-error-primary: #ff4757;
   --color-error-secondary: #d00707;
+  --color-accent: #c44dff;
 }
 
 :root[data-theme='dark'] {
@@ -12,7 +13,6 @@
   --color-border: #723792;
   --color-button-hover: #e093ff;
   --color-button-active: #b73ef1;
-  --color-accent-primary: #c44dff;
 }
 
 :root[data-theme='light'] {
@@ -24,7 +24,6 @@
   --color-border: #eeaac5;
   --color-button-hover: #ffdbe9;
   --color-button-active: #f5bdd3;
-  --color-accent-primary: #c44dff;
 }
 
 @font-face {

@@ -5,7 +5,7 @@
 
 .card-container {
   cursor: pointer;
-  box-shadow: 1px 1px 10px 0 var(--color-accent-primary);
+  box-shadow: 1px 1px 10px 0 var(--color-accent);
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;

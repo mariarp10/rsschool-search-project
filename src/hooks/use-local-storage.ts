@@ -32,7 +32,11 @@ export const useLocalStorage = (
   });
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(lastSearch));
+    try {
+      localStorage.setItem(key, JSON.stringify(lastSearch));
+    } catch {
+      console.error('Could not store data to localStorage');
+    }
   }, [key, lastSearch]);
 
   return [lastSearch, setLastSearch];

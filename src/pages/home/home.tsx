@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
 import { Search } from '@components/search/search';
 import { Results } from '@components/results/results';
@@ -17,6 +17,7 @@ import { useResultsStore } from '@store/results.store';
 
 export const HomePage: FC = () => {
   const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
+  const [userInput, setUserInput] = useState<string>(lastSearch);
 
   const { page, name } = Route.useSearch();
   const navigate = useNavigate({ from: '/characters' });
@@ -87,7 +88,11 @@ export const HomePage: FC = () => {
   return (
     <>
       <section style={{ paddingInline: '100px' }}>
-        <Search savedSearch={lastSearch} onSearch={handleSearch} />
+        <Search
+          value={userInput}
+          onChange={setUserInput}
+          onSearch={handleSearch}
+        />
 
         {errorCode ? (
           <ErrorNotification errorCode={errorCode} />
