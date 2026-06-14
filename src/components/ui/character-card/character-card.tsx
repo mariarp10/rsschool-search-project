@@ -26,6 +26,7 @@ export const CharacterCard: FC<CharacterCardProps> = ({ character }) => {
   return (
     <li className={cn('list-item')}>
       <input
+        aria-label={`Select character ${character.name}`}
         checked={isChecked}
         className={cn('checkbox')}
         type="checkbox"

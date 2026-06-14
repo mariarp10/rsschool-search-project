@@ -13,6 +13,8 @@ type ResultsState = {
   fetchCharacters: (page: number, searchTerm?: string) => Promise<void>;
 };
 
+let latestRequestId = 0;
+
 export const useResultsStore = create<ResultsState>()((set) => ({
   characters: [],
   totalPages: 0,
@@ -27,6 +29,9 @@ export const useResultsStore = create<ResultsState>()((set) => ({
   },
 
   fetchCharacters: async (page: number, searchTerm?: string): Promise<void> => {
+    const requestId = latestRequestId + 1;
+    latestRequestId = requestId;
+
     set({
       isLoading: true,
       errorCode: null,
@@ -35,6 +40,10 @@ export const useResultsStore = create<ResultsState>()((set) => ({
     try {
       const response = await getCharacters(page, searchTerm);
 
+      if (requestId !== latestRequestId) {
+        return;
+      }
+
       set({
         isLoading: false,
         errorCode: null,
@@ -42,6 +51,9 @@ export const useResultsStore = create<ResultsState>()((set) => ({
         totalPages: response.info.pages,
       });
     } catch (error) {
+      if (requestId !== latestRequestId) {
+        return;
+      }
       set({
         isLoading: false,
         errorCode: error instanceof ApiError ? error.status : null,

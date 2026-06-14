@@ -30,6 +30,8 @@ export const FlyAway = () => {
               <div className={cn('item')}>
                 <p>{character.name}</p>
                 <button
+                  aria-label={`Unselect character ${character.name}`}
+                  type="button"
                   className={cn('delete-button')}
                   onClick={() => toggleSelection(character)}
                 >

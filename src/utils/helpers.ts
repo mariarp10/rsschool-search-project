@@ -1,5 +1,16 @@
 import type { Character } from './types';
 
+const sanitizeCsvCell = (value: string | number): string => {
+  const formulaPrefixPattern = /^[=+\-@]/;
+
+  const stringValue = String(value);
+  const safeValue = formulaPrefixPattern.test(stringValue)
+    ? `'${stringValue}`
+    : stringValue;
+
+  return `"${safeValue.replaceAll('"', '""')}"`;
+};
+
 export const convertToCSV = (characters: Character[]): string => {
   const headers = [
     'id',
@@ -20,7 +31,7 @@ export const convertToCSV = (characters: Character[]): string => {
   ]);
 
   return [headers, ...rows]
-    .map((row) => row.map((item) => `"${String(item)}"`).join(','))
+    .map((row) => row.map((item) => sanitizeCsvCell(item)).join(','))
     .join('\n');
 };
 
