@@ -1,7 +1,5 @@
 import type { Character } from '@utils/types';
 import { create } from 'zustand';
-import { getCharacters } from '@utils/api';
-import { ApiError } from '@utils/api-error';
 
 type ResultsState = {
   characters: Character[];
@@ -10,10 +8,9 @@ type ResultsState = {
   errorCode: number | null;
 
   setLoading: () => void;
-  fetchCharacters: (page: number, searchTerm?: string) => Promise<void>;
+  setResults: (characters: Character[], totalPages: number) => void;
+  setError: (errorCode: number | null) => void;
 };
-
-let latestRequestId = 0;
 
 export const useResultsStore = create<ResultsState>()((set) => ({
   characters: [],
@@ -28,38 +25,21 @@ export const useResultsStore = create<ResultsState>()((set) => ({
     });
   },
 
-  fetchCharacters: async (page: number, searchTerm?: string): Promise<void> => {
-    const requestId = latestRequestId + 1;
-    latestRequestId = requestId;
-
+  setResults: (characters, totalPages): void => {
     set({
-      isLoading: true,
+      characters,
+      totalPages,
+      isLoading: false,
       errorCode: null,
     });
+  },
 
-    try {
-      const response = await getCharacters(page, searchTerm);
-
-      if (requestId !== latestRequestId) {
-        return;
-      }
-
-      set({
-        isLoading: false,
-        errorCode: null,
-        characters: response.results,
-        totalPages: response.info.pages,
-      });
-    } catch (error) {
-      if (requestId !== latestRequestId) {
-        return;
-      }
-      set({
-        isLoading: false,
-        errorCode: error instanceof ApiError ? error.status : null,
-        totalPages: 0,
-        characters: [],
-      });
-    }
+  setError: (errorCode): void => {
+    set({
+      characters: [],
+      totalPages: 0,
+      isLoading: false,
+      errorCode,
+    });
   },
 }));

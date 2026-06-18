@@ -1,52 +1,64 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Search } from './search';
 
-const navigateMock = vi.fn();
-const setLastSearchMock = vi.fn();
-const setLoadingMock = vi.fn();
-const fetchCharactersMock = vi.fn();
-
-let searchParamsMock: {
+type SearchParamsMock = {
   page: number;
   name?: string;
 };
 
-let lastSearchMock = '';
+type Mocks = {
+  navigateMock: ReturnType<typeof vi.fn>;
+  setLastSearchMock: ReturnType<typeof vi.fn>;
+  useFetchCharactersMock: ReturnType<
+    typeof vi.fn<(page: number, enabled: boolean, searchTerm: string) => void>
+  >;
+  searchParamsMock: SearchParamsMock;
+  lastSearchMock: string;
+};
+
+const mocks = vi.hoisted<Mocks>(() => ({
+  navigateMock: vi.fn(),
+  setLastSearchMock: vi.fn(),
+  useFetchCharactersMock:
+    vi.fn<(page: number, enabled: boolean, searchTerm: string) => void>(),
+
+  searchParamsMock: {
+    page: 1,
+    name: undefined,
+  },
+
+  lastSearchMock: '',
+}));
 
 vi.mock('@tanstack/react-router', () => ({
-  useNavigate: () => navigateMock,
+  useNavigate: () => mocks.navigateMock,
 }));
 
 vi.mock('@routes/characters', () => ({
   Route: {
-    useSearch: () => searchParamsMock,
+    useSearch: () => mocks.searchParamsMock,
   },
 }));
 
 vi.mock('@hooks/use-local-storage', () => ({
-  useLocalStorage: () => [lastSearchMock, setLastSearchMock],
+  useLocalStorage: () => [mocks.lastSearchMock, mocks.setLastSearchMock],
 }));
 
-vi.mock('@store/results.store', () => ({
-  useResultsStore: (selector: (state: unknown) => unknown) =>
-    selector({
-      setLoading: setLoadingMock,
-      fetchCharacters: fetchCharactersMock,
-    }),
+vi.mock('@hooks/use-fetch-characters', () => ({
+  useFetchCharacters: (page: number, enabled: boolean, searchTerm: string) =>
+    mocks.useFetchCharactersMock(page, enabled, searchTerm),
 }));
 
 describe('Search', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    searchParamsMock = {
-      page: 1,
-      name: undefined,
-    };
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = undefined;
 
-    lastSearchMock = '';
+    mocks.lastSearchMock = '';
   });
 
   it('renders search input, submit button and hint', () => {
@@ -65,59 +77,43 @@ describe('Search', () => {
     ).toBeInTheDocument();
   });
 
-  it('fetches characters by page and name from url', async () => {
-    searchParamsMock = {
-      page: 2,
-      name: 'rick',
-    };
+  it('starts fetching characters by page and name from url', () => {
+    mocks.searchParamsMock.page = 2;
+    mocks.searchParamsMock.name = 'rick';
 
     render(<Search />);
 
-    await waitFor(() => {
-      expect(fetchCharactersMock).toHaveBeenCalledWith(2, 'rick');
-    });
+    expect(mocks.useFetchCharactersMock).toHaveBeenCalledWith(2, true, 'rick');
   });
 
-  it('fetches all characters when name is not provided and lastSearch is empty', async () => {
-    searchParamsMock = {
-      page: 1,
-      name: undefined,
-    };
-
-    lastSearchMock = '';
+  it('starts fetching all characters when name is not provided', () => {
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = undefined;
 
     render(<Search />);
 
-    await waitFor(() => {
-      expect(fetchCharactersMock).toHaveBeenCalledWith(1, '');
-    });
+    expect(mocks.useFetchCharactersMock).toHaveBeenCalledWith(1, true, '');
   });
 
-  it('restores last search from localStorage when url does not contain name', async () => {
-    searchParamsMock = {
-      page: 1,
-      name: undefined,
-    };
+  it('restores last search from localStorage when url does not contain name', () => {
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = undefined;
 
-    lastSearchMock = 'morty';
+    mocks.lastSearchMock = 'morty';
 
     render(<Search />);
 
-    await waitFor(() => {
-      expect(navigateMock).toHaveBeenCalledWith({
-        search: {
-          page: 1,
-          name: 'morty',
-        },
-        replace: true,
-      });
+    expect(mocks.navigateMock).toHaveBeenCalledWith({
+      search: {
+        page: 1,
+        name: 'morty',
+      },
+      replace: true,
     });
-
-    expect(fetchCharactersMock).not.toHaveBeenCalled();
   });
 
   it('uses lastSearch as initial input value', () => {
-    lastSearchMock = 'summer';
+    mocks.lastSearchMock = 'summer';
 
     render(<Search />);
 
@@ -157,10 +153,9 @@ describe('Search', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
 
-    expect(setLoadingMock).toHaveBeenCalledTimes(1);
-    expect(setLastSearchMock).toHaveBeenCalledWith('rick');
+    expect(mocks.setLastSearchMock).toHaveBeenCalledWith('rick');
 
-    expect(navigateMock).toHaveBeenCalledWith({
+    expect(mocks.navigateMock).toHaveBeenCalledWith({
       search: {
         page: 1,
         name: 'rick',
@@ -169,12 +164,10 @@ describe('Search', () => {
   });
 
   it('removes name from url when submitted search is empty', () => {
-    searchParamsMock = {
-      page: 1,
-      name: 'rick',
-    };
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = 'rick';
 
-    lastSearchMock = 'rick';
+    mocks.lastSearchMock = 'rick';
 
     render(<Search />);
 
@@ -190,10 +183,9 @@ describe('Search', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
 
-    expect(setLoadingMock).toHaveBeenCalledTimes(1);
-    expect(setLastSearchMock).toHaveBeenCalledWith('');
+    expect(mocks.setLastSearchMock).toHaveBeenCalledWith('');
 
-    expect(navigateMock).toHaveBeenCalledWith({
+    expect(mocks.navigateMock).toHaveBeenCalledWith({
       search: {
         page: 1,
         name: undefined,
@@ -202,20 +194,18 @@ describe('Search', () => {
   });
 
   it('does nothing when submitted search equals lastSearch', () => {
-    lastSearchMock = 'rick';
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = 'rick';
+
+    mocks.lastSearchMock = 'rick';
 
     render(<Search />);
 
+    vi.clearAllMocks();
+
     fireEvent.click(screen.getByRole('button', { name: /search/i }));
 
-    expect(setLoadingMock).not.toHaveBeenCalled();
-    expect(setLastSearchMock).not.toHaveBeenCalled();
-
-    expect(navigateMock).not.toHaveBeenCalledWith({
-      search: {
-        page: 1,
-        name: 'rick',
-      },
-    });
+    expect(mocks.setLastSearchMock).not.toHaveBeenCalled();
+    expect(mocks.navigateMock).not.toHaveBeenCalled();
   });
 });

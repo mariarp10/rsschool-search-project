@@ -6,7 +6,7 @@ import classNames from 'classnames/bind';
 import { useLocalStorage } from '@hooks/use-local-storage';
 import { Route } from '@routes/characters';
 import { useNavigate } from '@tanstack/react-router';
-import { useResultsStore } from '@store/results.store';
+import { useFetchCharacters } from '@hooks/use-fetch-characters';
 
 const cn = classNames.bind(styles);
 
@@ -18,28 +18,27 @@ export const Search = () => {
 
   const navigate = useNavigate({ from: '/characters' });
 
-  const setLoading = useResultsStore((state) => state.setLoading);
-  const fetchCharacters = useResultsStore((state) => state.fetchCharacters);
+  const shouldRestoreLastSearch = !name && Boolean(lastSearch);
+
+  useEffect(() => {
+    if (!shouldRestoreLastSearch) {
+      return;
+    }
+
+    void navigate({
+      search: {
+        page: 1,
+        name: lastSearch,
+      },
+      replace: true,
+    });
+  }, [lastSearch, navigate, shouldRestoreLastSearch]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUserInput(event.target.value);
   };
 
-  useEffect(() => {
-    if (!name && lastSearch) {
-      void navigate({
-        search: {
-          page: 1,
-          name: lastSearch,
-        },
-        replace: true,
-      });
-
-      return;
-    }
-
-    void fetchCharacters(page, name ?? '');
-  }, [page, name, lastSearch, navigate, fetchCharacters]);
+  useFetchCharacters(page, !shouldRestoreLastSearch, name ?? '');
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -49,8 +48,6 @@ export const Search = () => {
     if (trimmedSearch === lastSearch) {
       return;
     }
-
-    setLoading();
 
     setLastSearch(trimmedSearch);
 
