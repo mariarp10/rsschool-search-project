@@ -1,16 +1,12 @@
-import { type FC } from 'react';
+import { type FC, useContext } from 'react';
 import style from './theme-controls.module.css';
 import classNames from 'classnames/bind';
-import {
-  useTheme,
-  useToggleTheme,
-} from '@components/theme-provider/theme-context';
+import { ThemeContext } from '@components/theme-provider/theme-context';
 
 const cn = classNames.bind(style);
 
 export const ThemeControls: FC = () => {
-  const theme = useTheme();
-  const toggleTheme = useToggleTheme();
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
     <div className={cn('container')}>

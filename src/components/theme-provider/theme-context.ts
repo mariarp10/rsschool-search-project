@@ -1,12 +1,15 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
 
 export type Theme = 'light' | 'dark';
 
-export const ThemeContext = createContext<Theme>('dark');
-export const ThemeUpdateContext = createContext<() => void>(() => {
-  // noop
-});
+type ThemeContextValue = {
+  theme: Theme;
+  toggleTheme: () => void;
+};
 
-export const useTheme = (): Theme => useContext(ThemeContext);
-export const useToggleTheme = (): (() => void) =>
-  useContext(ThemeUpdateContext);
+export const ThemeContext = createContext<ThemeContextValue>({
+  theme: 'dark',
+  toggleTheme: () => {
+    // noop
+  },
+});

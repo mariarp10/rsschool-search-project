@@ -1,11 +1,11 @@
-import { type FC, type ReactNode, useState, useEffect } from 'react';
-import { ThemeContext, ThemeUpdateContext, type Theme } from './theme-context';
+import { type ReactNode, useState, useEffect } from 'react';
+import { ThemeContext, type Theme } from './theme-context';
 
 type ThemeProps = {
   children: ReactNode;
 };
 
-export const ThemeProvider: FC<ThemeProps> = ({ children }) => {
+export const ThemeProvider = ({ children }: ThemeProps) => {
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
@@ -17,10 +17,8 @@ export const ThemeProvider: FC<ThemeProps> = ({ children }) => {
   };
 
   return (
-    <ThemeContext.Provider value={theme}>
-      <ThemeUpdateContext.Provider value={toggleTheme}>
-        {children}
-      </ThemeUpdateContext.Provider>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
     </ThemeContext.Provider>
   );
 };
