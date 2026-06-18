@@ -1,8 +1,3 @@
-.container {
-  display: flex;
-  gap: 10px;
-}
-
 .button {
   display: flex;
   align-items: center;
@@ -16,18 +11,39 @@
   color: var(--color-text-primary);
 
   background-color: transparent;
+}
 
-  &:hover {
-    cursor: pointer;
-    color: var(--color-accent);
-  }
+.button:hover {
+  cursor: pointer;
+  color: var(--color-accent);
+}
 
-  &:active {
-    color: var(--color-accent-secondary);
-  }
+.button:active {
+  color: var(--color-accent-secondary);
+}
 
-  &:focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
-  }
+.icon {
+  display: block;
+
+  width: 40px;
+  height: 40px;
+
+  background-color: currentcolor;
+
+  mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-position: center;
+  mask-size: contain;
+  mask-size: contain;
+}
+
+.moon {
+  mask-image: url('/icons/moon-icon.svg');
+  mask-image: url('/icons/moon-icon.svg');
+}
+
+.sun {
+  mask-image: url('/icons/sun-icon.svg');
+  mask-image: url('/icons/sun-icon.svg');
 }

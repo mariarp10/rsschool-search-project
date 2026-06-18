@@ -37,7 +37,7 @@
   height: 30px;
   border: none;
 
-  color: inherit;
+  color: var(--color-error-primary);
 
   background-color: transparent;
 
@@ -55,4 +55,21 @@
   gap: 30px;
   justify-content: center;
   padding-block: 10px;
+}
+
+.icon {
+  display: block;
+
+  width: 30px;
+  height: 30px;
+
+  background-color: currentcolor;
+
+  mask-image: url('/icons/delete-icon.svg');
+  mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-position: center;
+  mask-size: contain;
+  mask-size: contain;
 }

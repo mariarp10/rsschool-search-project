@@ -6,7 +6,6 @@ import { getDetails } from '@utils/api';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
 import { ErrorNotification } from '@ui/error-notification/error-notification';
-import { CrossIcon } from '@assets/icons/cross-icon';
 import { ApiError } from '@utils/api-error';
 
 const cn = classNames.bind(styles);
@@ -129,7 +128,7 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
           aria-label="Close"
           className={cn('close-button')}
         >
-          <CrossIcon />
+          <span aria-hidden="true" className={cn('icon')} />
         </button>
       </div>
 

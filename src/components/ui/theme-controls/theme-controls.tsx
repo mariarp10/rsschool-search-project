@@ -5,8 +5,6 @@ import {
   useTheme,
   useToggleTheme,
 } from '@components/theme-provider/theme-context';
-import { MoonIcon } from '@assets/icons/moon-icon';
-import { SunIcon } from '@assets/icons/sun-icon';
 
 const cn = classNames.bind(style);
 
@@ -22,7 +20,13 @@ export const ThemeControls: FC = () => {
         className={cn('button')}
         onClick={toggleTheme}
       >
-        {theme === 'dark' ? <MoonIcon /> : <SunIcon />}
+        <span
+          aria-hidden="true"
+          className={cn('icon', {
+            moon: theme === 'dark',
+            sun: theme !== 'dark',
+          })}
+        />
       </button>
     </div>
   );

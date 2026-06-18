@@ -3,7 +3,6 @@ import classNames from 'classnames/bind';
 import styles from './fly-away.module.css';
 import { Button } from '@ui/button/button';
 import { convertToCSV, downloadFile } from '@utils/helpers';
-import { DeleteIcon } from '@assets/icons/delete-icon';
 
 const cn = classNames.bind(styles);
 
@@ -35,7 +34,7 @@ export const FlyAway = () => {
                   className={cn('delete-button')}
                   onClick={() => toggleSelection(character)}
                 >
-                  <DeleteIcon />
+                  <span aria-hidden="true" className={cn('icon')} />
                 </button>
               </div>
             </li>
