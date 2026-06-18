@@ -1,32 +1,43 @@
-import { useCallback } from 'react';
+import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 
-type UseLocalStorageReturn = {
-  getValue: () => string;
-  setValue: (value: string, defaultValue?: string) => void;
+type useLocalStorageReturn = [string, Dispatch<SetStateAction<string>>];
+
+const parseString = (value: string): string | null => {
+  const parsed: unknown = JSON.parse(value);
+
+  if (typeof parsed === 'string') {
+    return parsed;
+  }
+
+  return null;
 };
 
 export const useLocalStorage = (
   key: string,
   defaultValue = '',
-): UseLocalStorageReturn => {
-  const getValue = useCallback(() => {
+): useLocalStorageReturn => {
+  const [lastSearch, setLastSearch] = useState(() => {
     try {
-      return localStorage.getItem(key) ?? defaultValue;
-    } catch {
-      return defaultValue;
-    }
-  }, [key, defaultValue]);
+      const value = localStorage.getItem(key);
 
-  const setValue = useCallback(
-    (value: string, defaultValue = '') => {
-      try {
-        localStorage.setItem(key, value);
-      } catch {
+      if (value === null) {
         return defaultValue;
       }
-    },
-    [key],
-  );
 
-  return { getValue, setValue };
+      return parseString(value) ?? defaultValue;
+    } catch {
+      console.error('A problem occured when retrieving data from localStorage');
+      return defaultValue;
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(key, JSON.stringify(lastSearch));
+    } catch {
+      console.error('Could not store data to localStorage');
+    }
+  }, [key, lastSearch]);
+
+  return [lastSearch, setLastSearch];
 };

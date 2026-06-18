@@ -1,20 +1,29 @@
 :root {
+  --color-error-primary: #ff4757;
+  --color-error-secondary: #d00707;
+  --color-accent: #c44dff;
+}
+
+:root[data-theme='dark'] {
   --color-bg-primary: #0b0c10;
-  --color-bg-secondary: #13151c;
-  --color-bg-card: #1c1f2e;
   --color-bg-elevated: #252840;
-  --color-text-primary: #f5f5f5;
-  --color-text-secondary: #cdd5e4;
-  --color-text-placeholder: #7a7a7a;
-  --color-light-green: #00e5b0;
-  --color-dark-green: #00b389;
-  --color-light-blue: #97e8ff;
-  --color-dark-blue: #1e90ff;
-  --color-light-purple: #c44dff;
-  --color-error: #ff4757;
-  --color-error-bg: #2a0e12;
-  --color-warning: #ffd166;
-  --color-border: #2e3150;
+  --color-text-primary: #eee;
+  --color-text-secondary: #b4b4b4;
+  --color-text-placeholder: #606060;
+  --color-border: #723792;
+  --color-button-hover: #e093ff;
+  --color-button-active: #b73ef1;
+}
+
+:root[data-theme='light'] {
+  --color-bg-primary: #fffcfd;
+  --color-bg-elevated: #eff0f3;
+  --color-text-primary: #1e1f24;
+  --color-text-secondary: #80828d;
+  --color-text-placeholder: #b9bbc6;
+  --color-border: #eeaac5;
+  --color-button-hover: #ffdbe9;
+  --color-button-active: #f5bdd3;
 }
 
 @font-face {

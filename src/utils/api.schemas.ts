@@ -9,7 +9,7 @@ export const CharacterSchema = z.object({
   gender: z.string(),
   origin: z.object({
     name: z.string(),
-    url: z.url(),
+    url: z.string(),
   }),
   location: z.object({
     name: z.string(),

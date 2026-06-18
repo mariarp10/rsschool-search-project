@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useState, type SyntheticEvent } from 'react';
 import type { Character } from '@utils/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
@@ -6,14 +6,13 @@ import { getDetails } from '@utils/api';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
 import { ErrorNotification } from '@ui/error-notification/error-notification';
-import { CrossIcon } from '@assets/icons/cross-icon';
 import { ApiError } from '@utils/api-error';
 
 const cn = classNames.bind(styles);
 
 const PLACEHOLDER_IMAGE = '/images/placeholder-details-image.png';
 
-const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+const handleImageError = (event: SyntheticEvent<HTMLImageElement>) => {
   const image = event.currentTarget;
 
   if (image.src.includes(PLACEHOLDER_IMAGE)) {
@@ -129,7 +128,7 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
           aria-label="Close"
           className={cn('close-button')}
         >
-          <CrossIcon />
+          <span aria-hidden="true" className={cn('icon')} />
         </button>
       </div>
 

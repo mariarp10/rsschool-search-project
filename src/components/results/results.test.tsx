@@ -5,7 +5,7 @@ import { type ReactNode } from 'react';
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual<typeof import('@tanstack/react-router')>(
-    '@tanstack/react-router'
+    '@tanstack/react-router',
   );
 
   return {
@@ -31,7 +31,7 @@ const defaultProps = {
 };
 
 describe('Results Component', () => {
-  test(`renders cards with results on the screen`, () => {
+  test('renders cards with results on the screen', () => {
     render(<Results {...defaultProps} characters={MockCharacters} />);
 
     const title = screen.getByRole('heading', { level: 2 });
@@ -40,14 +40,16 @@ describe('Results Component', () => {
     expect(title).toBeInTheDocument();
     expect(charactersList).toBeInTheDocument();
   });
-  test(`renders correct number of items`, () => {
+
+  test('renders correct number of items', () => {
     render(<Results {...defaultProps} characters={MockCharacters} />);
 
     const cards = screen.getAllByRole('listitem');
 
     expect(cards.length).toEqual(MockCharacters.length);
   });
-  test(`shows and removes loader while waiting for results`, () => {
+
+  test('shows and removes loader while waiting for results', () => {
     const { rerender } = render(<Results {...defaultProps} isLoading={true} />);
     expect(screen.getByRole('status')).toBeInTheDocument();
 
@@ -56,23 +58,25 @@ describe('Results Component', () => {
         {...defaultProps}
         characters={MockCharacters}
         isLoading={false}
-      />
+      />,
     );
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
-  test(`shows only loader when isLoading is true`, () => {
+
+  test('shows only loader when isLoading is true', () => {
     render(<Results {...defaultProps} isLoading={true} />);
 
     expect(screen.getByRole('status')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
   });
+
   test('shows new results after characters prop changes', () => {
     const initialCharacters = [MockCharacters[0]];
     const changedCharacters = MockCharacters.slice(1);
 
     const { rerender } = render(
-      <Results {...defaultProps} characters={initialCharacters} />
+      <Results {...defaultProps} characters={initialCharacters} />,
     );
 
     expect(screen.getByText(initialCharacters[0].name)).toBeInTheDocument();

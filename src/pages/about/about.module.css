@@ -15,7 +15,7 @@
 }
 
 .link {
-  color: var(--color-light-blue);
+  color: var(--color-accent);
 
   &:hover {
     text-decoration: underline;

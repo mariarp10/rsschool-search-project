@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { useLocalStorage } from './use-local-storage';
 
 describe('useLocalStorage', () => {
@@ -8,32 +8,48 @@ describe('useLocalStorage', () => {
   });
 
   test('returns value from localStorage', () => {
-    localStorage.setItem('lastSearch', 'rick');
+    localStorage.setItem('lastSearch', JSON.stringify('rick'));
     const { result } = renderHook(() => useLocalStorage('lastSearch'));
-    expect(result.current.getValue()).toBe('rick');
+    const [lastSearch] = result.current;
+    expect(lastSearch).toBe('rick');
   });
 
   test('returns empty string when localStorage is empty', () => {
     const { result } = renderHook(() => useLocalStorage('lastSearch'));
-    expect(result.current.getValue()).toBe('');
+    const [lastSearch] = result.current;
+    expect(lastSearch).toBe('');
   });
 
   test('saves value to localStorage', () => {
     const { result } = renderHook(() => useLocalStorage('lastSearch'));
-    result.current.setValue('beth');
-    expect(localStorage.getItem('lastSearch')).toBe('beth');
+    const [, setLastSearch] = result.current;
+
+    act(() => {
+      setLastSearch('beth');
+    });
+
+    const [lastSearch] = result.current;
+    expect(lastSearch).toBe('beth');
   });
 
   test('overwrites previous value', () => {
     const { result } = renderHook(() => useLocalStorage('lastSearch'));
-    result.current.setValue('summer');
-    result.current.setValue('morty');
-    expect(localStorage.getItem('lastSearch')).toBe('morty');
+    const [, setLastSearch] = result.current;
+
+    act(() => {
+      setLastSearch('summer');
+      setLastSearch('morty');
+    });
+
+    const [lastSearch] = result.current;
+
+    expect(lastSearch).toEqual('morty');
   });
 
   test('saves empty string', () => {
     const { result } = renderHook(() => useLocalStorage('lastSearch'));
-    result.current.setValue('');
-    expect(localStorage.getItem('lastSearch')).toBe('');
+    const [lastSearch, setLastSearch] = result.current;
+    setLastSearch('');
+    expect(lastSearch).toBe('');
   });
 });

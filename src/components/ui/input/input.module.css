@@ -6,12 +6,11 @@
 
   font-family: inherit;
 
-  background-color: var(--color-text-primary);
+  background-color: white;
   outline: none;
 
   &:focus {
-    border-color: var(--color-light-green);
-    border-width: 2px;
+    border-color: var(--color-accent);
   }
 
   &::placeholder {

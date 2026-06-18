@@ -1,43 +1,74 @@
-import { type FC, type ChangeEvent, type KeyboardEvent } from 'react';
+import { type ChangeEvent, type SubmitEvent, useState, useEffect } from 'react';
 import { Button } from '@ui/button/button';
 import { Input } from '@ui/input/input';
 import styles from './search.module.css';
 import classNames from 'classnames/bind';
+import { useLocalStorage } from '@hooks/use-local-storage';
+import { Route } from '@routes/characters';
+import { useNavigate } from '@tanstack/react-router';
+import { useFetchCharacters } from '@hooks/use-fetch-characters';
 
 const cn = classNames.bind(styles);
 
-type SearchProps = {
-  value: string;
-  onChange: (value: string) => void;
-  onSearch: (value: string) => void;
-};
+export const Search = () => {
+  const { page, name } = Route.useSearch();
 
-export const Search: FC<SearchProps> = ({ value, onChange, onSearch }) => {
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value);
-  };
+  const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
+  const [userInput, setUserInput] = useState<string>(lastSearch);
 
-  const handleClick = () => {
-    onSearch(value);
-  };
+  const navigate = useNavigate({ from: '/characters' });
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      onSearch(value);
+  const shouldRestoreLastSearch = !name && Boolean(lastSearch);
+
+  useEffect(() => {
+    if (!shouldRestoreLastSearch) {
+      return;
     }
+
+    void navigate({
+      search: {
+        page: 1,
+        name: lastSearch,
+      },
+      replace: true,
+    });
+  }, [lastSearch, navigate, shouldRestoreLastSearch]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUserInput(event.target.value);
+  };
+
+  useFetchCharacters(page, !shouldRestoreLastSearch, name ?? '');
+
+  const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const trimmedSearch = userInput.trim().toLowerCase();
+
+    if (trimmedSearch === lastSearch) {
+      return;
+    }
+
+    setLastSearch(trimmedSearch);
+
+    void navigate({
+      search: {
+        page: 1,
+        name: trimmedSearch || undefined,
+      },
+    });
   };
 
   return (
     <section className={cn('container')}>
-      <div className={cn('search')}>
+      <form className={cn('search')} onSubmit={handleSubmit}>
         <Input
           placeholder="Look up Rick and Morty characters"
-          value={value}
+          value={userInput}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
         />
-        <Button handleClick={handleClick} text="search" />
-      </div>
+        <Button text="search" type="submit" />
+      </form>
       <p className={cn('hint')}>
         Try typing in names of the characters from the show: Summer, Beth, Rick
       </p>

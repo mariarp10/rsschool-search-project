@@ -1,0 +1,75 @@
+.container {
+  position: sticky;
+  z-index: 3;
+  bottom: 61.5px;
+  left: 100px;
+
+  width: 450px;
+  border-radius: 20px;
+
+  background-color: var(--color-bg-primary);
+  box-shadow: 1px 1px 10px 0 var(--color-accent);
+}
+
+.list {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+
+  max-height: 200px;
+  padding: 10px 20px 0;
+
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delete-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+  border: none;
+
+  color: var(--color-error-primary);
+
+  background-color: transparent;
+
+  &:hover {
+    color: var(--color-error-primary);
+  }
+
+  &:active {
+    color: var(--color-error-secondary);
+  }
+}
+
+.controls {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  padding-block: 10px;
+}
+
+.icon {
+  display: block;
+
+  width: 30px;
+  height: 30px;
+
+  background-color: currentcolor;
+
+  mask-image: url('/icons/delete-icon.svg');
+  mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-position: center;
+  mask-size: contain;
+  mask-size: contain;
+}

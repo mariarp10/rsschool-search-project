@@ -1,142 +1,211 @@
-import { useState } from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vi } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { Search } from './search';
 
-const defaultProps = {
-  value: '',
-  onChange: vi.fn(),
-  onSearch: vi.fn(),
+type SearchParamsMock = {
+  page: number;
+  name?: string;
 };
 
-const renderControlledSearch = (onSearch = vi.fn()) => {
-  const ControlledSearch = () => {
-    const [value, setValue] = useState('');
-
-    return <Search value={value} onChange={setValue} onSearch={onSearch} />;
-  };
-
-  render(<ControlledSearch />);
-
-  return {
-    onSearch,
-  };
+type Mocks = {
+  navigateMock: ReturnType<typeof vi.fn>;
+  setLastSearchMock: ReturnType<typeof vi.fn>;
+  useFetchCharactersMock: ReturnType<
+    typeof vi.fn<(page: number, enabled: boolean, searchTerm: string) => void>
+  >;
+  searchParamsMock: SearchParamsMock;
+  lastSearchMock: string;
 };
 
-describe('Search Component', () => {
-  test('renders input, search button, and hint', () => {
-    render(<Search {...defaultProps} />);
+const mocks = vi.hoisted<Mocks>(() => ({
+  navigateMock: vi.fn(),
+  setLastSearchMock: vi.fn(),
+  useFetchCharactersMock:
+    vi.fn<(page: number, enabled: boolean, searchTerm: string) => void>(),
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
-    );
-    const searchButton = screen.getByRole('button', { name: /search/i });
-    const hintElement = screen.getByText(
-      'Try typing in names of the characters from the show: Summer, Beth, Rick'
-    );
+  searchParamsMock: {
+    page: 1,
+    name: undefined,
+  },
 
-    expect(inputElement).toBeInTheDocument();
-    expect(searchButton).toBeInTheDocument();
-    expect(hintElement).toBeInTheDocument();
+  lastSearchMock: '',
+}));
+
+vi.mock('@tanstack/react-router', () => ({
+  useNavigate: () => mocks.navigateMock,
+}));
+
+vi.mock('@routes/characters', () => ({
+  Route: {
+    useSearch: () => mocks.searchParamsMock,
+  },
+}));
+
+vi.mock('@hooks/use-local-storage', () => ({
+  useLocalStorage: () => [mocks.lastSearchMock, mocks.setLastSearchMock],
+}));
+
+vi.mock('@hooks/use-fetch-characters', () => ({
+  useFetchCharacters: (page: number, enabled: boolean, searchTerm: string) =>
+    mocks.useFetchCharactersMock(page, enabled, searchTerm),
+}));
+
+describe('Search', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = undefined;
+
+    mocks.lastSearchMock = '';
   });
 
-  test('displays value from props', () => {
-    render(<Search {...defaultProps} value="Rick" />);
+  it('renders search input, submit button and hint', () => {
+    render(<Search />);
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
-    );
+    expect(
+      screen.getByPlaceholderText('Look up Rick and Morty characters'),
+    ).toBeInTheDocument();
 
-    expect(inputElement).toHaveValue('Rick');
+    expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        'Try typing in names of the characters from the show: Summer, Beth, Rick',
+      ),
+    ).toBeInTheDocument();
   });
 
-  test('displays empty string when value is empty', () => {
-    render(<Search {...defaultProps} value="" />);
+  it('starts fetching characters by page and name from url', () => {
+    mocks.searchParamsMock.page = 2;
+    mocks.searchParamsMock.name = 'rick';
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
-    );
+    render(<Search />);
 
-    expect(inputElement).toHaveValue('');
+    expect(mocks.useFetchCharactersMock).toHaveBeenCalledWith(2, true, 'rick');
   });
 
-  test('calls onChange when user types', async () => {
-    const user = userEvent.setup();
-    const handleChange = vi.fn();
+  it('starts fetching all characters when name is not provided', () => {
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = undefined;
 
-    render(<Search {...defaultProps} value="" onChange={handleChange} />);
+    render(<Search />);
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
-    );
-
-    await user.type(inputElement, 'Morty');
-
-    expect(handleChange).toHaveBeenCalled();
-    expect(handleChange).toHaveBeenLastCalledWith('y');
+    expect(mocks.useFetchCharactersMock).toHaveBeenCalledWith(1, true, '');
   });
 
-  test('updates input value when parent updates value', async () => {
-    const user = userEvent.setup();
+  it('restores last search from localStorage when url does not contain name', () => {
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = undefined;
 
-    renderControlledSearch();
+    mocks.lastSearchMock = 'morty';
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
-    );
+    render(<Search />);
 
-    await user.type(inputElement, 'Morty');
-
-    expect(inputElement).toHaveValue('Morty');
+    expect(mocks.navigateMock).toHaveBeenCalledWith({
+      search: {
+        page: 1,
+        name: 'morty',
+      },
+      replace: true,
+    });
   });
 
-  test('calls onSearch callback with input value when user clicks search button', async () => {
-    const user = userEvent.setup();
-    const handleSearch = vi.fn();
+  it('uses lastSearch as initial input value', () => {
+    mocks.lastSearchMock = 'summer';
 
-    renderControlledSearch(handleSearch);
+    render(<Search />);
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
-    );
-    const searchButton = screen.getByRole('button', { name: /search/i });
-
-    await user.type(inputElement, 'Summer');
-    await user.click(searchButton);
-
-    expect(handleSearch).toHaveBeenCalledTimes(1);
-    expect(handleSearch).toHaveBeenCalledWith('Summer');
+    expect(
+      screen.getByPlaceholderText('Look up Rick and Morty characters'),
+    ).toHaveValue('summer');
   });
 
-  test('calls onSearch callback with input value when user presses Enter', async () => {
-    const user = userEvent.setup();
-    const handleSearch = vi.fn();
+  it('updates input value when user types', () => {
+    render(<Search />);
 
-    renderControlledSearch(handleSearch);
-
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
+    const input = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters',
     );
 
-    await user.type(inputElement, 'Summer');
-    await user.keyboard('{Enter}');
+    fireEvent.change(input, {
+      target: {
+        value: 'Beth',
+      },
+    });
 
-    expect(handleSearch).toHaveBeenCalledTimes(1);
-    expect(handleSearch).toHaveBeenCalledWith('Summer');
+    expect(input).toHaveValue('Beth');
   });
 
-  test('updates input value when value prop changes', () => {
-    const { rerender } = render(<Search {...defaultProps} value="Rick" />);
+  it('saves trimmed lowercase search and navigates on submit', () => {
+    render(<Search />);
 
-    const inputElement = screen.getByPlaceholderText(
-      'Look up Rick and Morty characters'
+    const input = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters',
     );
 
-    expect(inputElement).toHaveValue('Rick');
+    fireEvent.change(input, {
+      target: {
+        value: '  Rick  ',
+      },
+    });
 
-    rerender(<Search {...defaultProps} value="Morty" />);
+    fireEvent.click(screen.getByRole('button', { name: /search/i }));
 
-    expect(inputElement).toHaveValue('Morty');
+    expect(mocks.setLastSearchMock).toHaveBeenCalledWith('rick');
+
+    expect(mocks.navigateMock).toHaveBeenCalledWith({
+      search: {
+        page: 1,
+        name: 'rick',
+      },
+    });
+  });
+
+  it('removes name from url when submitted search is empty', () => {
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = 'rick';
+
+    mocks.lastSearchMock = 'rick';
+
+    render(<Search />);
+
+    const input = screen.getByPlaceholderText(
+      'Look up Rick and Morty characters',
+    );
+
+    fireEvent.change(input, {
+      target: {
+        value: '   ',
+      },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /search/i }));
+
+    expect(mocks.setLastSearchMock).toHaveBeenCalledWith('');
+
+    expect(mocks.navigateMock).toHaveBeenCalledWith({
+      search: {
+        page: 1,
+        name: undefined,
+      },
+    });
+  });
+
+  it('does nothing when submitted search equals lastSearch', () => {
+    mocks.searchParamsMock.page = 1;
+    mocks.searchParamsMock.name = 'rick';
+
+    mocks.lastSearchMock = 'rick';
+
+    render(<Search />);
+
+    vi.clearAllMocks();
+
+    fireEvent.click(screen.getByRole('button', { name: /search/i }));
+
+    expect(mocks.setLastSearchMock).not.toHaveBeenCalled();
+    expect(mocks.navigateMock).not.toHaveBeenCalled();
   });
 });

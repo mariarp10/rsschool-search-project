@@ -1,0 +1,49 @@
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+
+  color: var(--color-text-primary);
+
+  background-color: transparent;
+}
+
+.button:hover {
+  cursor: pointer;
+  color: var(--color-accent);
+}
+
+.button:active {
+  color: var(--color-accent-secondary);
+}
+
+.icon {
+  display: block;
+
+  width: 40px;
+  height: 40px;
+
+  background-color: currentcolor;
+
+  mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-position: center;
+  mask-size: contain;
+  mask-size: contain;
+}
+
+.moon {
+  mask-image: url('/icons/moon-icon.svg');
+  mask-image: url('/icons/moon-icon.svg');
+}
+
+.sun {
+  mask-image: url('/icons/sun-icon.svg');
+  mask-image: url('/icons/sun-icon.svg');
+}

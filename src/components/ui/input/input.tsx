@@ -1,4 +1,4 @@
-import { type FC, type ChangeEvent, type KeyboardEvent } from 'react';
+import { type FC, type ChangeEvent } from 'react';
 import styles from './input.module.css';
 import classNames from 'classnames/bind';
 
@@ -8,22 +8,15 @@ type InputProps = {
   placeholder: string;
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
 };
 
-export const Input: FC<InputProps> = ({
-  placeholder,
-  value,
-  onChange,
-  onKeyDown,
-}) => {
+export const Input: FC<InputProps> = ({ placeholder, value, onChange }) => {
   return (
     <input
       type="search"
       className={cn('input')}
       placeholder={placeholder}
       onChange={onChange}
-      onKeyDown={onKeyDown}
       value={value}
     />
   );

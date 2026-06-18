@@ -7,8 +7,9 @@ const cn = classNames.bind(styles);
 type ButtonProps = {
   text: string;
   disabled?: boolean;
-  handleClick: () => void;
+  handleClick?: () => void;
   extraClass?: string;
+  type?: 'submit';
 };
 
 export const Button: FC<ButtonProps> = ({
@@ -16,13 +17,14 @@ export const Button: FC<ButtonProps> = ({
   disabled,
   handleClick,
   extraClass,
+  type,
 }) => {
   return (
     <button
       className={cn('button', extraClass)}
       onClick={handleClick}
-      type="button"
       disabled={disabled}
+      type={type ?? 'button'}
     >
       {text}
     </button>

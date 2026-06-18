@@ -36,15 +36,32 @@
   height: 40px;
   border: none;
 
-  color: white;
+  color: var(--text-primary-color);
 
   background: none;
 
   &:hover {
-    color: var(--color-light-green);
+    color: var(--color-button-hover);
   }
 
   &:active {
-    color: var(--color-dark-green);
+    color: var(--color-button-active);
   }
+}
+
+.icon {
+  display: block;
+
+  width: 40px;
+  height: 40px;
+
+  background-color: currentcolor;
+
+  mask-image: url('/icons/cross-icon.svg');
+  mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-position: center;
+  mask-size: contain;
+  mask-size: contain;
 }

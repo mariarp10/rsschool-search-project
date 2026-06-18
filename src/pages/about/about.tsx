@@ -7,7 +7,7 @@ const cn = classNames.bind(styles);
 export const AboutPage: FC = () => {
   return (
     <section className={cn('container')}>
-      <h1>{`Howdy y'all`}</h1>
+      <h1>{"Howdy y'all"}</h1>
       <div className={cn('wrapper')}>
         <div className={cn('content')}>
           <p>
@@ -48,7 +48,11 @@ export const AboutPage: FC = () => {
             , though it&apos;s a major work in progress.
           </p>
         </div>
-        <img src="/images/about-page-picture.jpg" alt="" />
+        <img
+          data-testid="about-page-image"
+          src="/images/about-page-picture.jpg"
+          alt=""
+        />
       </div>
     </section>
   );
