@@ -33,7 +33,9 @@ describe('CharacterCard Component', () => {
 
     expect(img).toBeInTheDocument();
 
-    fireEvent.error(img!);
+    if (img) {
+      fireEvent.error(img);
+    }
 
     expect(img).toHaveAttribute('src', '/images/placeholder-image.png');
   });

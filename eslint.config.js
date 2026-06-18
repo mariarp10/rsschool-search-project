@@ -165,9 +165,8 @@ export default defineConfig([
       '*.config.js',
       '**/routeTree.gen.ts',
       '.tanstack',
-      '**/*.test.tsx',
       '**/routes/**',
-      '**/__tests__/**',
+      'coverage/**',
     ],
   },
 ]);

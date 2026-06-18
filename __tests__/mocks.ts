@@ -5,11 +5,13 @@ import { ApiError } from '@utils/api-error';
 
 export const mockApiGetCharacters = (): void => {
   vi.spyOn(api, 'getCharacters').mockImplementation((_page, name) => {
-    const results = name
-      ? MockCharacters.filter((c) =>
-          c.name.toLowerCase().includes(name.toLowerCase()),
-        )
-      : MockCharacters;
+    const normalizedName = name?.toLowerCase();
+
+    const results = MockCharacters.filter(
+      (character) =>
+        !normalizedName ||
+        character.name.toLowerCase().includes(normalizedName),
+    );
     return Promise.resolve({
       info: { count: results.length, pages: 1, next: null, prev: null },
       results,

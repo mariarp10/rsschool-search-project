@@ -19,7 +19,7 @@ const TestComponent = () => {
 
 describe('ThemeProvider', () => {
   beforeEach(() => {
-    document.documentElement.removeAttribute('data-theme');
+    delete document.documentElement.dataset.theme;
   });
 
   test('provides default dark theme', () => {
