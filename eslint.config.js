@@ -157,6 +157,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/main.tsx'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
+  {
     ignores: [
       '**/node_modules/**',
       '**/dist/**',

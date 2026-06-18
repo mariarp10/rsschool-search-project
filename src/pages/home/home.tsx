@@ -9,7 +9,7 @@ import { ErrorNotification } from '@ui/error-notification/error-notification';
 
 import { useLocalStorage } from '@hooks/use-local-storage';
 
-import { Route } from '@routes/characters.index';
+import { Route } from '@routes/characters';
 
 import { useNavigate } from '@tanstack/react-router';
 

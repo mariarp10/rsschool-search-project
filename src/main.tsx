@@ -8,9 +8,9 @@ const router = createRouter({
   routeTree,
 });
 declare module '@tanstack/react-router' {
-  type Register = {
+  interface Register {
     router: typeof router;
-  };
+  }
 }
 
 const rootElement = document.getElementById('root');
