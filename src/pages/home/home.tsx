@@ -45,27 +45,6 @@ export const HomePage: FC = () => {
     void fetchCharacters(page, name ?? '');
   }, [page, name, lastSearch, navigate, fetchCharacters]);
 
-  const handleNextPage = () => {
-    changePage(page + 1);
-  };
-
-  const handlePreviousPage = () => {
-    changePage(page - 1);
-  };
-
-  const changePage = (nextPage: number) => {
-    setLoading();
-
-    void navigate({
-      search: (prev) => ({
-        ...prev,
-        page: nextPage,
-      }),
-    });
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
   const handleSearch = (userInput: string) => {
     const trimmedSearch = userInput.trim().toLowerCase();
 
@@ -99,13 +78,7 @@ export const HomePage: FC = () => {
         ) : (
           <>
             {totalPages > 1 && (
-              <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                isLoading={isLoading}
-                handleNextPage={handleNextPage}
-                handlePreviousPage={handlePreviousPage}
-              />
+              <Pagination totalPages={totalPages} isLoading={isLoading} />
             )}
 
             <Results characters={characters} isLoading={isLoading} />
