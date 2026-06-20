@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const CharacterSchema = z.object({
-  id: z.number(),
+  id: z.number().int().positive(),
   name: z.string(),
   status: z.string(),
   species: z.string(),
@@ -17,14 +17,14 @@ export const CharacterSchema = z.object({
   }),
   image: z.string(),
   episode: z.array(z.string()),
-  url: z.string(),
+  url: z.url(),
   created: z.string(),
 });
 
 export const CharacterResponseSchema = z.object({
   info: z.object({
-    count: z.number(),
-    pages: z.number(),
+    count: z.number().int().positive(),
+    pages: z.number().int().positive(),
     next: z.string().nullable(),
     prev: z.string().nullable(),
   }),

@@ -1,23 +1,20 @@
-import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
-import { UIErrorNotification } from '@ui/error-notification';
-import { useCharacterQuery } from '@hooks/query/use-character-details';
+import { ErrorNotification } from '@ui/error-notification/error-notification';
 import { ApiError } from '@utils/api-error';
-import { CrossIcon } from '@assets/icons/cross-icon';
-import { RefreshIcon } from '@assets/icons/refresh-icon';
 import { useQueryClient } from '@tanstack/react-query';
+import { useCharacterQuery } from '@hooks/query/use-character-details';
 import { queryKeys } from '@utils/query-keys';
 
 const cn = classNames.bind(styles);
 
-type TCharacterDetailsProps = {
+type CharacterDetailsProps = {
   id: number;
 };
 
-export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
+export const CharacterDetails = ({ id }: CharacterDetailsProps) => {
   const navigate = useNavigate();
   const search = CharactersRoute.useSearch();
 
@@ -34,7 +31,7 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
   const errorCode = error instanceof ApiError ? error.status : null;
 
   const handleClose = () => {
-    navigate({
+    void navigate({
       to: '/characters',
       search: {
         page: search.page,
@@ -43,8 +40,8 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
     });
   };
 
-  const handleRefresh = () => {
-    queryClient.invalidateQueries({
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({
       queryKey: queryKeys.characterDetails(id),
     });
   };
@@ -54,7 +51,7 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
   }
 
   if (isError) {
-    return <UIErrorNotification errorCode={errorCode} />;
+    return <ErrorNotification errorCode={errorCode} />;
   }
 
   if (!character) {
@@ -70,12 +67,14 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
       <div className={cn('card-header')}>
         <h2>Details about character</h2>
         <button
-          onClick={handleRefresh}
+          onClick={() => {
+            void handleRefresh();
+          }}
           type="button"
           aria-label="refresh"
           className={cn('button')}
         >
-          <RefreshIcon />
+          <span aria-hidden="true" className={cn('icon', 'refresh-icon')} />
         </button>
         <button
           onClick={handleClose}
@@ -83,25 +82,29 @@ export const CharacterDetails: React.FC<TCharacterDetailsProps> = ({ id }) => {
           aria-label="Close"
           className={cn('button')}
         >
-          <CrossIcon />
+          <span aria-hidden="true" className={cn('icon', 'cross-icon')} />
         </button>
       </div>
+
       <section className={cn('card')}>
         <img
+          data-testid="character-image"
           className={cn('image')}
           src={image}
-          alt="Picture of character"
+          alt=""
           onError={(e) => {
             e.currentTarget.onerror = null;
             e.currentTarget.src = '/images/placeholder-details-image.png';
           }}
         />
+
         <h3 className={cn('facts-title')}>{name}</h3>
+
         <div className={cn('facts-container')}>
           <p>{`Status: ${status}`}</p>
           <p>{`Species: ${species}`}</p>
           <p>{`Origin planet: ${origin.name}`}</p>
-          <p>{`Appeared in ${episodesCount} episode(s)`}</p>
+          <p>{`Appeared in ${String(episodesCount)} episode(s)`}</p>
         </div>
       </section>
     </>

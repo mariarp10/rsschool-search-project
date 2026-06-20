@@ -1,39 +1,38 @@
-import React from 'react';
-import type { TCharacter } from '@utils/types';
-import { CharacterCard } from '@ui/character-card';
-import { CardsList } from '@ui/cards-list';
-import { UILoader } from '@ui/loader';
-import { UIButton } from '@ui/button';
+import type { Character } from '@utils/types';
+import { CharacterCard } from '@ui/character-card/character-card';
+import { Loader } from '@ui/loader/loader';
 import styles from './results.module.css';
 import classNames from 'classnames/bind';
+import { Button } from '@ui/button/button';
 
 const cn = classNames.bind(styles);
 
-type TResultsProps = {
-  characters: TCharacter[];
+type ResultsProps = {
+  characters: Character[];
   isLoading: boolean;
   handleRefresh: () => void;
 };
-export const Results: React.FC<TResultsProps> = ({
+
+export const Results = ({
   characters,
   isLoading,
   handleRefresh,
-}) => {
+}: ResultsProps) => {
   return (
     <>
       {isLoading ? (
-        <UILoader></UILoader>
+        <Loader />
       ) : (
         <section className={cn('container')}>
           <div className={cn('list-header')}>
             <h2 className={cn('title')}>Seen in the show</h2>
-            <UIButton handleClick={handleRefresh} text="Refresh" />
+            <Button handleClick={handleRefresh} text="Refresh" />
           </div>
-          <CardsList>
+          <ul className={cn('list')}>
             {characters.map((character) => (
               <CharacterCard key={character.id} character={character} />
             ))}
-          </CardsList>
+          </ul>
         </section>
       )}
     </>

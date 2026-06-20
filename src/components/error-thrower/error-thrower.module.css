@@ -1,5 +1,5 @@
 .container {
   display: flex;
   justify-content: center;
-  padding-block: 30px;
+  padding-top: 30px;
 }

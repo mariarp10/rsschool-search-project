@@ -69,7 +69,7 @@ describe('FlyAway', () => {
 
     await user.click(
       screen.getByRole('button', {
-        name: `Remove ${MockCharacters[0].name}`,
+        name: `Unselect character ${MockCharacters[0].name}`,
       }),
     );
 

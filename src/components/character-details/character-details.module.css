@@ -36,9 +36,9 @@
   height: 40px;
   border: none;
 
-  color: var(--color-text-primary);
+  color: var(--text-primary-color);
 
-  background: none;
+  background-color: transparent;
 
   &:hover {
     color: var(--color-button-hover);
@@ -47,4 +47,24 @@
   &:active {
     color: var(--color-button-active);
   }
+}
+
+.icon {
+  display: block;
+
+  width: 40px;
+  height: 40px;
+
+  background-color: currentcolor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.cross-icon {
+  mask-image: url('/icons/cross-icon.svg');
+}
+
+.refresh-icon {
+  mask-image: url('/icons/refresh-icon.svg');
 }

@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from './theme-provider';
-import { useTheme, useToggleTheme } from './theme-context';
+import { ThemeContext } from './theme-context';
+import { useContext } from 'react';
 
 const TestComponent = () => {
-  const theme = useTheme();
-  const toggleTheme = useToggleTheme();
+  const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (
     <div>
@@ -19,7 +19,7 @@ const TestComponent = () => {
 
 describe('ThemeProvider', () => {
   beforeEach(() => {
-    document.documentElement.removeAttribute('data-theme');
+    delete document.documentElement.dataset.theme;
   });
 
   test('provides default dark theme', () => {

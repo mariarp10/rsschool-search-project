@@ -1,4 +1,4 @@
-import type { TCharacter, TCharacterResponse } from './types';
+import type { Character, CharacterResponse } from './types';
 import { CharacterResponseSchema, CharacterSchema } from './api.schemas';
 import { ApiError } from './api-error';
 
@@ -7,7 +7,7 @@ const baseURL = 'https://rickandmortyapi.com/api';
 export const getCharacters = async (
   page: number,
   name?: string,
-): Promise<TCharacterResponse> => {
+): Promise<CharacterResponse> => {
   const url: URL = new URL(`${baseURL}/character`);
 
   if (name) {
@@ -29,7 +29,7 @@ export const getCharacters = async (
   return CharacterResponseSchema.parse(data);
 };
 
-export const getDetails = async (detailsId: number): Promise<TCharacter> => {
+export const getDetails = async (detailsId: number): Promise<Character> => {
   const url: URL = new URL(`${baseURL}/character/${String(detailsId)}`);
 
   const response: Response = await fetch(url.toString());

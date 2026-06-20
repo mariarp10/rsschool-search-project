@@ -3,9 +3,9 @@ import { afterEach, describe, expect, test, vi } from 'vitest';
 import { getCharacters, getDetails } from './api';
 import { ApiError } from './api-error';
 import { MockCharacters } from '@tests/fixtures';
-import type { TCharacterResponse } from './types';
+import type { CharacterResponse } from './types';
 
-const createCharactersResponse = (): TCharacterResponse => ({
+const createCharactersResponse = (): CharacterResponse => ({
   info: {
     count: MockCharacters.length,
     pages: 1,

@@ -1,44 +1,48 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { UIThemeControls } from './theme-controls';
-import { ThemeProvider } from '@components/theme-provider/theme-provider';
+import {
+  ThemeContext,
+  type Theme,
+} from '@components/theme-provider/theme-context';
+import { ThemeControls } from './theme-controls';
 
-vi.mock('@assets/icons/moon-icon', () => ({
-  MoonIcon: () => <svg data-testid="moon-icon" />,
-}));
+type RenderThemeControlsOptions = {
+  theme?: Theme;
+  toggleTheme?: () => void;
+};
 
-vi.mock('@assets/icons/sun-icon', () => ({
-  SunIcon: () => <svg data-testid="sun-icon" />,
-}));
+const renderThemeControls = ({
+  theme = 'dark',
+  toggleTheme = vi.fn(),
+}: RenderThemeControlsOptions = {}) => {
+  return render(
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      <ThemeControls />
+    </ThemeContext.Provider>,
+  );
+};
 
-describe('UIThemeControls', () => {
-  test('renders moon icon for dark theme by default', () => {
-    render(
-      <ThemeProvider>
-        <UIThemeControls />
-      </ThemeProvider>,
-    );
+describe('ThemeControls', () => {
+  it('renders theme toggle button', () => {
+    renderThemeControls();
 
-    expect(screen.getByTestId('moon-icon')).toBeInTheDocument();
-    expect(screen.queryByTestId('sun-icon')).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Toggle theme' }),
+    ).toBeInTheDocument();
   });
 
-  test('changes icon when theme is toggled', async () => {
+  it('calls toggleTheme when button is clicked', async (): Promise<void> => {
     const user = userEvent.setup();
+    const toggleThemeMock = vi.fn();
 
-    render(
-      <ThemeProvider>
-        <UIThemeControls />
-      </ThemeProvider>,
-    );
+    renderThemeControls({
+      toggleTheme: toggleThemeMock,
+    });
 
-    expect(screen.getByTestId('moon-icon')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'Toggle theme' }));
 
-    await user.click(screen.getByRole('button'));
-
-    expect(screen.getByTestId('sun-icon')).toBeInTheDocument();
-    expect(screen.queryByTestId('moon-icon')).not.toBeInTheDocument();
+    expect(toggleThemeMock).toHaveBeenCalledTimes(1);
   });
 });

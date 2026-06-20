@@ -1,21 +1,15 @@
-import { createContext, useContext } from 'react';
+import { createContext } from 'react';
 
-export type TTheme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 
-const throwMissingThemeProviderError = (): never => {
-  throw new Error('useToggleTheme must be used within ThemeProvider');
+type ThemeContextValue = {
+  theme: Theme;
+  toggleTheme: () => void;
 };
 
-export const ThemeContext = createContext<TTheme>('dark');
-
-export const ThemeUpdateContext = createContext<() => void>(
-  throwMissingThemeProviderError,
-);
-
-export const useTheme = (): TTheme => {
-  return useContext(ThemeContext);
-};
-
-export const useToggleTheme = (): (() => void) => {
-  return useContext(ThemeUpdateContext);
-};
+export const ThemeContext = createContext<ThemeContextValue>({
+  theme: 'dark',
+  toggleTheme: () => {
+    // noop
+  },
+});

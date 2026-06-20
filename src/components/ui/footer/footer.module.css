@@ -1,9 +1,24 @@
 .footer {
   position: sticky;
-  z-index: 2;
+  z-index: 1;
   bottom: 0;
 
   padding: 20px 100px;
 
   background-color: var(--color-bg-primary);
+}
+
+.link {
+  cursor: pointer;
+  transition: transform 120ms ease;
+
+  &:hover {
+    color: var(--color-light-blue);
+    text-decoration: underline;
+    text-underline-offset: 10px;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
 }

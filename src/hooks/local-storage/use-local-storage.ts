@@ -1,25 +1,30 @@
 import { useState, useEffect, type Dispatch, type SetStateAction } from 'react';
 
-type UseLocalStorageReturnType = [
-  value: string,
-  setValue: Dispatch<SetStateAction<string>>,
-];
+type useLocalStorageReturn = [string, Dispatch<SetStateAction<string>>];
+
+const parseString = (value: string): string | null => {
+  const parsed: unknown = JSON.parse(value);
+
+  if (typeof parsed === 'string') {
+    return parsed;
+  }
+
+  return null;
+};
 
 export const useLocalStorage = (
   key: string,
   defaultValue = '',
-): UseLocalStorageReturnType => {
-  const [lastSearch, setLastSearch] = useState<string>(() => {
+): useLocalStorageReturn => {
+  const [lastSearch, setLastSearch] = useState(() => {
     try {
       const value = localStorage.getItem(key);
 
-      if (!value) {
+      if (value === null) {
         return defaultValue;
       }
 
-      const parsedValue: unknown = JSON.parse(value);
-
-      return typeof parsedValue === 'string' ? parsedValue : defaultValue;
+      return parseString(value) ?? defaultValue;
     } catch {
       console.error('A problem occured when retrieving data from localStorage');
       return defaultValue;
@@ -27,7 +32,11 @@ export const useLocalStorage = (
   });
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(lastSearch));
+    try {
+      localStorage.setItem(key, JSON.stringify(lastSearch));
+    } catch {
+      console.error('Could not store data to localStorage');
+    }
   }, [key, lastSearch]);
 
   return [lastSearch, setLastSearch];

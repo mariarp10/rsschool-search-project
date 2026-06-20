@@ -4,13 +4,14 @@ import { Link } from '@tanstack/react-router';
 
 const cn = classNames.bind(styles);
 
-export const NotFoundPage: React.FC = () => {
+export const NotFoundPage = () => {
   return (
     <article className={cn('container')}>
-      <h1 className={cn('title')}>Sorry we could not find that page</h1>
+      <h1 className={cn('titile')}>Sorry we could not find that page</h1>
       <img
+        data-testid="not-found-image"
         src="/images/not-found-image.png"
-        alt="Background picture"
+        alt=""
         className={cn('image')}
       />
       <Link to="/" className={cn('link')}>

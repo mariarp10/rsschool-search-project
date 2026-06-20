@@ -133,9 +133,7 @@ describe('CharacterDetails Component', () => {
 
     renderWithQueryClient(<CharacterDetails id={character.id} />);
 
-    const image = await screen.findByRole('img', {
-      name: 'Picture of character',
-    });
+    const image = await screen.findByTestId('character-image');
 
     expect(image).toHaveAttribute('src', character.image);
   });
@@ -147,9 +145,7 @@ describe('CharacterDetails Component', () => {
 
     renderWithQueryClient(<CharacterDetails id={character.id} />);
 
-    const image = await screen.findByRole('img', {
-      name: 'Picture of character',
-    });
+    const image = await screen.findByTestId('character-image');
 
     fireEvent.error(image);
 
@@ -163,7 +159,7 @@ describe('CharacterDetails Component', () => {
     const NotFoundStatusCode = 404;
 
     mockedGetDetails.mockRejectedValue(
-      new ApiError('There is nothing here', NotFoundStatusCode),
+      new ApiError('Failed to fetch character details', NotFoundStatusCode),
     );
 
     renderWithQueryClient(<CharacterDetails id={999} />);
@@ -197,7 +193,7 @@ describe('CharacterDetails Component', () => {
     });
 
     fireEvent.click(
-      screen.getByRole('button', {
+      await screen.findByRole('button', {
         name: 'Close',
       }),
     );
@@ -228,7 +224,7 @@ describe('CharacterDetails Component', () => {
     });
 
     fireEvent.click(
-      screen.getByRole('button', {
+      await screen.findByRole('button', {
         name: 'Close',
       }),
     );

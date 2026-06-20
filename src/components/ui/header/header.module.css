@@ -15,7 +15,7 @@
 }
 
 .title {
-  color: var(--color-accent-primary);
+  color: var(--color-accent);
 }
 
 .link {
@@ -31,4 +31,10 @@
   &:active {
     transform: scale(0.96);
   }
+}
+
+.menu {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }

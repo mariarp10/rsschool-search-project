@@ -1,30 +1,29 @@
-import React from 'react';
 import styles from './button.module.css';
 import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-type TUIButtonProps = {
+type ButtonProps = {
   text: string;
   disabled?: boolean;
   handleClick?: () => void;
   extraClass?: string;
-  type?: 'button' | 'submit';
+  type?: 'submit';
 };
 
-export const UIButton: React.FC<TUIButtonProps> = ({
+export const Button = ({
   text,
   disabled,
   handleClick,
   extraClass,
   type,
-}) => {
+}: ButtonProps) => {
   return (
     <button
       className={cn('button', extraClass)}
       onClick={handleClick}
       disabled={disabled}
-      type={type ? type : 'button'}
+      type={type ?? 'button'}
     >
       {text}
     </button>

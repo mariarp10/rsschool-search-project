@@ -1,4 +1,4 @@
-import React from 'react';
+import { type ReactNode } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -26,7 +26,7 @@ vi.mock('@tanstack/react-router', async () => {
       className,
       search,
     }: {
-      children: React.ReactNode;
+      children: ReactNode;
       className?: string;
 
       search?: (prev: { page?: number; name?: string }) => unknown;
@@ -123,7 +123,11 @@ describe('CharacterCard', () => {
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', character.image);
 
-    fireEvent.error(image!);
+    if (!image) {
+      throw new Error('No image component');
+    }
+
+    fireEvent.error(image);
 
     expect(image).toHaveAttribute('src', '/images/placeholder-image.png');
   });

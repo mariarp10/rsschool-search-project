@@ -3,25 +3,27 @@ import userEvent from '@testing-library/user-event';
 import { type MockInstance } from 'vitest';
 import { ErrorThrower } from './error-thrower';
 
-describe(`Error Thrower Component`, () => {
+describe('Error Thrower Component', () => {
   let consoleError: MockInstance<() => void>;
 
   beforeEach(() => {
-    consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleError = vi.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    });
   });
 
   afterEach(() => {
     consoleError.mockRestore();
   });
 
-  test(`shows test button to initiate error throw`, () => {
+  test('shows test button to initiate error throw', () => {
     render(<ErrorThrower />);
     expect(
       screen.getByRole('button', { name: /test error/i }),
     ).toBeInTheDocument();
   });
 
-  test(`throws error when button is clicked`, async () => {
+  test('throws error when button is clicked', async () => {
     const user = userEvent.setup();
 
     render(<ErrorThrower />);

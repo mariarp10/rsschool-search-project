@@ -50,16 +50,14 @@ describe('AboutPage', () => {
 
       expect(link).toHaveAttribute('href', href);
       expect(link).toHaveAttribute('target', '_blank');
-      expect(link).toHaveAttribute('rel', 'noreferrer');
+      expect(link).toHaveAttribute('rel', 'noopener noreferrer');
     }
   });
 
   test('renders about page image', () => {
     render(<AboutPage />);
 
-    const image = screen.getByRole('img', {
-      name: /picture of a meme/i,
-    });
+    const image = screen.getByTestId('about-page-image');
 
     expect(image).toBeInTheDocument();
     expect(image).toHaveAttribute('src', '/images/about-page-picture.jpg');

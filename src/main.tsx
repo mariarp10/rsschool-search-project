@@ -6,9 +6,19 @@ import { routeTree } from './routeTree.gen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ApiError } from '@utils/api-error';
 
+const HOURS = 24;
+const MINUTES = 60;
+const SECONDS = 60;
+
 // 1 day
 const cacheTime =
-  Number(import.meta.env.VITE_CACHE_TTL_MS) || 24 * 60 * 60 * 1000;
+  Number(import.meta.env.VITE_CACHE_TTL_MS) || HOURS * MINUTES * SECONDS * 1000;
+
+const retryDelay = 5000;
+
+const maxFailures = 5;
+
+const SERVER_ERROR_CODE = 500;
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,16 +27,17 @@ const queryClient = new QueryClient({
       gcTime: cacheTime,
       retry: (failureCount, error) => {
         if (error instanceof TypeError) {
-          return failureCount < 5;
+          return failureCount < maxFailures;
         }
 
         if (error instanceof ApiError) {
-          return error.status >= 500 && failureCount < 2;
+          return error.status >= SERVER_ERROR_CODE && failureCount < 2;
         }
 
         return false;
       },
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000),
+      retryDelay: (attemptIndex) =>
+        Math.min(1000 * 2 ** attemptIndex, retryDelay),
     },
   },
 });
@@ -40,7 +51,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
-createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('rootElement not found');
+}
+
+createRoot(rootElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />

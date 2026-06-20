@@ -136,6 +136,7 @@ export default defineConfig([
       'unicorn/prefer-query-selector': 'off',
       'unicorn/prevent-abbreviations': 'off',
       'unicorn/explicit-length-check': 'off',
+      'unicorn/prefer-add-event-listener': 'off',
     },
   },
   {
@@ -156,6 +157,12 @@ export default defineConfig([
     },
   },
   {
+    files: ['src/main.tsx'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
+  {
     ignores: [
       '**/node_modules/**',
       '**/dist/**',
@@ -164,6 +171,8 @@ export default defineConfig([
       '*.config.js',
       '**/routeTree.gen.ts',
       '.tanstack',
+      '**/routes/**',
+      'coverage/**',
     ],
   },
 ]);

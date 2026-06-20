@@ -37,11 +37,10 @@ describe('NotFoundPage Component', () => {
       }),
     ).toBeInTheDocument();
 
-    expect(
-      screen.getByRole('img', {
-        name: 'Background picture',
-      }),
-    ).toHaveAttribute('src', '/images/not-found-image.png');
+    expect(screen.getByTestId('not-found-image')).toHaveAttribute(
+      'src',
+      '/images/not-found-image.png',
+    );
 
     expect(
       screen.getByRole('link', {

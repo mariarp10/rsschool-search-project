@@ -1,5 +1,5 @@
-import React from 'react';
-import type { TCharacter } from '@utils/types';
+import { type ChangeEvent } from 'react';
+import type { Character } from '@utils/types';
 import styles from './character-card.module.css';
 import classNames from 'classnames/bind';
 import { Link } from '@tanstack/react-router';
@@ -7,18 +7,18 @@ import { useSelectionStore } from '@store/selection.store';
 
 const cn = classNames.bind(styles);
 
-type TCharacterCardProps = {
-  character: TCharacter;
+type CharacterCardProps = {
+  character: Character;
 };
 
-export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
+export const CharacterCard = ({ character }: CharacterCardProps) => {
   const toggleSelection = useSelectionStore((state) => state.toggleSelection);
 
   const isChecked = useSelectionStore((state) =>
     state.selectedCharacters.some((selection) => selection.id === character.id),
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.stopPropagation();
     toggleSelection(character);
   };
@@ -26,6 +26,7 @@ export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
   return (
     <li className={cn('list-item')}>
       <input
+        aria-label={`Select character ${character.name}`}
         checked={isChecked}
         className={cn('checkbox')}
         type="checkbox"
@@ -44,16 +45,14 @@ export const CharacterCard: React.FC<TCharacterCardProps> = ({ character }) => {
           <img
             className={cn('avatar')}
             src={character.image}
-            alt={''}
+            alt=""
             loading="lazy"
             onError={(e) => {
               e.currentTarget.onerror = null;
               e.currentTarget.src = '/images/placeholder-image.png';
             }}
           />
-          <div className={cn('overlay')}>
-            <h3 className={cn('name')}>{character.name}</h3>
-          </div>
+          <h3 className={cn('name')}>{character.name}</h3>
         </div>
       </Link>
     </li>

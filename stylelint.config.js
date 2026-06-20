@@ -7,7 +7,6 @@ export default {
   ],
   plugins: ['stylelint-order'],
   rules: {
-    'import-notation': 'string',
     'selector-pseudo-class-no-unknown': [
       true,
       {

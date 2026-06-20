@@ -1,10 +1,10 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 
 import { Results } from './results';
 import { MockCharacters } from '@tests/fixtures';
+import { type ReactNode } from 'react';
 
 vi.mock('@tanstack/react-router', async () => {
   const actual = await vi.importActual<typeof import('@tanstack/react-router')>(
@@ -18,7 +18,7 @@ vi.mock('@tanstack/react-router', async () => {
       children,
       className,
     }: {
-      children: React.ReactNode;
+      children: ReactNode;
       className?: string;
     }) => (
       <a href="/characters?page=1&detailsId=1" className={className}>
@@ -57,19 +57,19 @@ describe('Results Component', () => {
     const props = createDefaultProps();
     const { rerender } = render(<Results {...props} isLoading={true} />);
 
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
 
     rerender(
       <Results {...props} characters={MockCharacters} isLoading={false} />,
     );
 
-    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
   test('shows only loader when isLoading is true', () => {
     render(<Results {...createDefaultProps()} isLoading={true} />);
 
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
     expect(screen.queryByRole('heading', { level: 2 })).not.toBeInTheDocument();
     expect(screen.queryByRole('list')).not.toBeInTheDocument();
     expect(

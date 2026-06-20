@@ -1,28 +1,23 @@
-import React from 'react';
+import { type ChangeEvent } from 'react';
 import styles from './input.module.css';
 import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-type TUIInputProps = {
+type InputProps = {
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const UIInput: React.FC<TUIInputProps> = ({
-  placeholder,
-  value,
-  onChange,
-}) => {
+export const Input = ({ placeholder, value, onChange }: InputProps) => {
   return (
     <input
-      type="text"
+      type="search"
       className={cn('input')}
       placeholder={placeholder}
       onChange={onChange}
       value={value}
-      id="search"
     />
   );
 };
