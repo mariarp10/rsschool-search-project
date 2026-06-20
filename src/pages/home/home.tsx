@@ -10,13 +10,9 @@ import { Route } from '@routes/characters.index';
 import { useCharactersQuery } from '@hooks/query/use-characters-query';
 
 import { ApiError } from '@utils/api-error';
-import { useQueryClient } from '@tanstack/react-query';
-import { queryKeys } from '@utils/query-keys';
 
 export const HomePage = () => {
   const { page, name } = Route.useSearch();
-
-  const queryClient = useQueryClient();
 
   const { data, isLoading, isFetching, isError, error } = useCharactersQuery(
     page,
@@ -26,12 +22,6 @@ export const HomePage = () => {
   const characters = data?.results ?? [];
   const totalPages = data?.info.pages ?? 0;
   const errorCode = error instanceof ApiError ? error.status : null;
-
-  const handleRefresh = async () => {
-    await queryClient.invalidateQueries({
-      queryKey: queryKeys.characters(page, name),
-    });
-  };
 
   return (
     <>
@@ -50,7 +40,6 @@ export const HomePage = () => {
             )}
 
             <Results
-              handleRefresh={() => void handleRefresh}
               characters={characters}
               isLoading={isLoading || isFetching}
             />
