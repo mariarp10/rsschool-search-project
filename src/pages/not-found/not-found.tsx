@@ -1,11 +1,10 @@
 import classNames from 'classnames/bind';
 import styles from './not-found.module.css';
 import { Link } from '@tanstack/react-router';
-import { type FC } from 'react';
 
 const cn = classNames.bind(styles);
 
-export const NotFoundPage: FC = () => {
+export const NotFoundPage = () => {
   return (
     <article className={cn('container')}>
       <h1 className={cn('titile')}>Sorry we could not find that page</h1>

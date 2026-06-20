@@ -1,11 +1,11 @@
-import { type FC, useContext } from 'react';
+import { useContext } from 'react';
 import style from './theme-controls.module.css';
 import classNames from 'classnames/bind';
 import { ThemeContext } from '@components/theme-provider/theme-context';
 
 const cn = classNames.bind(style);
 
-export const ThemeControls: FC = () => {
+export const ThemeControls = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
 
   return (

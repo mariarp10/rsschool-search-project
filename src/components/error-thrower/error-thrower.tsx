@@ -1,11 +1,10 @@
-import { type FC } from 'react';
 import { useState } from 'react';
 import styles from './error-thrower.module.css';
 import classNames from 'classnames/bind';
 
 const cn = classNames.bind(styles);
 
-export const ErrorThrower: FC = () => {
+export const ErrorThrower = () => {
   const [shouldThrow, setShouldThrow] = useState(false);
 
   const handleClick = () => {

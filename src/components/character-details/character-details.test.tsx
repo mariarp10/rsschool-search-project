@@ -1,5 +1,8 @@
 import { fireEvent, render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 import { describe, test, expect, vi, beforeEach } from 'vitest';
+
 import { CharacterDetails } from './character-details';
 import { getDetails } from '@utils/api';
 import { MockCharacters } from '@tests/fixtures';
@@ -44,9 +47,29 @@ vi.mock('@utils/api', () => ({
 
 const mockedGetDetails = vi.mocked(getDetails);
 
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        gcTime: Infinity,
+        staleTime: Infinity,
+      },
+    },
+  });
+
+const renderWithQueryClient = (component: ReactNode) => {
+  const queryClient = createTestQueryClient();
+
+  return render(
+    <QueryClientProvider client={queryClient}>{component}</QueryClientProvider>,
+  );
+};
+
 describe('CharacterDetails Component', () => {
   beforeEach(() => {
     mocks.navigate.mockClear();
+
     mocks.search = {
       page: 1,
     };
@@ -55,12 +78,52 @@ describe('CharacterDetails Component', () => {
   });
 
   test('shows loader while character details are loading', () => {
-    mockedGetDetails.mockResolvedValue(MockCharacters[0]);
+    const pendingPromise = new Promise<never>(() => {
+      return undefined;
+    });
 
-    render(<CharacterDetails id={MockCharacters[0].id} />);
+    mockedGetDetails.mockReturnValue(pendingPromise);
+
+    renderWithQueryClient(<CharacterDetails id={MockCharacters[0].id} />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
     expect(mockedGetDetails).toHaveBeenCalledWith(MockCharacters[0].id);
+  });
+
+  test('renders character details', async () => {
+    const character = MockCharacters[0];
+
+    mockedGetDetails.mockResolvedValue(character);
+
+    renderWithQueryClient(<CharacterDetails id={character.id} />);
+
+    expect(
+      await screen.findByRole('heading', {
+        name: 'Details about character',
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('heading', {
+        name: character.name,
+      }),
+    ).toBeInTheDocument();
+
+    expect(screen.getByText(`Status: ${character.status}`)).toBeInTheDocument();
+    expect(
+      screen.getByText(`Species: ${character.species}`),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(`Origin planet: ${character.origin.name}`),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        `Appeared in ${String(character.episode.length)} episode(s)`,
+      ),
+    ).toBeInTheDocument();
+
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
 
   test('renders character image', async () => {
@@ -68,7 +131,7 @@ describe('CharacterDetails Component', () => {
 
     mockedGetDetails.mockResolvedValue(character);
 
-    render(<CharacterDetails id={character.id} />);
+    renderWithQueryClient(<CharacterDetails id={character.id} />);
 
     const image = await screen.findByTestId('character-image');
 
@@ -80,7 +143,7 @@ describe('CharacterDetails Component', () => {
 
     mockedGetDetails.mockResolvedValue(character);
 
-    render(<CharacterDetails id={character.id} />);
+    renderWithQueryClient(<CharacterDetails id={character.id} />);
 
     const image = await screen.findByTestId('character-image');
 
@@ -99,7 +162,7 @@ describe('CharacterDetails Component', () => {
       new ApiError('Failed to fetch character details', NotFoundStatusCode),
     );
 
-    render(<CharacterDetails id={999} />);
+    renderWithQueryClient(<CharacterDetails id={999} />);
 
     expect(screen.getByText('Loading...')).toBeInTheDocument();
 
@@ -108,6 +171,7 @@ describe('CharacterDetails Component', () => {
         'Looks like this character was not in the show. Try looking up someone else.',
       ),
     ).toBeInTheDocument();
+
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
 
@@ -122,7 +186,11 @@ describe('CharacterDetails Component', () => {
 
     mockedGetDetails.mockResolvedValue(character);
 
-    render(<CharacterDetails id={character.id} />);
+    renderWithQueryClient(<CharacterDetails id={character.id} />);
+
+    await screen.findByRole('heading', {
+      name: character.name,
+    });
 
     fireEvent.click(
       await screen.findByRole('button', {
@@ -149,7 +217,11 @@ describe('CharacterDetails Component', () => {
 
     mockedGetDetails.mockResolvedValue(character);
 
-    render(<CharacterDetails id={character.id} />);
+    renderWithQueryClient(<CharacterDetails id={character.id} />);
+
+    await screen.findByRole('heading', {
+      name: character.name,
+    });
 
     fireEvent.click(
       await screen.findByRole('button', {
@@ -163,5 +235,45 @@ describe('CharacterDetails Component', () => {
         page: 3,
       },
     });
+  });
+
+  test('refreshes character details when refresh button is clicked', async () => {
+    const firstCharacter = MockCharacters[0];
+    const updatedCharacter = {
+      ...firstCharacter,
+      name: 'Updated Rick',
+      status: 'unknown',
+    };
+
+    mockedGetDetails
+      .mockResolvedValueOnce(firstCharacter)
+      .mockResolvedValueOnce(updatedCharacter);
+
+    renderWithQueryClient(<CharacterDetails id={firstCharacter.id} />);
+
+    expect(
+      await screen.findByRole('heading', {
+        name: firstCharacter.name,
+      }),
+    ).toBeInTheDocument();
+
+    expect(mockedGetDetails).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(
+      screen.getByRole('button', {
+        name: /refresh/i,
+      }),
+    );
+
+    expect(
+      await screen.findByRole('heading', {
+        name: updatedCharacter.name,
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(`Status: ${updatedCharacter.status}`),
+    ).toBeInTheDocument();
+    expect(mockedGetDetails).toHaveBeenCalledTimes(2);
   });
 });

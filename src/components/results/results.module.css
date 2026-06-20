@@ -3,8 +3,13 @@
 }
 
 .title {
-  padding-bottom: 5px;
   font-size: 22px;
+}
+
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
 }
 
 .list {

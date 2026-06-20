@@ -25,7 +25,7 @@
   gap: 5px;
 }
 
-.close-button {
+.button {
   cursor: pointer;
 
   display: flex;
@@ -38,7 +38,7 @@
 
   color: var(--text-primary-color);
 
-  background: none;
+  background-color: transparent;
 
   &:hover {
     color: var(--color-button-hover);
@@ -56,12 +56,15 @@
   height: 40px;
 
   background-color: currentcolor;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
 
+.cross-icon {
   mask-image: url('/icons/cross-icon.svg');
-  mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-position: center;
-  mask-size: contain;
-  mask-size: contain;
+}
+
+.refresh-icon {
+  mask-image: url('/icons/refresh-icon.svg');
 }

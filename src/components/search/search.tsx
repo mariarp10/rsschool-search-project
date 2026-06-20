@@ -3,7 +3,7 @@ import { Button } from '@ui/button/button';
 import { Input } from '@ui/input/input';
 import styles from './search.module.css';
 import classNames from 'classnames/bind';
-import { useLocalStorage } from '@hooks/use-local-storage';
+import { useLocalStorage } from '@hooks/local-storage/use-local-storage';
 import { Route } from '@routes/characters';
 import { useNavigate } from '@tanstack/react-router';
 import { useFetchCharacters } from '@hooks/use-fetch-characters';

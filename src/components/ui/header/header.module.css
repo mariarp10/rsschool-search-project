@@ -23,7 +23,7 @@
   transition: transform 120ms ease;
 
   &:hover {
-    color: var(--color-light-blue);
+    color: var(--color-accent-primary);
     text-decoration: underline;
     text-underline-offset: 10px;
   }

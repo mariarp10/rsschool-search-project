@@ -1,4 +1,4 @@
-import { type FC, type ChangeEvent } from 'react';
+import { type ChangeEvent } from 'react';
 import styles from './input.module.css';
 import classNames from 'classnames/bind';
 
@@ -10,7 +10,7 @@ type InputProps = {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const Input: FC<InputProps> = ({ placeholder, value, onChange }) => {
+export const Input = ({ placeholder, value, onChange }: InputProps) => {
   return (
     <input
       type="search"

@@ -1,4 +1,3 @@
-import { type FC } from 'react';
 import styles from './error-notification.module.css';
 import classNames from 'classnames/bind';
 
@@ -13,9 +12,7 @@ type ErrorNotificationProps = {
   errorCode: number | null;
 };
 
-export const ErrorNotification: FC<ErrorNotificationProps> = ({
-  errorCode,
-}) => {
+export const ErrorNotification = ({ errorCode }: ErrorNotificationProps) => {
   const getErrorMessage = () => {
     if (errorCode) {
       return ERROR_MESSAGES[errorCode];

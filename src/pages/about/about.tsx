@@ -1,10 +1,9 @@
 import classNames from 'classnames/bind';
 import styles from './about.module.css';
-import { type FC } from 'react';
 
 const cn = classNames.bind(styles);
 
-export const AboutPage: FC = () => {
+export const AboutPage = () => {
   return (
     <section className={cn('container')}>
       <h1>{"Howdy y'all"}</h1>

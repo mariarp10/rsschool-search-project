@@ -1,96 +1,34 @@
-import { type FC, useEffect, useState, type SyntheticEvent } from 'react';
-import type { Character } from '@utils/types';
 import { useNavigate } from '@tanstack/react-router';
 import { Route as CharactersRoute } from '@routes/characters';
-import { getDetails } from '@utils/api';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
 import { ErrorNotification } from '@ui/error-notification/error-notification';
 import { ApiError } from '@utils/api-error';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCharacterQuery } from '@hooks/query/use-character-details';
+import { queryKeys } from '@utils/query-keys';
 
 const cn = classNames.bind(styles);
-
-const PLACEHOLDER_IMAGE = '/images/placeholder-details-image.png';
-
-const handleImageError = (event: SyntheticEvent<HTMLImageElement>) => {
-  const image = event.currentTarget;
-
-  if (image.src.includes(PLACEHOLDER_IMAGE)) {
-    return;
-  }
-
-  image.src = PLACEHOLDER_IMAGE;
-};
 
 type CharacterDetailsProps = {
   id: number;
 };
 
-type CharacterDetailsState = {
-  isLoading: boolean;
-  hasError: boolean;
-  errorCode: number | null;
-  character: Character | null;
-};
-
-const initialState: CharacterDetailsState = {
-  isLoading: false,
-  hasError: false,
-  errorCode: null,
-  character: null,
-};
-
-export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
-  const [state, setState] = useState<CharacterDetailsState>(initialState);
-
+export const CharacterDetails = ({ id }: CharacterDetailsProps) => {
   const navigate = useNavigate();
   const search = CharactersRoute.useSearch();
 
-  useEffect(() => {
-    let isActive = true;
+  const queryClient = useQueryClient();
 
-    const loadDetails = async () => {
-      setState((prev) => ({
-        ...prev,
-        isLoading: true,
-        hasError: false,
-        errorCode: null,
-        character: null,
-      }));
+  const {
+    data: character,
+    isLoading,
+    isFetching,
+    isError,
+    error,
+  } = useCharacterQuery(id);
 
-      try {
-        const character = await getDetails(id);
-
-        if (!isActive) {
-          return;
-        }
-
-        setState({
-          isLoading: false,
-          hasError: false,
-          errorCode: null,
-          character,
-        });
-      } catch (error) {
-        if (!isActive) {
-          return;
-        }
-
-        setState({
-          isLoading: false,
-          character: null,
-          hasError: true,
-          errorCode: error instanceof ApiError ? error.status : null,
-        });
-      }
-    };
-
-    void loadDetails();
-
-    return () => {
-      isActive = false;
-    };
-  }, [id]);
+  const errorCode = error instanceof ApiError ? error.status : null;
 
   const handleClose = () => {
     void navigate({
@@ -102,19 +40,25 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
     });
   };
 
-  if (state.isLoading) {
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: queryKeys.characterDetails(id),
+    });
+  };
+
+  if (isLoading || isFetching) {
     return <p>Loading...</p>;
   }
 
-  if (state.hasError) {
-    return <ErrorNotification errorCode={state.errorCode} />;
+  if (isError) {
+    return <ErrorNotification errorCode={errorCode} />;
   }
 
-  if (!state.character) {
+  if (!character) {
     return null;
   }
 
-  const { name, status, species, image, episode, origin } = state.character;
+  const { name, status, species, image, episode, origin } = character;
 
   const episodesCount = episode.length;
 
@@ -123,12 +67,22 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
       <div className={cn('card-header')}>
         <h2>Details about character</h2>
         <button
+          onClick={() => {
+            void handleRefresh();
+          }}
+          type="button"
+          aria-label="refresh"
+          className={cn('button')}
+        >
+          <span aria-hidden="true" className={cn('icon', 'refresh-icon')} />
+        </button>
+        <button
           onClick={handleClose}
           type="button"
           aria-label="Close"
-          className={cn('close-button')}
+          className={cn('button')}
         >
-          <span aria-hidden="true" className={cn('icon')} />
+          <span aria-hidden="true" className={cn('icon', 'cross-icon')} />
         </button>
       </div>
 
@@ -138,7 +92,10 @@ export const CharacterDetails: FC<CharacterDetailsProps> = ({ id }) => {
           className={cn('image')}
           src={image}
           alt=""
-          onError={handleImageError}
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = '/images/placeholder-details-image.png';
+          }}
         />
 
         <h3 className={cn('facts-title')}>{name}</h3>

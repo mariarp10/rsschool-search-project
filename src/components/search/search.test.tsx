@@ -42,7 +42,7 @@ vi.mock('@routes/characters', () => ({
   },
 }));
 
-vi.mock('@hooks/use-local-storage', () => ({
+vi.mock('@hooks/local-storage/use-local-storage', () => ({
   useLocalStorage: () => [mocks.lastSearchMock, mocks.setLastSearchMock],
 }));
 

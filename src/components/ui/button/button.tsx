@@ -1,4 +1,3 @@
-import { type FC } from 'react';
 import styles from './button.module.css';
 import classNames from 'classnames/bind';
 
@@ -12,13 +11,13 @@ type ButtonProps = {
   type?: 'submit';
 };
 
-export const Button: FC<ButtonProps> = ({
+export const Button = ({
   text,
   disabled,
   handleClick,
   extraClass,
   type,
-}) => {
+}: ButtonProps) => {
   return (
     <button
       className={cn('button', extraClass)}

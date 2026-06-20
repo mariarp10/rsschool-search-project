@@ -1,4 +1,4 @@
-import { type FC, type ChangeEvent } from 'react';
+import { type ChangeEvent } from 'react';
 import type { Character } from '@utils/types';
 import styles from './character-card.module.css';
 import classNames from 'classnames/bind';
@@ -11,7 +11,7 @@ type CharacterCardProps = {
   character: Character;
 };
 
-export const CharacterCard: FC<CharacterCardProps> = ({ character }) => {
+export const CharacterCard = ({ character }: CharacterCardProps) => {
   const toggleSelection = useSelectionStore((state) => state.toggleSelection);
 
   const isChecked = useSelectionStore((state) =>

@@ -1,5 +1,5 @@
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
-import { screen, waitFor, act } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { renderWithRouter } from '@tests/render-with-router';
 import {
   infiniteApi,
@@ -7,14 +7,10 @@ import {
   mockApiNotFound,
 } from '@tests/mocks';
 import { MockCharacters } from '@tests/fixtures';
-import { useResultsStore } from '@store/results.store';
-
-const initialStateStore = useResultsStore.getState();
 
 describe('Home page', () => {
   beforeEach(() => {
     localStorage.clear();
-    useResultsStore.setState(initialStateStore, true);
   });
 
   afterEach(() => {
@@ -53,13 +49,9 @@ describe('Home page', () => {
     });
   });
 
-  describe('loader and errors', () => {
+  describe('loading, errors, and invalidation', () => {
     test('signals to show loader while fetching results', async () => {
       infiniteApi();
-
-      act(() => {
-        useResultsStore.setState({ isLoading: true });
-      });
 
       renderWithRouter({ initialLocation: '/characters?page=1' });
 
@@ -68,13 +60,6 @@ describe('Home page', () => {
 
     test('shows error notification when character is not found', async () => {
       mockApiNotFound();
-
-      useResultsStore.setState({
-        errorCode: 404,
-        characters: [],
-        isLoading: false,
-        totalPages: 0,
-      });
 
       renderWithRouter({ initialLocation: '/characters/?page=1&name=xyz' });
 

@@ -29,21 +29,15 @@
   height: 40px;
 
   background-color: currentcolor;
-
-  mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   mask-position: center;
-  mask-position: center;
-  mask-size: contain;
   mask-size: contain;
 }
 
 .moon {
   mask-image: url('/icons/moon-icon.svg');
-  mask-image: url('/icons/moon-icon.svg');
 }
 
 .sun {
-  mask-image: url('/icons/sun-icon.svg');
   mask-image: url('/icons/sun-icon.svg');
 }
