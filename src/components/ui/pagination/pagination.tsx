@@ -1,5 +1,3 @@
-'use client';
-
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@ui/button/button';
 import styles from './pagination.module.css';

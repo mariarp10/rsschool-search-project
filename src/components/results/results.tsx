@@ -1,16 +1,14 @@
-'use client';
-
 import { useSearchParams } from 'next/navigation';
 import type { Character } from '@utils/types';
 import { CharacterCard } from '@ui/character-card/character-card';
 import { Loader } from '@ui/loader/loader';
-import styles from './results.module.css';
 import classNames from 'classnames/bind';
 import { Button } from '@ui/button/button';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@utils/query-keys';
+import styles from './results.module.css';
 
-const cn = classNames.bind(styles);
+const cx = classNames.bind(styles);
 
 type ResultsProps = {
   characters: Character[];
@@ -36,9 +34,9 @@ export const Results = ({ characters, isLoading }: ResultsProps) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <section className={cn('container')}>
-          <div className={cn('list-header')}>
-            <h2 className={cn('title')}>Seen in the show</h2>
+        <section className={cx('container')}>
+          <div className={cx('list-header')}>
+            <h2 className={cx('title')}>Seen in the show</h2>
             <Button
               handleClick={() => {
                 void handleRefresh();
@@ -47,7 +45,7 @@ export const Results = ({ characters, isLoading }: ResultsProps) => {
             />
           </div>
 
-          <ul className={cn('list')}>
+          <ul className={cx('list')}>
             {characters.map((character) => (
               <CharacterCard key={character.id} character={character} />
             ))}

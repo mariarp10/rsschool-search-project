@@ -1,5 +1,3 @@
-'use client';
-
 import { Search } from '@components/search/search';
 import { Results } from '@components/results/results';
 import { ErrorThrower } from '@components/error-thrower/error-thrower';

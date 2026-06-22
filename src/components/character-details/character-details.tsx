@@ -1,5 +1,3 @@
-'use client';
-
 import { useRouter, useSearchParams } from 'next/navigation';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';

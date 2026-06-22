@@ -1,5 +1,3 @@
-'use client';
-
 import { type ChangeEvent, type SubmitEvent, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@ui/button/button';
