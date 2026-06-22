@@ -1,22 +1,25 @@
+'use client';
+
 import { type ChangeEvent, type SubmitEvent, useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@ui/button/button';
 import { Input } from '@ui/input/input';
 import styles from './search.module.css';
 import classNames from 'classnames/bind';
 import { useLocalStorage } from '@hooks/local-storage/use-local-storage';
-import { Route } from '@routes/characters';
-import { useNavigate } from '@tanstack/react-router';
 import { useFetchCharacters } from '@hooks/use-fetch-characters';
 
 const cn = classNames.bind(styles);
 
 export const Search = () => {
-  const { page, name } = Route.useSearch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? 1);
+  const name = searchParams.get('name') ?? '';
 
   const [lastSearch, setLastSearch] = useLocalStorage('lastSearch');
   const [userInput, setUserInput] = useState<string>(lastSearch);
-
-  const navigate = useNavigate({ from: '/characters' });
 
   const shouldRestoreLastSearch = !name && Boolean(lastSearch);
 
@@ -25,20 +28,19 @@ export const Search = () => {
       return;
     }
 
-    void navigate({
-      search: {
-        page: 1,
-        name: lastSearch,
-      },
-      replace: true,
-    });
-  }, [lastSearch, navigate, shouldRestoreLastSearch]);
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set('page', '1');
+    params.set('name', lastSearch);
+
+    router.replace(`/characters?${params.toString()}`);
+  }, [lastSearch, router, searchParams, shouldRestoreLastSearch]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setUserInput(event.target.value);
   };
 
-  useFetchCharacters(page, !shouldRestoreLastSearch, name ?? '');
+  useFetchCharacters(page, !shouldRestoreLastSearch, name);
 
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,12 +53,17 @@ export const Search = () => {
 
     setLastSearch(trimmedSearch);
 
-    void navigate({
-      search: {
-        page: 1,
-        name: trimmedSearch || undefined,
-      },
-    });
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set('page', '1');
+
+    if (trimmedSearch) {
+      params.set('name', trimmedSearch);
+    } else {
+      params.delete('name');
+    }
+
+    router.push(`/characters?${params.toString()}`);
   };
 
   return (
@@ -69,6 +76,7 @@ export const Search = () => {
         />
         <Button text="search" type="submit" />
       </form>
+
       <p className={cn('hint')}>
         Try typing in names of the characters from the show: Summer, Beth, Rick
       </p>

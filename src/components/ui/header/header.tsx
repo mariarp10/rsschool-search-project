@@ -1,6 +1,6 @@
 import styles from './header.module.css';
 import classNames from 'classnames/bind';
-import { Link } from '@tanstack/react-router';
+import Link from 'next/link';
 import { ThemeControls } from '../theme-controls/theme-controls';
 
 const cn = classNames.bind(styles);
@@ -11,10 +11,10 @@ export const Header = () => {
       <h1 className={cn('title')}>Rick and Morty Search</h1>
       <ThemeControls />
       <nav className={cn('menu')}>
-        <Link to="/" className={cn('link')}>
+        <Link href="/" className={cn('link')}>
           Home
         </Link>
-        <Link to="/about" className={cn('link')}>
+        <Link href="/about" className={cn('link')}>
           About
         </Link>
       </nav>

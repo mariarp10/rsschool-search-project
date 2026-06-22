@@ -1,3 +1,6 @@
+'use client';
+
+import { useSearchParams } from 'next/navigation';
 import type { Character } from '@utils/types';
 import { CharacterCard } from '@ui/character-card/character-card';
 import { Loader } from '@ui/loader/loader';
@@ -6,7 +9,6 @@ import classNames from 'classnames/bind';
 import { Button } from '@ui/button/button';
 import { useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@utils/query-keys';
-import { Route } from '@routes/characters.index';
 
 const cn = classNames.bind(styles);
 
@@ -16,7 +18,11 @@ type ResultsProps = {
 };
 
 export const Results = ({ characters, isLoading }: ResultsProps) => {
-  const { page, name } = Route.useSearch();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? 1);
+  const name = searchParams.get('name') ?? undefined;
+
   const queryClient = useQueryClient();
 
   const handleRefresh = async () => {
@@ -40,6 +46,7 @@ export const Results = ({ characters, isLoading }: ResultsProps) => {
               text="Refresh"
             />
           </div>
+
           <ul className={cn('list')}>
             {characters.map((character) => (
               <CharacterCard key={character.id} character={character} />

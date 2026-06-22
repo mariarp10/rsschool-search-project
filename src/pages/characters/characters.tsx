@@ -1,3 +1,5 @@
+'use client';
+
 import { Search } from '@components/search/search';
 import { Results } from '@components/results/results';
 import { ErrorThrower } from '@components/error-thrower/error-thrower';
@@ -5,14 +7,16 @@ import { ErrorThrower } from '@components/error-thrower/error-thrower';
 import { Pagination } from '@ui/pagination/pagination';
 import { ErrorNotification } from '@ui/error-notification/error-notification';
 
-import { Route } from '@routes/characters.index';
-
 import { useCharactersQuery } from '@hooks/query/use-characters-query';
 
 import { ApiError } from '@utils/api-error';
+import { useSearchParams } from 'next/navigation';
 
-export const HomePage = () => {
-  const { page, name } = Route.useSearch();
+export const Characters = () => {
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? 1);
+  const name = searchParams.get('name') ?? undefined;
 
   const { data, isLoading, isFetching, isError, error } = useCharactersQuery(
     page,

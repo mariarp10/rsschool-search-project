@@ -157,9 +157,15 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/main.tsx'],
+    files: ['src/app.tsx'],
     rules: {
       '@typescript-eslint/consistent-type-definitions': 'off',
+    },
+  },
+  {
+    files: ['src/app/layout.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
     },
   },
   {
@@ -168,8 +174,7 @@ export default defineConfig([
       '**/dist/**',
       '**/build/**',
       '**/*.d.ts',
-      '*.config.js',
-      '**/routeTree.gen.ts',
+      '*.config.{js,mjs}',
       '.tanstack',
       '**/routes/**',
       'coverage/**',

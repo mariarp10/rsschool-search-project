@@ -1,20 +1,26 @@
-import { HomePage } from '@pages/home/home';
-import { Outlet } from '@tanstack/react-router';
+'use client';
+
+import { useSearchParams } from 'next/navigation';
+import { Characters } from '@pages/characters/characters';
+import { CharacterDetails } from '@components/character-details/character-details';
 import classNames from 'classnames/bind';
 import styles from './split-layout.module.css';
-import { Route as CharactersRoute } from '@routes/characters';
 
 const cn = classNames.bind(styles);
 
 export const SplitLayout = () => {
-  const { detailsId } = CharactersRoute.useSearch();
+  const searchParams = useSearchParams();
+
+  const detailsId = searchParams.get('detailsId');
+  const characterId = detailsId ? Number(detailsId) : null;
 
   return (
     <div className={cn('split-container')}>
-      <HomePage />
-      {detailsId && (
+      <Characters />
+
+      {characterId && (
         <aside className={cn('details-panel')}>
-          <Outlet />
+          <CharacterDetails id={characterId} />
         </aside>
       )}
     </div>

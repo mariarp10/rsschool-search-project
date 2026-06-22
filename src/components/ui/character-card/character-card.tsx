@@ -1,8 +1,11 @@
+'use client';
+
 import { type ChangeEvent } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import type { Character } from '@utils/types';
 import styles from './character-card.module.css';
 import classNames from 'classnames/bind';
-import { Link } from '@tanstack/react-router';
 import { useSelectionStore } from '@store/selection.store';
 
 const cn = classNames.bind(styles);
@@ -12,6 +15,8 @@ type CharacterCardProps = {
 };
 
 export const CharacterCard = ({ character }: CharacterCardProps) => {
+  const searchParams = useSearchParams();
+
   const toggleSelection = useSelectionStore((state) => state.toggleSelection);
 
   const isChecked = useSelectionStore((state) =>
@@ -23,6 +28,13 @@ export const CharacterCard = ({ character }: CharacterCardProps) => {
     toggleSelection(character);
   };
 
+  const params = new URLSearchParams(searchParams.toString());
+
+  params.set('page', params.get('page') ?? '1');
+  params.set('detailsId', String(character.id));
+
+  const href = `/characters?${params.toString()}`;
+
   return (
     <li className={cn('list-item')}>
       <input
@@ -32,15 +44,8 @@ export const CharacterCard = ({ character }: CharacterCardProps) => {
         type="checkbox"
         onChange={handleChange}
       />
-      <Link
-        to="/characters"
-        search={(prev) => ({
-          page: prev.page ?? 1,
-          name: prev.name,
-          detailsId: character.id,
-        })}
-        className={cn('card-container')}
-      >
+
+      <Link href={href} className={cn('card-container')}>
         <div className={cn('image-container')}>
           <img
             className={cn('avatar')}
