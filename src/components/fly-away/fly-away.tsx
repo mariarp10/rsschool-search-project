@@ -1,3 +1,5 @@
+'use client';
+
 import { useSelectionStore } from '@store/selection.store';
 import classNames from 'classnames/bind';
 import styles from './fly-away.module.css';
@@ -20,7 +22,11 @@ export const FlyAway = () => {
     downloadFile(csvData, `${String(itemsCount)}_characters.csv`);
   };
 
-  if (selectedCharacters.length > 0) {
+  if (itemsCount === 0) {
+    return null;
+  }
+
+  if (itemsCount > 0) {
     return (
       <div className={cn('container')}>
         <ul className={cn('list')}>
