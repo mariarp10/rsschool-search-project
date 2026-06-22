@@ -3,7 +3,16 @@
   grid-template-columns: 1fr auto;
 }
 
+.split-container.with-details {
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+}
+
 .details-panel {
   width: 500px;
   padding-right: 100px;
+}
+
+.details-panel.empty {
+  display: none;
 }

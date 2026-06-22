@@ -1,54 +1,31 @@
 import { Search } from '@components/search/search';
 import { Results } from '@components/results/results';
 import { ErrorThrower } from '@components/error-thrower/error-thrower';
-
 import { Pagination } from '@ui/pagination/pagination';
-import { ErrorNotification } from '@ui/error-notification/error-notification';
+import { getCharacters } from '@utils/api';
 
-import { useCharactersQuery } from '@hooks/query/use-characters-query';
+type CharactersProps = {
+  page: number;
+  name?: string;
+};
 
-import { ApiError } from '@utils/api-error';
-import { useSearchParams } from 'next/navigation';
+export const Characters = async ({ page, name }: CharactersProps) => {
+  const data = await getCharacters(page, name);
 
-export const Characters = () => {
-  const searchParams = useSearchParams();
-
-  const page = Number(searchParams.get('page') ?? 1);
-  const name = searchParams.get('name') ?? undefined;
-
-  const { data, isLoading, isFetching, isError, error } = useCharactersQuery(
-    page,
-    name,
-  );
-
-  const characters = data?.results ?? [];
-  const totalPages = data?.info.pages ?? 0;
-  const errorCode = error instanceof ApiError ? error.status : null;
+  const characters = data.results;
+  const totalPages = data.info.pages;
 
   return (
-    <>
-      <section style={{ paddingInline: '100px' }}>
-        <Search />
+    <section style={{ paddingInline: '100px' }}>
+      <Search />
 
-        {isError ? (
-          <ErrorNotification errorCode={errorCode} />
-        ) : (
-          <>
-            {totalPages > 1 && (
-              <Pagination
-                totalPages={totalPages}
-                isLoading={isLoading || isFetching}
-              />
-            )}
+      {totalPages > 1 && (
+        <Pagination totalPages={totalPages} isLoading={false} />
+      )}
 
-            <Results
-              characters={characters}
-              isLoading={isLoading || isFetching}
-            />
-          </>
-        )}
-        <ErrorThrower />
-      </section>
-    </>
+      <Results characters={characters} isLoading={false} />
+
+      <ErrorThrower />
+    </section>
   );
 };

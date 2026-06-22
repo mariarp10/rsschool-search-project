@@ -1,3 +1,5 @@
+'use client';
+
 import { useSearchParams } from 'next/navigation';
 import type { Character } from '@utils/types';
 import { CharacterCard } from '@ui/character-card/character-card';

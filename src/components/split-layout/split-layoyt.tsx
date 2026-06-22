@@ -1,6 +1,3 @@
-'use client';
-
-import { useSearchParams } from 'next/navigation';
 import { Characters } from '@pages/characters/characters';
 import { CharacterDetails } from '@components/character-details/character-details';
 import classNames from 'classnames/bind';
@@ -8,21 +5,22 @@ import styles from './split-layout.module.css';
 
 const cn = classNames.bind(styles);
 
-export const SplitLayout = () => {
-  const searchParams = useSearchParams();
+type SplitLayoutProps = {
+  page: number;
+  name?: string;
+  characterId: number | null;
+};
 
-  const detailsId = searchParams.get('detailsId');
-  const characterId = detailsId ? Number(detailsId) : null;
+export const SplitLayout = ({ page, name, characterId }: SplitLayoutProps) => {
+  const hasDetails = characterId !== null;
 
   return (
-    <div className={cn('split-container')}>
-      <Characters />
+    <div className={cn('split-container', { 'with-details': hasDetails })}>
+      <Characters page={page} name={name} />
 
-      {characterId && (
-        <aside className={cn('details-panel')}>
-          <CharacterDetails id={characterId} />
-        </aside>
-      )}
+      <aside className={cn('details-panel', { empty: !hasDetails })}>
+        {hasDetails ? <CharacterDetails id={characterId} /> : null}
+      </aside>
     </div>
   );
 };
