@@ -1,9 +1,10 @@
+'use client';
+
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@ui/button/button';
 import styles from './pagination.module.css';
 import classNames from 'classnames/bind';
-import { useNavigate } from '@tanstack/react-router';
 import { useResultsStore } from '@store/results.store';
-import { Route } from '@routes/characters';
 
 const cn = classNames.bind(styles);
 
@@ -13,20 +14,21 @@ type PaginationProps = {
 };
 
 export const Pagination = ({ totalPages, isLoading }: PaginationProps) => {
-  const { page } = Route.useSearch();
-  const navigate = useNavigate({ from: '/characters' });
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? 1);
 
   const setLoading = useResultsStore((state) => state.setLoading);
 
   const changePage = (nextPage: number) => {
     setLoading();
 
-    void navigate({
-      search: (prev) => ({
-        ...prev,
-        page: nextPage,
-      }),
-    });
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set('page', String(nextPage));
+
+    router.push(`/characters?${params.toString()}`);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

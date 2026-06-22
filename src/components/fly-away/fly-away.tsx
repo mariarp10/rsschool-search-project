@@ -1,8 +1,10 @@
+'use client';
+
 import { useSelectionStore } from '@store/selection.store';
 import classNames from 'classnames/bind';
 import styles from './fly-away.module.css';
 import { Button } from '@ui/button/button';
-import { convertToCSV, downloadFile } from '@utils/helpers';
+import { downloadFile } from '@utils/download-csv';
 
 const cn = classNames.bind(styles);
 
@@ -15,12 +17,29 @@ export const FlyAway = () => {
 
   const itemsCount = selectedCharacters.length;
 
-  const handleDownload = () => {
-    const csvData = convertToCSV(selectedCharacters);
+  const handleDownload = async () => {
+    const response = await fetch('/api/export-csv', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(selectedCharacters),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate CSV');
+    }
+
+    const csvData = await response.text();
+
     downloadFile(csvData, `${String(itemsCount)}_characters.csv`);
   };
 
-  if (selectedCharacters.length > 0) {
+  if (itemsCount === 0) {
+    return null;
+  }
+
+  if (itemsCount > 0) {
     return (
       <div className={cn('container')}>
         <ul className={cn('list')}>
@@ -43,7 +62,9 @@ export const FlyAway = () => {
         <div className={cn('controls')}>
           <Button
             text={`Download (${String(itemsCount)})`}
-            handleClick={handleDownload}
+            handleClick={() => {
+              void handleDownload();
+            }}
           />
           <Button text={'Clear'} handleClick={clearSelection} />
         </div>

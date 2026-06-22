@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './not-found.module.css';
-import { Link } from '@tanstack/react-router';
+import Link from 'next/link';
 
 const cn = classNames.bind(styles);
 
@@ -14,7 +14,7 @@ export const NotFoundPage = () => {
         alt=""
         className={cn('image')}
       />
-      <Link to="/" className={cn('link')}>
+      <Link href="/" className={cn('link')}>
         Back to homepage
       </Link>
     </article>

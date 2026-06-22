@@ -1,22 +1,26 @@
-import { HomePage } from '@pages/home/home';
-import { Outlet } from '@tanstack/react-router';
+import { Characters } from '@pages/characters/characters';
+import { CharacterDetails } from '@components/character-details/character-details';
 import classNames from 'classnames/bind';
 import styles from './split-layout.module.css';
-import { Route as CharactersRoute } from '@routes/characters';
 
 const cn = classNames.bind(styles);
 
-export const SplitLayout = () => {
-  const { detailsId } = CharactersRoute.useSearch();
+type SplitLayoutProps = {
+  page: number;
+  name?: string;
+  characterId: number | null;
+};
+
+export const SplitLayout = ({ page, name, characterId }: SplitLayoutProps) => {
+  const hasDetails = characterId !== null;
 
   return (
-    <div className={cn('split-container')}>
-      <HomePage />
-      {detailsId && (
-        <aside className={cn('details-panel')}>
-          <Outlet />
-        </aside>
-      )}
+    <div className={cn('split-container', { 'with-details': hasDetails })}>
+      <Characters page={page} name={name} />
+
+      <aside className={cn('details-panel', { empty: !hasDetails })}>
+        {hasDetails ? <CharacterDetails id={characterId} /> : null}
+      </aside>
     </div>
   );
 };

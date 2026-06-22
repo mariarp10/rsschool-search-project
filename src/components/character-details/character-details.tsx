@@ -1,5 +1,6 @@
-import { useNavigate } from '@tanstack/react-router';
-import { Route as CharactersRoute } from '@routes/characters';
+'use client';
+
+import { useRouter, useSearchParams } from 'next/navigation';
 import classNames from 'classnames/bind';
 import styles from './character-details.module.css';
 import { ErrorNotification } from '@ui/error-notification/error-notification';
@@ -15,8 +16,8 @@ type CharacterDetailsProps = {
 };
 
 export const CharacterDetails = ({ id }: CharacterDetailsProps) => {
-  const navigate = useNavigate();
-  const search = CharactersRoute.useSearch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const queryClient = useQueryClient();
 
@@ -31,13 +32,11 @@ export const CharacterDetails = ({ id }: CharacterDetailsProps) => {
   const errorCode = error instanceof ApiError ? error.status : null;
 
   const handleClose = () => {
-    void navigate({
-      to: '/characters',
-      search: {
-        page: search.page,
-        ...(search.name ? { name: search.name } : {}),
-      },
-    });
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.delete('detailsId');
+
+    router.push(`/characters?${params.toString()}`);
   };
 
   const handleRefresh = async () => {
@@ -66,6 +65,7 @@ export const CharacterDetails = ({ id }: CharacterDetailsProps) => {
     <>
       <div className={cn('card-header')}>
         <h2>Details about character</h2>
+
         <button
           onClick={() => {
             void handleRefresh();
@@ -76,6 +76,7 @@ export const CharacterDetails = ({ id }: CharacterDetailsProps) => {
         >
           <span aria-hidden="true" className={cn('icon', 'refresh-icon')} />
         </button>
+
         <button
           onClick={handleClose}
           type="button"

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import styles from './error-thrower.module.css';
 import classNames from 'classnames/bind';
